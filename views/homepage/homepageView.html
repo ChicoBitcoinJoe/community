@@ -1,0 +1,25 @@
+<div>  
+    <md-toolbar layout="row" class="md-toolbar-tools">
+    <md-button class="menu md-icon-button" hide-gt-sm ng-click="app.toggleList()"
+    aria-label="Show User List">
+    <md-icon md-svg-icon="menu"></md-icon>
+    </md-button>
+    <h1>Angular Material - Starter App - {{hello}}</h1>
+    </md-toolbar>
+
+    <!-- Container #2 -->
+    <div flex layout="row">
+        <!-- Container #3 -->
+        <md-sidenav class="md-whiteframe-4dp" md-is-locked-open="$mdMedia('gt-sm')"
+        md-component-id="left" ng-click="app.toggleList()">
+            <!-- Custom UsersList component -->
+            <users-list users="app.users" selected="app.selected" on-selected="app.selectUser(user)"></users-list>
+        </md-sidenav>
+
+        <!-- Container #4 -->
+        <md-content flex id="content">
+            <!-- Custom UserDetails component -->
+            <user-details selected="app.selected" ></user-details>
+        </md-content>
+    </div>
+</div>
