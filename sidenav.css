@@ -37,3 +37,12 @@ md-list {
 md-sidenav {
     transition: 0.2s all;
 }
+
+.sidenav-close-button {
+    cursor: pointer; cursor: hand;
+}
+
+.sidenav-close-button:focus {
+    outline: none;
+    border: 0;
+}

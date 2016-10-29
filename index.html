@@ -1,6 +1,7 @@
 <html lang="en" >
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="This is a description of something...">
@@ -19,11 +20,11 @@
     <title>Community</title>
     
 </head>
-<body ng-app="Community" layout="row">
+<body ng-app="Community" ng-controller="LayoutController" layout="row">
 
     <md-sidenav md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" layout="column" class="md-whiteframe-4dp">
         <md-toolbar class="md-tall sidenavGreen paddingLR10">
-            <h3 class="sidenav-community-header">Community</h3>
+            <h3 class="sidenav-community-header" layout="row">Community<span flex></span><span ng-click="toggle('left')" class="sidenav-close-button" hide-gt-md><md-icon>close</md-icon></span></h3>
             <h5 style="margin:0px;">Account Info</h5>
         </md-toolbar>
         <md-content class="paddingLR10">
@@ -50,6 +51,13 @@
                     <div class="sidenav-list-item">Bitcoin</div>
                     <div class="sidenav-list-item">Ethereum</div>
                     <div class="sidenav-list-item">Monero</div>
+                    <div class="sidenav-list-item">Dogecoin</div>
+                    <div class="sidenav-list-item">Litecoin</div>
+                    <div class="sidenav-list-item">Augur</div>
+                    <div class="sidenav-list-item">Tether</div>
+                    <div class="sidenav-list-item">CounterParty</div>
+                    <div class="sidenav-list-item">Ripple</div>
+                    <div class="sidenav-list-item">Waves</div>
                 </md-list>
             </div>
         </md-content>
@@ -77,6 +85,7 @@
     <!-- Application Files  -->
     <script src="app.js"></script>
     <script src="views/homepage/homepageViewController.js"></script>
+    <script src="controllers/layoutController.js"></script>
     <script src="directives/post/postDirective.js"></script>
     <script src="directives/comment/commentDirective.js"></script>
             

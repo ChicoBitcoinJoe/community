@@ -1,5 +1,5 @@
 .post md-card{
-    min-width: 420px;
+    
 }
 
 md-content {
@@ -13,8 +13,10 @@ md-card-title {
 
 .post-score-color {
     background-color: #79A8A6;
+    height: 20px;
 }
 
 .post-public-opinion {
     background-color: #79A8A6;
+    height: 20px;
 }
