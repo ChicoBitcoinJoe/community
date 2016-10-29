@@ -1,0 +1,16 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #212121;
+}
+
+::-webkit-scrollbar {
+   display: none;
+}
+
+.aqua {
+    background-color: aqua;
+}
+
+.aquamarine {
+    background-color: aquamarine;
+}

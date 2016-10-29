@@ -1,0 +1,39 @@
+.paddingLR10 {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.sidenavGreen {
+    background-color:#0a5451 !important;
+}
+
+.sidenav-header {
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+.sidenav-list-item {
+    padding-left:15px;
+    padding-right:15px;
+    min-height: 40px;
+    height:auto;
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.sidenav-header-text {
+    margin:0px;
+}
+
+.sidenav-community-header {
+    margin: 12px 0px;
+}
+
+md-list {
+    padding-top:0px !important;
+}
+
+md-sidenav {
+    transition: 0.2s all;
+}

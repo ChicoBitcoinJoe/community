@@ -7,24 +7,63 @@
     
     <!-- Angular Material style sheet -->
     <link rel="stylesheet" href="angular-includes/angular-material-1.1.0.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="sidenav.css">
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="views/homepage/homepageView.css">
+    <link rel="stylesheet" href="directives/post/postDirective.css">
+    <link rel="stylesheet" href="directives/comment/commentDirective.css">
     
-    <!-- App Material style sheet -->
-    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,700'>
-    <link rel='stylesheet' href='app.css'>
+    <title>Community</title>
     
-    <title>Angular Material - Starter App</title>
 </head>
-<body ng-app="Community">
-  
-    <div class="container">
-        <div ng-view>
-            Loading...
+<body ng-app="Community" layout="row">
+
+    <md-sidenav md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" layout="column" class="md-whiteframe-4dp">
+        <md-toolbar class="md-tall sidenavGreen paddingLR10">
+            <h3 class="sidenav-community-header">Community</h3>
+            <h5 style="margin:0px;">Account Info</h5>
+        </md-toolbar>
+        <md-content class="paddingLR10">
+            <div>
+                <div class="sidenav-header" layout="row">
+                    <h4 class="sidenav-header-text">Multis</h4>
+                    <span flex></span>
+                    <md-icon>settings</md-icon>
+                </div>
+                <md-list>
+                    <div class="sidenav-list-item">All</div>
+                    <div class="sidenav-list-item" style="background-color:#3c8985; color:rgba(255,255,255,0.87)">Cryptocurrencies</div>
+                    <div class="sidenav-list-item">Politics</div>
+                    <div class="sidenav-list-item">Ungrouped</div>
+                </md-list>
+            </div>
+            <div>
+                <div class="sidenav-header" layout="row">
+                    <h4 class="sidenav-header-text">Cryptocurrencies</h4>
+                    <span flex></span>
+                    <md-icon>settings</md-icon>
+                </div>
+                <md-list>
+                    <div class="sidenav-list-item">Bitcoin</div>
+                    <div class="sidenav-list-item">Ethereum</div>
+                    <div class="sidenav-list-item">Monero</div>
+                </md-list>
+            </div>
+        </md-content>
+        <span flex></span>
+        <div class="sidenavGreen paddingLR10">
+            <h5 style="color:rgba(255,255,255,0.87)">Sidebar footer</h5>
         </div>
-    </div>
+    </md-sidenav>
+    
+    <div ng-view flex layout="column"> Loading... </div>
+
     
     <!-- Angular Material requires Angular.js Libraries -->
     <script src="angular-includes/angular-1.5.5.min.js"></script>
-    <script src="angular-includes/angular-route-1.5.5.min.js"></script>
     <script src="angular-includes/angular-animate-1.5.5.min.js"></script>
     <script src="angular-includes/angular-aria-1.5.5.min.js"></script>
     <script src="angular-includes/angular-messages-1.5.5.min.js"></script>
@@ -32,10 +71,14 @@
     <!-- Angular Material Library -->
     <script src="angular-includes/angular-material-1.1.0.min.js"></script>
 
-    <!-- Your application bootstrap  -->
+    <!-- Other Libraries -->
+    <script src="angular-includes/angular-route-1.5.5.min.js"></script>
+    
+    <!-- Application Files  -->
     <script src="app.js"></script>
     <script src="views/homepage/homepageViewController.js"></script>
+    <script src="directives/post/postDirective.js"></script>
+    <script src="directives/comment/commentDirective.js"></script>
             
 </body>
 </html>
-

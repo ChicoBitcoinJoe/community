@@ -1,25 +1,38 @@
-<div>  
-    <md-toolbar layout="row" class="md-toolbar-tools">
-    <md-button class="menu md-icon-button" hide-gt-sm ng-click="app.toggleList()"
-    aria-label="Show User List">
-    <md-icon md-svg-icon="menu"></md-icon>
-    </md-button>
-    <h1>Angular Material - Starter App - {{hello}}</h1>
-    </md-toolbar>
+<md-toolbar class="header" layout="row" layout-align="left center">
+    <h4>Cryptocurrencies</h4>
+    &nbsp
+    <md-icon>star_border</md-icon>
+    <span flex></span>
+    <md-icon>search</md-icon>
+</md-toolbar>
 
-    <!-- Container #2 -->
-    <div flex layout="row">
-        <!-- Container #3 -->
-        <md-sidenav class="md-whiteframe-4dp" md-is-locked-open="$mdMedia('gt-sm')"
-        md-component-id="left" ng-click="app.toggleList()">
-            <!-- Custom UsersList component -->
-            <users-list users="app.users" selected="app.selected" on-selected="app.selectUser(user)"></users-list>
-        </md-sidenav>
-
-        <!-- Container #4 -->
-        <md-content flex id="content">
-            <!-- Custom UserDetails component -->
-            <user-details selected="app.selected" ></user-details>
-        </md-content>
-    </div>
+<div layout="row" flex>
+    <md-content layout="column" flex>
+        <post-card post-url="'images/chicobitcoinjoe.jpg'"></post-card>
+        <post-card post-url="'images/lady.jpg'"></post-card>
+        <post-card post-url="'images/chicobitcoinjoe.jpg'"></post-card>
+        <post-card post-url="'images/lady.jpg'"></post-card>
+        <post-card post-url="'images/chicobitcoinjoe.jpg'"></post-card>
+        <post-card post-url="'images/lady.jpg'"></post-card>
+        <post-card post-url="'images/chicobitcoinjoe.jpg'"></post-card>
+        <post-card post-url="'images/lady.jpg'"></post-card>
+        <post-card post-url="'images/chicobitcoinjoe.jpg'"></post-card>
+        <post-card post-url="'images/lady.jpg'"></post-card>
+        <post-card post-url="'images/chicobitcoinjoe.jpg'"></post-card>
+        <post-card post-url="'images/lady.jpg'"></post-card>
+    </md-content>
+    <md-content hide show-gt-sm layout="column" flex="55">
+        <comment-card comment-url="'images/chicobitcoinjoe.jpg'"></comment-card>
+        <comment-card comment-url="'images/lady.jpg'"></comment-card>
+        <comment-card comment-url="'images/chicobitcoinjoe.jpg'"></comment-card>
+        <comment-card comment-url="'images/lady.jpg'"></comment-card>
+        <comment-card comment-url="'images/chicobitcoinjoe.jpg'"></comment-card>
+        <comment-card comment-url="'images/lady.jpg'"></comment-card>
+        <comment-card comment-url="'images/chicobitcoinjoe.jpg'"></comment-card>
+        <comment-card comment-url="'images/lady.jpg'"></comment-card>
+        <comment-card comment-url="'images/chicobitcoinjoe.jpg'"></comment-card>
+        <comment-card comment-url="'images/lady.jpg'"></comment-card>
+        <comment-card comment-url="'images/chicobitcoinjoe.jpg'"></comment-card>
+        <comment-card comment-url="'images/lady.jpg'"></comment-card>
+    </md-content>
 </div>

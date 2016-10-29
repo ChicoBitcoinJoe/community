@@ -1,0 +1,20 @@
+.post md-card{
+    min-width: 420px;
+}
+
+md-content {
+    background-color: #212121;
+}
+    
+md-card-title {
+    padding-top: 0px !important;
+    padding-bottom: 5px !important;
+}
+
+.post-score-color {
+    background-color: #79A8A6;
+}
+
+.post-public-opinion {
+    background-color: #79A8A6;
+}

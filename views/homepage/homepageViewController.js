@@ -1,4 +1,6 @@
-Community.controller('HomepageViewController', ['$scope','$route',
-function($scope, $route, $routeParams, $location) {
-   $scope.hello = "Hello Community!";
+Community.controller('HomepageViewController', ['$scope','$mdSidenav',
+function($scope, $mdSidenav) {
+    $scope.hello = "Hello Community!";
+    
 }]);
+
