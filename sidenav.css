@@ -1,33 +1,51 @@
-.paddingLR10 {
+.sidenav-toolbar {
     padding-left: 10px;
     padding-right: 10px;
+    padding-top: 5px;
 }
 
 .sidenavGreen {
     background-color:#0a5451 !important;
+    color: rgba(255,255,255,0.87);
+}
+
+.sidenav-settings-button {
+    margin: 0px;
 }
 
 .sidenav-header {
     margin-top: 10px;
     margin-bottom: 0px;
+    padding: 0px;
+}
+
+.sidenav-header-text {
+    margin: 0px;
+    padding-right:15px;
+    padding-top:10px;
+    padding-left:10px;
+    padding-bottom:10px;
+}
+
+.selected {
+    background-color: #4D8987 !important;
+    color: rgba(255,255,255,0.87);
 }
 
 .sidenav-list-item {
     padding-left:15px;
     padding-right:15px;
-    min-height: 40px;
+    min-height: 36px;
     height:auto;
     display:flex;
     justify-content: flex-start;
     align-items: center;
+    cursor:pointer;
 }
 
-.sidenav-header-text {
-    margin:0px;
-}
-
-.sidenav-community-header {
-    margin: 12px 0px;
+.sidenav-list-item:hover {
+    background-color: #79A8A6;
+    color: rgba(255,255,255,0.87);
 }
 
 md-list {
@@ -45,4 +63,12 @@ md-sidenav {
 .sidenav-close-button:focus {
     outline: none;
     border: 0;
+}
+
+.user-account-color {
+    background-color: #1c6965;
+}
+
+.sidenav-community-header {
+    margin: 12px 0px;
 }

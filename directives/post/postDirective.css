@@ -1,5 +1,4 @@
 .post md-card{
-    
 }
 
 md-content {
@@ -20,3 +19,12 @@ md-card-title {
     background-color: #79A8A6;
     height: 20px;
 }
+
+md-card-header {
+    padding: 10px !important;
+}
+
+md-card-title {
+    padding: 10px 10px 0px 10px !important;
+}
+

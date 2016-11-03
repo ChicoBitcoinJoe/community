@@ -1,5 +1,5 @@
 Community.directive('commentCard', [ 
-function($location,ProfileDB,IpfsService,AutoModerator) {
+function() {
 	return {
 		restrict: 'E',
 		scope: {
@@ -11,7 +11,7 @@ function($location,ProfileDB,IpfsService,AutoModerator) {
             $scope.showDetails = false;
 		},
 		link : function($scope, $element, $attrs) {
-            console.log($scope.postUrl);
+            //console.log($scope.commentUrl);
 		}
 	}
 }]);

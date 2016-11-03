@@ -1,7 +1,6 @@
 <html lang="en" >
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="mobile-web-app-capable" content="yes">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="This is a description of something...">
@@ -11,81 +10,96 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="sidenav.css">
-    <link rel="stylesheet" href="header.css">
     <link rel="stylesheet" href="views/homepage/homepageView.css">
+    <link rel="stylesheet" href="sidenav.css">
+    <link rel="stylesheet" href="directives/toolbar/toolbarDirective.css">
     <link rel="stylesheet" href="directives/post/postDirective.css">
     <link rel="stylesheet" href="directives/comment/commentDirective.css">
     
     <title>Community</title>
-    
 </head>
-<body ng-app="Community" ng-controller="LayoutController" layout="row">
-
-    <md-sidenav md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" layout="column" class="md-whiteframe-4dp">
-        <md-toolbar class="md-tall sidenavGreen paddingLR10">
+<body ng-app="Community" ng-controller="SidenavController" layout="row">
+    <md-sidenav md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" class="md-whiteframe-4dp" layout="column">
+        <md-toolbar class="md-tall sidenavGreen sidenav-toolbar" layout="column">
             <h3 class="sidenav-community-header" layout="row">Community<span flex></span><span ng-click="toggle('left')" class="sidenav-close-button" hide-gt-md><md-icon>close</md-icon></span></h3>
-            <h5 style="margin:0px;">Account Info</h5>
+            <span flex></span>
+            <div class="user-account-color md-whiteframe-4dp" layout="row" layout-align="left center" style="padding:5px; margin-bottom:10px;">
+                &nbsp<md-icon>face</md-icon>
+                <div layout="column" flex>
+                    <h5 style="margin: 0px 10px 0px 10px; overflow:hidden; white-space:nowrap; text-overflow: ellipsis;">{{username}}</h5>
+                    <div class="md-subhead" style="margin: 0px 0px 0px 10px; overflow:hidden; white-space:nowrap; text-overflow: ellipsis;" flex>{{account}}</div>
+                </div>
+            </div>
         </md-toolbar>
-        <md-content class="paddingLR10">
-            <div>
-                <div class="sidenav-header" layout="row">
-                    <h4 class="sidenav-header-text">Multis</h4>
-                    <span flex></span>
-                    <md-icon>settings</md-icon>
-                </div>
-                <md-list>
-                    <div class="sidenav-list-item">All</div>
-                    <div class="sidenav-list-item" style="background-color:#3c8985; color:rgba(255,255,255,0.87)">Cryptocurrencies</div>
-                    <div class="sidenav-list-item">Politics</div>
-                    <div class="sidenav-list-item">Ungrouped</div>
-                </md-list>
+        <md-content flex>
+            <div class="sidenav-header" layout="row">
+                <h3 class="sidenav-header-text">Multis</h3>
+                <span flex></span>
+                <md-button class="sidenav-settings-button" ng-click="toggleSettings = !toggleSettings"><md-icon>settings</md-icon></md-button>
             </div>
-            <div>
-                <div class="sidenav-header" layout="row">
-                    <h4 class="sidenav-header-text">Cryptocurrencies</h4>
-                    <span flex></span>
-                    <md-icon>settings</md-icon>
+            <md-list >
+                <div class="sidenav-list-item" ng-show="toggleSettings">
+                    <md-input-container style="margin:0px; margin-top:15px; height:36px; padding:0px;" layout="row" flex>
+                        <div>
+                            <label>Create Multi</label>
+                            <input style="height:36px;" type="text" ng-model="newMulti">
+                        </div>
+                        <span flex></span>
+                        <md-button style="margin:0px;" ng-click="createMulti(newMulti)"><md-icon>add_box</md-icon></md-button>
+                    </md-input-container>
                 </div>
-                <md-list>
-                    <div class="sidenav-list-item">Bitcoin</div>
-                    <div class="sidenav-list-item">Ethereum</div>
-                    <div class="sidenav-list-item">Monero</div>
-                    <div class="sidenav-list-item">Dogecoin</div>
-                    <div class="sidenav-list-item">Litecoin</div>
-                    <div class="sidenav-list-item">Augur</div>
-                    <div class="sidenav-list-item">Tether</div>
-                    <div class="sidenav-list-item">CounterParty</div>
-                    <div class="sidenav-list-item">Ripple</div>
-                    <div class="sidenav-list-item">Waves</div>
-                </md-list>
+                <div class="sidenav-list-item" ng-class="{selected: multi==activeView}" ng-repeat="multi in multis" layout="row">
+                    <a style="height:36;" ng-href="#/m/{{multi}}" layout layout-align="left center" flex>{{multi | capitalize}}</a>
+                    <md-button ng-show="toggleSettings && multi !== 'all' && multi !== 'ungrouped'" style="margin:0px;" ng-click="deleteMulti(multi)"><md-icon> indeterminate_check_box </md-icon></md-button>
+                </div>
+            </md-list>
+            <br>
+            <div class="sidenav-header" layout="row" layout-align="left center">
+                <h3 class="sidenav-header-text sidenavGreen">{{activeView | capitalize}}</h3>
             </div>
+            <md-list>
+                <div class="sidenav-list-item" ng-show="toggleSettings && activeView != 'ungrouped'">
+                    <md-input-container style="margin:0px; margin-top:15px; height:36px; padding:0px;" layout="row" flex>
+                        <div>
+                            <label>Add Community</label>
+                            <input style="height:36px;" type="text" ng-model="newCommunity">
+                        </div>
+                        <span flex></span>
+                        <md-button style="margin:0px;" ng-click="addCommunity(newCommunity)"><md-icon>add_box</md-icon></md-button>
+                    </md-input-container>
+                </div>
+                <div class="sidenav-list-item" ng-repeat="community in communities" layout="row">
+                    <a style="height:36px;" ng-href="#/c/{{community}}" layout layout-align="left center" flex>{{community | capitalize}}</a>
+                    <md-button ng-show="toggleSettings && activeView !== 'all'" style="margin:0px;" ng-click="removeCommunity(community)"><md-icon> indeterminate_check_box </md-icon></md-button>
+                </div>
+            </md-list>
         </md-content>
         <span flex></span>
-        <div class="sidenavGreen paddingLR10">
-            <h5 style="color:rgba(255,255,255,0.87)">Sidebar footer</h5>
+        <div class="sidenavGreen" style="padding:10px;" layout layout-align="center center">
+            <a href="https://github.com/ChicoBitcoinJoe/Community-Material-Design" target="_blank" ><h5 style="margin:0px; color:rgba(255,255,255,0.87);">Community created by Joseph Reed</h5></a>
         </div>
     </md-sidenav>
     
-    <div ng-view flex layout="column"> Loading... </div>
+    <div ng-view layout="column" flex></div>
 
-    
-    <!-- Angular Material requires Angular.js Libraries -->
+    <!-- Angular + Material Libraries -->
     <script src="angular-includes/angular-1.5.5.min.js"></script>
     <script src="angular-includes/angular-animate-1.5.5.min.js"></script>
     <script src="angular-includes/angular-aria-1.5.5.min.js"></script>
     <script src="angular-includes/angular-messages-1.5.5.min.js"></script>
-
-    <!-- Angular Material Library -->
     <script src="angular-includes/angular-material-1.1.0.min.js"></script>
-
-    <!-- Other Libraries -->
     <script src="angular-includes/angular-route-1.5.5.min.js"></script>
+    
+    <!-- Other Libraries -->
+    <script src="other-includes/web3.js"></script>
     
     <!-- Application Files  -->
     <script src="app.js"></script>
+    <script src="services/LinkDB.js"></script>
+    <script src="services/ProfileDB.js"></script>
     <script src="views/homepage/homepageViewController.js"></script>
-    <script src="controllers/layoutController.js"></script>
+    <script src="controllers/SidenavController.js"></script>
+    <script src="directives/toolbar/toolbarDirective.js"></script>
     <script src="directives/post/postDirective.js"></script>
     <script src="directives/comment/commentDirective.js"></script>
             

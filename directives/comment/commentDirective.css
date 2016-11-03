@@ -5,14 +5,15 @@
 md-content {
     background-color: #212121;
 }
-    
+
 md-card-title {
     padding-top: 0px !important;
     padding-bottom: 5px !important;
 }
 
 .comment-card-content {
-    cursor: pointer; cursor: hand;
+    cursor: pointer;
+    cursor: hand;
 }
 
 .comment-score-color {
