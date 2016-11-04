@@ -5,15 +5,15 @@ This is an implementation of Community using Material Design. This will probably
 
 * = non-critical
 
+- General
+    - web3 injected by MetaMask still loading late sometimes
+    
 - Sidenav
     - Turn into directive*
-    - Account panel
-    - Add multi
-    - remove multi
+    - Account panel username not editable* (need name registry)
     
 - header
-    - star
-    - search
+    - search bar not material design*
     
 - Posts
     - Little rough around the edges (need critics/suggestions)*
@@ -21,8 +21,14 @@ This is an implementation of Community using Material Design. This will probably
     - display correct posts for multi
     
 - Comments
-    - display on smaller devices after clicking posts
+    - display on small devices after clicking post
     - display comments of comments
     - disaply correct comments for selected post
     - Mark up support
+    
+- LinkDB.js
+    - Finalize contracts
+    - Single community posts
+    - Multi community posts
+    
     

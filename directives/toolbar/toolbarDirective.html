@@ -1,7 +1,12 @@
 <md-toolbar class="toolbar" layout="row" layout-align="left center">
-    <md-button hide-gt-md ng-click="toggle('left')"><md-icon>menu</md-icon></md-button><h4>{{header | capitalize}}</h4>
+    <md-button hide-gt-md ng-click="toggleSidenav('left')"><md-icon>menu</md-icon></md-button>
     &nbsp
-    <md-icon>star_border</md-icon>
+    <div layout="row" layout-align="left center">
+        <h4>{{header | capitalize}}</h4>
+        <md-button ng-click="quickSave()" ng-hide="viewType=='m'"><md-icon>{{star}}</md-icon></md-button>
+    </div>
     <span flex></span>
-    <md-icon>search</md-icon>
+    <input type="text" ng-show="showSearchbar" focus-on-show style="padding:4px;" ng-keyup="$event.keyCode == 13 && search()" ng-model="searchQuery" placeholder="Find A Community" aria-label="Find A Community">
+    </div>
+    <md-button ng-click="toggleSearch()"><md-icon>search</md-icon></md-button>
 </md-toolbar>

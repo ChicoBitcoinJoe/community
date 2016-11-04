@@ -1,18 +1,21 @@
 Community.service( 'ProfileDB',['$q','$window', function (LinkDB,$q,$window) {
     console.log('Loading ProfileDB account ');
     var ProfileDB = null;
+    var currentAccount;
     
     if (typeof web3 !== 'undefined') {
         // Use Mist/MetaMask's provider
         web3 = new Web3(web3.currentProvider);
+        currentAccount = web3.eth.accounts[0];
+        localStorage.setItem('ProfileDB.lastUsedAccount',currentAccount);
     } else {
         // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        //web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        currentAccount = localStorage.getItem('ProfileDB.lastUsedAccount');
     }
     
-    var currentAccount = web3.eth.accounts[0];
     var accountInterval = setInterval(function() {
-        if (typeof web3 === 'undefined') {
+        if (web3 === 'undefined') {
             console.log("set web3");
             web3 = new Web3(web3.currentProvider);
         }
@@ -95,26 +98,52 @@ Community.service( 'ProfileDB',['$q','$window', function (LinkDB,$q,$window) {
         getCommunitiesInMulti: function(multiName){
             return ProfileDB.SavedMultis[multiName];
         },
+        communityIsSaved: function(communityName){
+            communityName = communityName.toLowerCase();
+            var index = ProfileDB.SavedMultis['all'].indexOf(communityName);
+            if(index != '-1') 
+                return true;
+            
+            return false;
+        },
+        multiIsSaved: function(multiName){
+            if(ProfileDB.SavedMultis[multiName])
+                return true;
+            
+            return false;
+        },
         addCommunity: function(communityName,multiName){
-            if(multiName && communityName){
-                //If communityName does not exist in 'all' it does not exist in any multi so we can just add it
-                if(ProfileDB.SavedMultis['all'].indexOf(communityName) == "-1"){
-                    ProfileDB.SavedMultis['all'].push(communityName);
-                    console.log("Added " + communityName + " to 'all'");
-                    
-                    ProfileDB.SavedMultis[multiName].push(communityName);
-                    console.log("Added " + communityName + " to " + multiName);
-                } else {
-                    if(multiName == 'ungrouped'){
+            if(multiName && communityName && ProfileDB.SavedMultis[multiName]){
+                if(multiName == 'all'){
+                    //If communityName does not exist in 'all' it does not exist in any multi so we can just add it
+                    if(ProfileDB.SavedMultis['all'].indexOf(communityName) == "-1"){
+                        ProfileDB.SavedMultis['all'].push(communityName);
+                        console.log("Added " + communityName + " to 'all'");
+                        
                         if(ProfileDB.SavedMultis['ungrouped'].indexOf(communityName) == "-1"){
                             ProfileDB.SavedMultis['ungrouped'].push(communityName);
-                            console.log("Added " + communityName + " to 'ungrouped'");    
+                            console.log("Added " + communityName + " to ungrouped");
                         }
                     } else {
-                        if(ProfileDB.SavedMultis[multiName].indexOf(communityName) == "-1"){
-                            ProfileDB.SavedMultis[multiName].push(communityName);
-                            console.log("Added " + communityName + " to " + multiName);
-                        }
+                        //if it does exist in 'all' do nothing
+                    }
+                } else if(multiName == 'ungrouped'){
+                    //cannot add to 'ungrouped'
+                } else {
+                    if(ProfileDB.SavedMultis[multiName].indexOf(communityName) == "-1"){
+                        ProfileDB.SavedMultis[multiName].push(communityName);
+                        console.log("Added " + communityName + " to " + multiName);
+                    }
+                    
+                    if(ProfileDB.SavedMultis['all'].indexOf(communityName) == "-1"){
+                        ProfileDB.SavedMultis['all'].push(communityName);
+                        console.log("Added " + communityName + " to 'all'");
+                    }
+                    
+                    var index = ProfileDB.SavedMultis['ungrouped'].indexOf(communityName);
+                    if(index != "-1"){
+                        ProfileDB.SavedMultis['ungrouped'].splice(index,1);
+                        console.log("Removed " + communityName + " from 'ungrouped'");
                     }
                 }
             }
@@ -122,6 +151,7 @@ Community.service( 'ProfileDB',['$q','$window', function (LinkDB,$q,$window) {
             saveProfile();
         },
         createMulti: function(multiName){
+            multiName = multiName.toLowerCase();
             if(multiName){
                 multiName = multiName.toLowerCase();
                 if(!ProfileDB.SavedMultis[multiName]){
@@ -168,6 +198,7 @@ Community.service( 'ProfileDB',['$q','$window', function (LinkDB,$q,$window) {
                                 if(ProfileDB.SavedMultis[multi].indexOf(communityName) != "-1"){
                                     exists = true;
                                     console.log(communityName + ' exists in ' + multi);
+                                    break;
                                 }
                             }
                         }
@@ -200,7 +231,7 @@ Community.service( 'ProfileDB',['$q','$window', function (LinkDB,$q,$window) {
                 }
                 
                 delete ProfileDB.SavedMultis[multiName];
-                console.log("Deleted Multi" + multiName);
+                console.log("Deleted Multi: " + multiName);
 
                 saveProfile();
             }

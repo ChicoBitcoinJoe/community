@@ -3,7 +3,7 @@ function($scope, $mdSidenav, $location, ProfileDB) {
     $scope.toggle = function(id) { $mdSidenav(id).toggle(); };
     
     $scope.account = ProfileDB.getCurrentAccount();
-    $scope.username = 'ChicoBitcoinJoe';
+    $scope.username = 'Username';
     
     $scope.viewType = $location.url().split('/')[1];
     $scope.activeView = $location.url().split('/')[2];
@@ -12,6 +12,7 @@ function($scope, $mdSidenav, $location, ProfileDB) {
     $scope.communities = ProfileDB.getCommunitiesInMulti($scope.activeView);
     
     $scope.$on('$routeChangeSuccess', function() {
+        $scope.viewType = $location.url().split('/')[1];
         $scope.activeView = $location.url().split('/')[2];
         $scope.communities = ProfileDB.getCommunitiesInMulti($scope.activeView);
         $scope.multis = ProfileDB.getSavedMultis();

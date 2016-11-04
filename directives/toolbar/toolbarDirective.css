@@ -3,3 +3,7 @@
     padding-left: 15px;
     padding-right: 15px;
 }
+
+.searchbar input {
+	text-align: right;
+}

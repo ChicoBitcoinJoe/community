@@ -23,7 +23,7 @@ Community.run([ function() {
     console.log('Community booting up.');
 }]);
 
-Community.filter('capitalize', function() {  
+Community.filter('capitalize', function() {
     return function(input){
         if(input){
             if(input.indexOf(' ') !== -1){
