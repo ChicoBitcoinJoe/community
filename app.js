@@ -1,4 +1,4 @@
-var Community = angular.module('Community',['ngRoute','ngMaterial']);
+var Community = angular.module('Community',['ngRoute','ngMaterial','ngMessages','material.svgAssetsCache']);
 
 Community.config(function ($routeProvider) {
 	$routeProvider.
@@ -8,7 +8,7 @@ Community.config(function ($routeProvider) {
     }).
     when('/m/:multi', {
         templateUrl: 'views/homepage/homepageView.html',
-        controller: ''
+        controller: 'HomepageViewController'
     }).
     when('/c/:community', {
         templateUrl: 'views/homepage/homepageView.html',
@@ -17,6 +17,16 @@ Community.config(function ($routeProvider) {
 	otherwise({
       redirectTo: '/m/all'
     });
+});
+
+Community.config(function($mdThemingProvider) {
+     $mdThemingProvider
+    .theme('dark-theme')
+    .primaryPalette('blue-grey')
+    .accentPalette('amber')
+    .warnPalette('deep-orange')
+    .backgroundPalette('grey')
+    .dark();
 });
 
 Community.run([ function() {

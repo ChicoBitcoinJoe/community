@@ -3,7 +3,7 @@ function($mdSidenav, $location, ProfileDB) {
 	return {
 		restrict: 'E',
 		scope: {
-            
+            community:'='
 		},
 		replace: true,
 		templateUrl: 'directives/toolbar/toolbarDirective.html',
@@ -21,22 +21,22 @@ function($mdSidenav, $location, ProfileDB) {
             
             var url = $location.url().split('/');
             if(url[1] === 'm' || url[1] === 'c')
-                $scope.header = url[2];
+                $scope.community = url[2];
             else   
-                $scope.header = url[1];
+                $scope.community = url[1];
             
             $scope.viewType = url[1]
             
-            if($scope.viewType == 'c' && ProfileDB.communityIsSaved($scope.header))
+            if($scope.viewType == 'c' && ProfileDB.communityIsSaved($scope.community))
                 $scope.star = "star";
-            else if($scope.viewType == 'm' && ProfileDB.multiIsSaved($scope.header))
+            else if($scope.viewType == 'm' && ProfileDB.multiIsSaved($scope.community))
                 $scope.star = "star";
             else
                 $scope.star = "star_border";
             
             $scope.quickSave = function(){
                 if($scope.viewType == 'c'){
-                    ProfileDB.addCommunity($scope.header,'all');
+                    ProfileDB.addCommunity($scope.community,'all');
                     $scope.star = "star";
                 }
             }

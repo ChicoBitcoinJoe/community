@@ -20,7 +20,7 @@
     
 </head>
 <body ng-app="Community" ng-controller="SidenavController" layout="row">
-    <md-sidenav md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" class="md-whiteframe-4dp" layout="column">
+    <md-sidenav md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')" class="md-whiteframe-4dp" layout="column">
         <md-toolbar class="md-tall sidenavGreen sidenav-toolbar" layout="column">
             <h3 class="sidenav-community-header" layout="row">Community<span flex></span><span ng-click="toggle('left')" class="sidenav-close-button" hide-gt-md><md-icon>close</md-icon></span></h3>
             <span flex></span>
@@ -81,7 +81,10 @@
         </div>
     </md-sidenav>
     
-    <div ng-view layout="column" flex></div>
+    <div layout="column" flex>
+        <toolbar community="header"></toolbar>
+        <div ng-view layout="column" flex></div>
+    </div>
 
     <!-- Angular + Material Libraries -->
     <script src="angular-includes/angular-1.5.5.min.js"></script>
@@ -90,6 +93,7 @@
     <script src="angular-includes/angular-messages-1.5.5.min.js"></script>
     <script src="angular-includes/angular-material-1.1.0.min.js"></script>
     <script src="angular-includes/angular-route-1.5.5.min.js"></script>
+    <script src="angular-includes/angular-svg-assets-cache.js"></script>
     
     <!-- Other Libraries -->
     <script src="other-includes/web3.js"></script>

@@ -1,12 +1,14 @@
 <md-toolbar class="toolbar" layout="row" layout-align="left center">
-    <md-button hide-gt-md ng-click="toggleSidenav('left')"><md-icon>menu</md-icon></md-button>
-    &nbsp
-    <div layout="row" layout-align="left center">
-        <h4>{{header | capitalize}}</h4>
-        <md-button ng-click="quickSave()" ng-hide="viewType=='m'"><md-icon>{{star}}</md-icon></md-button>
-    </div>
+    <md-button hide-gt-md ng-click="toggleSidenav('left')" layout="row">
+        <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+        &nbsp
+        &nbsp
+        <h3 style="margin:0px;">{{community | capitalize}}</h3>
+    </md-button>
+    <md-button ng-click="quickSave()" ng-hide="viewType=='m'"><md-icon>{{star}}</md-icon></md-button>
     <span flex></span>
-    <input type="text" ng-show="showSearchbar" focus-on-show style="padding:4px;" ng-keyup="$event.keyCode == 13 && search()" ng-model="searchQuery" placeholder="Find A Community" aria-label="Find A Community">
+    <input type="text" ng-show="showSearchbar" focus-on-show style="padding:4px;" ng-keyup="$event.keyCode == 13 && search()" ng-model="searchQuery" placeholder="Find A Community" aria-label="Find A Community" flex>
     </div>
     <md-button ng-click="toggleSearch()"><md-icon>search</md-icon></md-button>
+    <md-button ng-click="toggleToolbarSettings = !toggleToolbarSettings"><md-icon >settings</md-icon></md-button>
 </md-toolbar>

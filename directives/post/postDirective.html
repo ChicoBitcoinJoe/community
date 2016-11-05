@@ -1,32 +1,26 @@
-<div class="post">
-    <md-card>
-        <div layout="column">
-            <md-card-header layout="row"> 
-                <md-card-avatar>
-                    <md-icon>face</md-icon>
-                </md-card-avatar>
-                <div layout="column">
-                    <md-card-header-text>ChicoBitcoinJoe</span>
-                        <span class="md-subhead"><small>posted to </small> Ethereum</span>
-                    </md-card-header-text>
+<md-card md-theme="dark-theme" layout="row" flex>
+    <div class="card-image-{{orientation}}" layout="{{layout}}" layout-align="center">
+        <img class="card-image" src="{{postUrl}}" alt="post image: {{postUrl}}">
+    </div>
+    <div layout="column" flex>
+        <md-card-title  style="padding-bottom:0px !important;">
+            <md-card-title-text><div style="max-height:143px; overflow:hidden">
+                Very eu much fugiat so dolore, very enim much reprehenderit such ut very padding. Such consequat much minim very pariatur so enim very ad very dolore.
                 </div>
-                <span flex></span>
-                <div class="post-score-color md-whiteframe-4dp" style="padding:6px;">
-                    <h4 style="margin:0px; color:white;">9001</h4>
-                </div>
-            </md-card-header>
-            <md-card-title>
-                <md-card-title-text>
-                    <span class=""><h4 style="margin:0px;">This is a Very Boring Posts Title. Hopefully I Can Get This to Look Good On Both Mobile. Sizing is Going to be Tricky!</h4></span>
-                </md-card-title-text>
-            </md-card-title>
-            <md-card-actions hide layout="row">
-                <md-button class="md-primary"><span><md-icon>favorite_border</md-icon><span hide show-gt-xs>Save</span></span></md-button>
-                <md-button class="md-primary"><span><md-icon>share</md-icon><span hide show-gt-xs>Share</span></span></md-button>
-                <md-button class="md-primary"><span><md-icon>comment</md-icon><span hide show-gt-xs>Comments</span></span></md-button>
-                <span flex></span>
-                <md-button class="md-primary"><span><md-icon> delete </md-icon><span hide show-gt-xs>Hide</span></span></md-button>
-            </md-card-actions>
-        </div> 
-    </md-card>
-</div>
+                <span class="md-subhead">Sub header</span>
+            </md-card-title-text>
+        </md-card-title>
+        <md-card-actions layout="row" layout-align="start center">
+            <md-card-icon-actions>
+                <md-button class="md-icon-button" aria-label="Favorite">
+                    <md-icon md-svg-icon="img/icons/favorite.svg"></md-icon>
+                </md-button>
+                <md-button class="md-icon-button" aria-label="Share">
+                    <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
+                </md-button>
+            </md-card-icon-actions>
+            <md-button>Action 1</md-button>
+            <md-button>Action 2</md-button>
+        </md-card-actions>
+    </div> 
+</md-card>

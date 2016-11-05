@@ -1,31 +1,5 @@
-<toolbar></toolbar>
-<div layout="row" flex>
-    <md-content layout="column" flex>
-        <post-card post-url="'images/chicobitcoinjoe.jpg'"></post-card>
-        <post-card post-url="'images/lady.jpg'"></post-card>
-        <post-card post-url="'images/chicobitcoinjoe.jpg'"></post-card>
-        <post-card post-url="'images/lady.jpg'"></post-card>
-        <post-card post-url="'images/chicobitcoinjoe.jpg'"></post-card>
-        <post-card post-url="'images/lady.jpg'"></post-card>
-        <post-card post-url="'images/chicobitcoinjoe.jpg'"></post-card>
-        <post-card post-url="'images/lady.jpg'"></post-card>
-        <post-card post-url="'images/chicobitcoinjoe.jpg'"></post-card>
-        <post-card post-url="'images/lady.jpg'"></post-card>
-        <post-card post-url="'images/chicobitcoinjoe.jpg'"></post-card>
-        <post-card post-url="'images/lady.jpg'"></post-card>
-    </md-content>
-    <md-content hide show-gt-xs layout="column" flex flex-gt-sm="60" flex-gt-xs="55">
-        <comment-card comment-url="'images/chicobitcoinjoe.jpg'"></comment-card>
-        <comment-card comment-url="'images/lady.jpg'"></comment-card>
-        <comment-card comment-url="'images/chicobitcoinjoe.jpg'"></comment-card>
-        <comment-card comment-url="'images/lady.jpg'"></comment-card>
-        <comment-card comment-url="'images/chicobitcoinjoe.jpg'"></comment-card>
-        <comment-card comment-url="'images/lady.jpg'"></comment-card>
-        <comment-card comment-url="'images/chicobitcoinjoe.jpg'"></comment-card>
-        <comment-card comment-url="'images/lady.jpg'"></comment-card>
-        <comment-card comment-url="'images/chicobitcoinjoe.jpg'"></comment-card>
-        <comment-card comment-url="'images/lady.jpg'"></comment-card>
-        <comment-card comment-url="'images/chicobitcoinjoe.jpg'"></comment-card>
-        <comment-card comment-url="'images/lady.jpg'"></comment-card>
-    </md-content>
-</div>
+<md-content>
+    
+    <post-card ng-repeat="imageUrl in imagePaths track by $index" post-url="imageUrl"></post-card>
+    
+</md-content>

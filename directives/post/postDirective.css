@@ -1,30 +1,40 @@
-.post md-card{
+md-card {
+    padding: 8px;
 }
 
-md-content {
-    background-color: #212121;
-}
-    
 md-card-title {
+    padding:0px !important;
+}
+
+md-card-title-text {
+    margin:0px;
+    padding:5px;
+}
+
+md-card-actions {
+    margin:0px !important;
+    padding-right: 5px;
+}
+
+.card-image-horizontal {
+    max-width: 152px;
+    width:152px;
+    padding: 5px;
+}
+
+.card-image-vertical {
+    max-width: 152px;
+    height: 152px;
+    padding: 5px;
+}
+
+.card-image{
+    max-height: 152px;
+    max-width: 152px;
+    overflow: hidden;
+}
+
+.md-subhead {
     padding-top: 0px !important;
-    padding-bottom: 5px !important;
+    color: rgba(255,255,255,0.5);
 }
-
-.post-score-color {
-    background-color: #79A8A6;
-    height: 20px;
-}
-
-.post-public-opinion {
-    background-color: #79A8A6;
-    height: 20px;
-}
-
-md-card-header {
-    padding: 10px !important;
-}
-
-md-card-title {
-    padding: 10px 10px 0px 10px !important;
-}
-
