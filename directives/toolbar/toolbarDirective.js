@@ -3,11 +3,13 @@ function($mdSidenav, $location, ProfileDB) {
 	return {
 		restrict: 'E',
 		scope: {
-            community:'='
+            community:'=',
+            viewType:'='
 		},
 		replace: true,
 		templateUrl: 'directives/toolbar/toolbarDirective.html',
 		controller: function($scope, $mdSidenav){
+            console.log($scope.community, $scope.viewType);
             $scope.toggleSidenav = function(id) { $mdSidenav(id).toggle(); };
 
             $scope.showSearchbar = false;
@@ -18,15 +20,7 @@ function($mdSidenav, $location, ProfileDB) {
                     $scope.searchQuery = null;
                 }
             }
-            
-            var url = $location.url().split('/');
-            if(url[1] === 'm' || url[1] === 'c')
-                $scope.community = url[2];
-            else   
-                $scope.community = url[1];
-            
-            $scope.viewType = url[1]
-            
+
             if($scope.viewType == 'c' && ProfileDB.communityIsSaved($scope.community))
                 $scope.star = "star";
             else if($scope.viewType == 'm' && ProfileDB.multiIsSaved($scope.community))

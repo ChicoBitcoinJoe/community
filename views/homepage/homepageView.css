@@ -1,0 +1,11 @@
+.card-video {
+    max-width: 200px;
+    width:200px;
+    height:14opx;
+    padding: 5px;
+    background-color: rgb(38,38,38);
+}
+
+.card-video iframe {
+    border-width: 0px;
+}

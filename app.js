@@ -2,10 +2,6 @@ var Community = angular.module('Community',['ngRoute','ngMaterial','ngMessages',
 
 Community.config(function ($routeProvider) {
 	$routeProvider.
-    when('/m/all', {
-        templateUrl: 'views/homepage/homepageView.html',
-        controller: ''
-    }).
     when('/m/:multi', {
         templateUrl: 'views/homepage/homepageView.html',
         controller: 'HomepageViewController'
