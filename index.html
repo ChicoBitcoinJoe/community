@@ -20,6 +20,7 @@
     
 </head>
 <body ng-app="Community" ng-controller="SidenavController" layout="row">
+    
     <md-sidenav md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')" class="md-whiteframe-4dp" layout="column">
         <md-toolbar class="md-tall sidenavGreen sidenav-toolbar" layout="column">
             <h3 class="sidenav-community-header" layout="row">Community<span flex></span><span ng-click="toggle('left')" class="sidenav-close-button" hide-gt-sm><md-icon>close</md-icon></span></h3>
@@ -85,6 +86,16 @@
         <toolbar community="activeView" view-type="viewType"></toolbar>
         <div ng-view layout="column" flex></div>
     </div>
+    
+    <md-sidenav md-theme="dark-theme" class="md-sidenav-right md-whiteframe-4dp" md-component-id="right" md-is-locked-open="$mdMedia('gt-md')" layout="column">
+        <md-toolbar class="md-theme-light">
+            <h1 class="md-toolbar-tools">Settings</h1>
+        </md-toolbar>
+        <md-content>
+            
+        </md-content>
+    </md-sidenav>
+    
 
     <!-- Angular + Material Libraries -->
     <script src="angular-includes/angular-1.5.5.min.js"></script>

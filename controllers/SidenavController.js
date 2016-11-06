@@ -39,4 +39,5 @@ function($scope, $mdSidenav, $location, ProfileDB) {
         ProfileDB.deleteMulti(multiName);
         $scope.multis = ProfileDB.getSavedMultis();
     }
+    
 }]);

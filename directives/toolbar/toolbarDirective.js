@@ -10,14 +10,17 @@ function($mdSidenav, $location, ProfileDB) {
 		templateUrl: 'directives/toolbar/toolbarDirective.html',
 		controller: function($scope, $mdSidenav){
             console.log($scope.community, $scope.viewType);
+            
             $scope.toggleSidenav = function(id) { $mdSidenav(id).toggle(); };
-
+            
+            
             $scope.showSearchbar = false;
-            $scope.toggleSearch = function(id) { $scope.showSearchbar = !$scope.showSearchbar };
+            $scope.toggleSearchbar = function() { $scope.showSearchbar = !$scope.showSearchbar };
             $scope.search = function(){
                 if($scope.searchQuery){
                     $location.path("/c/"+$scope.searchQuery.toLowerCase());
                     $scope.searchQuery = null;
+                    $scope.toggleSearchbar();
                 }
             }
 
