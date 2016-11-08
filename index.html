@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="views/homepage/homepageView.css">
+    <link rel="stylesheet" href="views/community/communityView.css">
     <link rel="stylesheet" href="sidenav.css">
     <link rel="stylesheet" href="directives/toolbar/toolbarDirective.css">
     <link rel="stylesheet" href="directives/post/postDirective.css">
@@ -21,12 +21,12 @@
 </head>
 <body ng-app="Community" ng-controller="SidenavController" layout="row">
     
-    <md-sidenav md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')" class="md-whiteframe-4dp" layout="column">
+    <md-sidenav md-theme="dark-theme" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')" class="md-whiteframe-4dp" layout="column">
         <md-toolbar class="md-tall sidenavGreen sidenav-toolbar" layout="column">
-            <h3 class="sidenav-community-header" layout="row">Community<span flex></span><span ng-click="toggle('left')" class="sidenav-close-button" hide-gt-sm><md-icon>close</md-icon></span></h3>
+            <h3 class="sidenav-community-header" layout="row">Community<span flex></span><span ng-click="toggle('left')" class="sidenav-close-button" hide-gt-sm><md-icon md-svg-src="images/icons/ic_close_white_24px"></md-icon></span></h3>
             <span flex></span>
             <div class="user-account-color md-whiteframe-4dp" layout="row" layout-align="left center" style="padding:5px; margin-bottom:10px;">
-                &nbsp<md-icon>face</md-icon>
+                &nbsp<md-icon md-svg-src="images/icons/ic_face_white_24px.svg"></md-icon>
                 <div layout="column" flex>
                     <h5 style="margin: 4px 0px 0px 10px; overflow:hidden; white-space:nowrap; text-overflow: ellipsis;">{{username}}</h5>
                     <div class="md-subhead" style="margin: 0px 0px 0px 10px; overflow:hidden; white-space:nowrap; text-overflow: ellipsis;" flex>{{account}}</div>
@@ -37,7 +37,7 @@
             <div class="sidenav-header" layout="row">
                 <h3 class="sidenav-header-text">Multis</h3>
                 <span flex></span>
-                <md-button class="sidenav-settings-button" ng-click="toggleSettings = !toggleSettings"><md-icon>settings</md-icon></md-button>
+                <md-button class="sidenav-settings-button" ng-click="toggleSettings = !toggleSettings"><md-icon md-svg-src="images/icons/ic_settings_white_24px.svg"></md-icon></md-button>
             </div>
             <md-list >
                 <div class="sidenav-list-item" ng-show="toggleSettings">
@@ -47,12 +47,12 @@
                             <input style="height:36px;" type="text" ng-model="newMulti">
                         </div>
                         <span flex></span>
-                        <md-button style="margin:0px;" ng-click="createMulti(newMulti)"><md-icon>add_box</md-icon></md-button>
+                        <md-button style="margin:0px;" ng-click="createMulti(newMulti)"><md-icon md-svg-src="images/icons/ic_add_box_white_24px.svg"></md-icon></md-button>
                     </md-input-container>
                 </div>
                 <div class="sidenav-list-item" ng-class="{selected: (multi==activeView && viewType=='m')}" ng-repeat="multi in multis" layout="row">
                     <a style="height:36;" ng-href="#/m/{{multi}}" layout layout-align="left center" flex>{{multi | capitalize}}</a>
-                    <md-button ng-show="toggleSettings && multi !== 'all' && multi !== 'ungrouped'" style="margin:0px;" ng-click="deleteMulti(multi)"><md-icon> indeterminate_check_box </md-icon></md-button>
+                    <md-button ng-show="toggleSettings && multi !== 'all' && multi !== 'ungrouped'" style="margin:0px;" ng-click="deleteMulti(multi)"><md-icon md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg"></md-icon></md-button>
                 </div>
             </md-list>
             <br>
@@ -67,12 +67,12 @@
                             <input style="height:36px;" type="text" ng-model="newCommunity">
                         </div>
                         <span flex></span>
-                        <md-button style="margin:0px;" ng-click="addCommunity(newCommunity)"><md-icon>add_box</md-icon></md-button>
+                        <md-button style="margin:0px;" ng-click="addCommunity(newCommunity)"><md-icon md-svg-src="images/icons/ic_add_box_white_24px.svg"></md-button>
                     </md-input-container>
                 </div>
                 <div ng-hide="viewType == 'c'" class="sidenav-list-item" ng-repeat="community in communities" layout="row">
                     <a style="height:36px;" ng-href="#/c/{{community}}" layout layout-align="left center" flex>{{community | capitalize}}</a>
-                    <md-button ng-show="toggleSettings && activeView !== 'all'" style="margin:0px;" ng-click="removeCommunity(community)"><md-icon> indeterminate_check_box </md-icon></md-button>
+                    <md-button ng-show="toggleSettings && activeView !== 'all'" style="margin:0px;" ng-click="removeCommunity(community)"><md-icon md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg"></md-button>
                 </div>
             </md-list>
         </md-content>
@@ -115,7 +115,8 @@
     <script src="services/LinkDB.js"></script>
     <script src="services/ProfileDB.js"></script>
     
-    <script src="views/homepage/homepageViewController.js"></script>
+    <script src="views/community/communityViewController.js"></script>
+    <script src="views/multi/multiViewController.js"></script>
     
     <script src="controllers/SidenavController.js"></script>
     
@@ -123,6 +124,8 @@
     <script src="directives/post/postDirective.js"></script>
     <script src="directives/comment/commentDirective.js"></script>
     <script src="directives/focus-on-show/focusOnShowDirective.js"></script>
+    <script src="directives/create-community/createCommunityDirective.js"></script>
+    <script src="directives/submit-post/submitPostDirective.js"></script>
             
 </body>
 </html>

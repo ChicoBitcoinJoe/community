@@ -3,15 +3,15 @@ var Community = angular.module('Community',['ngRoute','ngMaterial','ngMessages',
 Community.config(function ($routeProvider) {
 	$routeProvider.
     when('/m/:multi', {
-        templateUrl: 'views/homepage/homepageView.html',
-        controller: 'HomepageViewController'
+        templateUrl: 'views/multi/multiView.html',
+        controller: 'MultiViewController'
     }).
     when('/c/:community', {
-        templateUrl: 'views/homepage/homepageView.html',
-        controller: ''
+        templateUrl: 'views/community/communityView.html',
+        controller: 'CommunityViewController'
     }).
 	otherwise({
-      redirectTo: '/m/all'
+      redirectTo: '/c/all'
     });
 });
 
@@ -25,8 +25,14 @@ Community.config(function($mdThemingProvider) {
     .dark();
 });
 
-Community.run([ function() {
+Community.run(['$rootScope','$location', function($rootScope,$location) {
     console.log('Community booting up.');
+    
+    $rootScope.$on('$routeChangeSuccess', function() {
+        var locationUrlArray = $location.url().split('/');
+        $rootScope.header = locationUrlArray[2];
+        $rootScope.$broadcast('headerChange',$rootScope.header);
+    });
 }]);
 
 Community.filter('capitalize', function() {

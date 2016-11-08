@@ -1,15 +1,26 @@
 <md-toolbar class="toolbar" layout="row" layout-align="left center">
     <md-button hide-gt-sm ng-click="toggleSidenav('left')" layout="row">
-        <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+        <md-icon md-svg-src="images/icons/ic_menu_white_24px.svg"></md-icon>
     </md-button>
     &nbsp
     <h3 style="margin:0px;">{{community | capitalize}}</h3>
-    <md-button ng-click="quickSave()" ng-hide="viewType=='m'"><md-icon>{{star}}</md-icon></md-button>
+    <md-button ng-click="quickSave()" ng-hide="viewType=='m'">
+        <md-icon md-svg-src="images/icons/ic_{{star}}_white_24px.svg">settings</md-icon>
+    </md-button>
     <span flex></span>
-    <input style="min-width:200px;" type="text" ng-show="showSearchbar" focus-on-show style="padding:4px;" ng-keyup="$event.keyCode == 13 && search()" ng-model="searchQuery" placeholder="Find A Community" aria-label="Find A Community" flex>
-    </div>
-    <md-button ng-show="showSearchbar" ng-click="search(searchQuery)"><md-icon>search</md-icon></md-button>
-    <md-button ng-show="showSearchbar" ng-click="toggleSearchbar()"><md-icon>close</md-icon></md-button>
-    <md-button ng-show="!showSearchbar" ng-click="toggleSearchbar()"><md-icon>search</md-icon></md-button>
-    <md-button hide-gt-md ng-click="toggleSidenav('right')"><md-icon >settings</md-icon></md-button>
+    <md-button ng-show="showSearchbar" ng-click="search(searchQuery)">
+        <md-icon md-svg-src="images/icons/ic_search_white_24px.svg">settings</md-icon>
+    </md-button>
+    <md-input-container md-theme="dark-theme" style="top:12px; margin:0px;" md-no-float class="md-block" layout="row" layout-align="left center">
+        <input type="text" ng-show="showSearchbar" focus-on-show style="padding:4px;" ng-keyup="$event.keyCode == 13 && search()" ng-model="searchQuery" placeholder="Find A Community" aria-label="Find A Community" flex>
+    </md-input-container>
+    <md-button ng-show="showSearchbar" ng-click="toggleSearchbar()">
+        <md-icon md-svg-src="images/icons/ic_close_white_24px.svg">settings</md-icon>
+    </md-button>
+    <md-button ng-show="!showSearchbar" ng-click="toggleSearchbar()">
+        <md-icon md-svg-src="images/icons/ic_search_white_24px.svg">settings</md-icon>
+    </md-button>
+    <md-button hide-gt-md ng-click="toggleSidenav('right')">
+        <md-icon md-svg-src="images/icons/ic_settings_white_24px.svg">settings</md-icon>
+    </md-button>
 </md-toolbar>

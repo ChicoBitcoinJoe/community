@@ -11,8 +11,24 @@ function($mdSidenav, $location, ProfileDB) {
 		controller: function($scope, $mdSidenav){
             console.log($scope.community, $scope.viewType);
             
-            $scope.toggleSidenav = function(id) { $mdSidenav(id).toggle(); };
+            if($scope.viewType == 'c' && ProfileDB.communityIsSaved($scope.community))
+                $scope.star = "star";
+            else if($scope.viewType == 'm' && ProfileDB.multiIsSaved($scope.community))
+                $scope.star = "star";
+            else
+                $scope.star = "star_border";
             
+            $scope.$on('headerChange', function(event, newHeader) {
+                $scope.community = newHeader;
+                if($scope.viewType == 'c' && ProfileDB.communityIsSaved($scope.community))
+                    $scope.star = "star";
+                else if($scope.viewType == 'm' && ProfileDB.multiIsSaved($scope.community))
+                    $scope.star = "star";
+                else
+                    $scope.star = "star_border";
+            });
+            
+            $scope.toggleSidenav = function(id) { $mdSidenav(id).toggle(); };
             
             $scope.showSearchbar = false;
             $scope.toggleSearchbar = function() { $scope.showSearchbar = !$scope.showSearchbar };
@@ -24,13 +40,6 @@ function($mdSidenav, $location, ProfileDB) {
                 }
             }
 
-            if($scope.viewType == 'c' && ProfileDB.communityIsSaved($scope.community))
-                $scope.star = "star";
-            else if($scope.viewType == 'm' && ProfileDB.multiIsSaved($scope.community))
-                $scope.star = "star";
-            else
-                $scope.star = "star_border";
-            
             $scope.quickSave = function(){
                 if($scope.viewType == 'c'){
                     ProfileDB.addCommunity($scope.community,'all');

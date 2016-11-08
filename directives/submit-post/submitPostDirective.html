@@ -1,0 +1,69 @@
+<div>
+    <md-card md-theme="dark-theme" layout="column">
+        <form style="margin:0px;">
+            <h3 layout="row" layout-align="center center">Submit Post</h3>
+            <md-radio-group ng-model="newPost.postType" layout="row" layout-align="center center">
+                <md-radio-button value="self">self</md-radio-button>
+                <md-radio-button value="web"> Link </md-radio-button>
+                <md-radio-button value="image">image</md-radio-button>
+                <md-radio-button value="video">video</md-radio-button>
+                <md-radio-button value="audio">audio</md-radio-button>
+                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                <md-radio-button ng-show="newPost.postType !== 'null'" value="null">Clear</md-radio-button>
+            </md-radio-group>
+            <br>
+            <md-input-container ng-show="newPost.postType !== 'null'" class="md-block">
+                <label>Title</label>
+                <input ng-model="newPost.postTitle">
+            </md-input-container>
+            <md-input-container ng-show="newPost.postType !== 'null' && newPost.postType !== 'self'" class="md-block">
+                <label>{{newPost.postType | capitalize}} Link</label>
+                <input ng-model="newPost.postLink">
+            </md-input-container>
+            <md-input-container ng-show="newPost.postType !== 'null'" class="md-block">
+                <label>Comment:</label>
+                <textarea ng-model="newPost.postComment" md-maxlength="15000" rows="5" md-select-on-focus></textarea>
+            </md-input-container>
+        </form>
+    </md-card>
+    
+    <div ng-show="newPost.postType !== 'null'" layout layout-align="center center" style="color:rgba(255,255,255,0.87)">
+        <h4>- start preview -</h4>
+    </div>
+    
+    <md-card ng-show="newPost.postType !== 'null'" md-theme="dark-theme" layout="row" flex>
+        <div ng-if="newPost.postType == 'image'" class="card-image-{{orientation}}" layout="{{layout}}" layout-align="center">
+            <img class="card-image" src="{{newPost.postLink}}" alt="post image: {{newPost.postLink}}">
+        </div>
+        <div layout="column" flex>
+            <md-card-title  style="padding-bottom:0px !important;">
+                <md-card-title-text><div style="max-height:143px; overflow:hidden">
+                    {{newPost.postTitle}}<small style="color:rgba(255,255,255,0.5)">
+                    &nbsp {{newPost.postType}}
+                    &nbsp <span ng-show="newPost.postType !== 'self'">{{newPost.postLink}}</span></small>
+                    </div>
+                    <span class="md-subhead">{{newPost.postCommunity}}</span>
+                </md-card-title-text>
+            </md-card-title>
+            <md-card-actions layout="row" layout-align="start center">
+                <md-card-icon-actions>
+                    <md-button class="md-icon-button" aria-label="Favorite">
+                        <md-icon md-svg-icon="img/icons/favorite.svg"></md-icon>
+                    </md-button>
+                    <md-button class="md-icon-button" aria-label="Share">
+                        <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
+                    </md-button>
+                </md-card-icon-actions>
+                <md-button>Click here to Post</md-button>
+            </md-card-actions>
+        </div>
+        <div ng-if="newPost.postType == 'video'" class="card-video" layout="column" layout-align="center">
+            <iframe width="190" height="120" src=""></iframe><!-- https://www.youtube.com/v/xSGW7CwD5GM&rel=0" -->
+        </div>
+    </md-card>
+    
+    <div ng-show="newPost.postType !== 'null'" layout layout-align="center center" style="color:rgba(255,255,255,0.87)">
+        <h4>- end preview -</h4>
+    </div>
+    
+</div>

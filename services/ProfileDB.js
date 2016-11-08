@@ -182,6 +182,8 @@ Community.service( 'ProfileDB',['$q','$window', function (LinkDB,$q,$window) {
                     if(index != "-1"){
                         ProfileDB.SavedMultis['all'].splice(index, 1);
                         console.log("Deleted " + communityName + " from " + 'all');
+                        
+                        saveProfile();
                         return true;
                     }
                 } else {
@@ -209,11 +211,10 @@ Community.service( 'ProfileDB',['$q','$window', function (LinkDB,$q,$window) {
                             console.log("Added " + communityName + " to 'ungrouped'");
                         }
                         
+                        saveProfile();
                         return true;
                     }
                 }
-                
-                saveProfile();
             }
             
             return false;

@@ -26,3 +26,11 @@ contract Link {
         return shardList[shardName];
     }
 }
+
+contract Shard{
+    event Broadcast_event(string metadata);
+
+    function broadcast(string metadata){
+        Broadcast_event(metadata);
+    }
+}
