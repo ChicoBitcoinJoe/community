@@ -1,4 +1,4 @@
-Community.directive('submitPost', [ function() {
+Community.directive('submitPost', ['ProfileDB','$location','Community', function(ProfileDB,$location, Community) {
 	return {
 		restrict: 'E',
 		scope: {
@@ -8,11 +8,12 @@ Community.directive('submitPost', [ function() {
 		templateUrl: 'directives/submit-post/submitPostDirective.html',
 		controller: function($scope){
             $scope.newPost = {
-                postType:'null',
-                postTitle:'Very eu much fugiat so dolore, very enim much reprehenderit such ut very padding. Such consequat much minim very pariatur so enim very ad very dolore.',
+                poster: ProfileDB.getCurrentAccount(),
+                postType: 'null',
+                postTitle: '',
                 postCommunity: $scope.community,
-                postLink:'https://insert-your-link-here.com/reallycoollink.link',
-                postComment:'Not sure if 15000 is enough space for a comment. Maybe I should get rid of limit?'
+                postLink: '',
+                postComment: ''
             };
             
             var pictureCheckInterval = setInterval(function() {
@@ -34,6 +35,20 @@ Community.directive('submitPost', [ function() {
                     $scope.img.src = $scope.newPost.postLink;
                 }
             }, 1000);
+            
+            $scope.submitPost = function(){
+                console.log($scope.newPost);
+                Community.submitPost($scope.newPost).then(
+                function(txHash){
+                    if(txHash){
+                        $location.url('c/'+ $scope.community + /tx/ + txHash);
+                    } else {
+                        console.log('Not a valid post. Aborting.');
+                    }
+                }, function(error){
+                    console.error(err);
+                });
+            };
         },
 		link : function($scope, element, attrs) {
             

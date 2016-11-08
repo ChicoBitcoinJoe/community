@@ -5,7 +5,6 @@ This is an implementation of Community using Material Design. This will probably
 
 - General
     - web3 injected by MetaMask still loading late sometimes (critical)
-    - md-icons need to be saved locally (critical)
     
 - Commnity Sidenav
     - Turn into directive (noncritical)
@@ -31,7 +30,7 @@ This is an implementation of Community using Material Design. This will probably
     
 - LinkDB.js (critical)
     - Finalize contracts
-    - Single community posts
-    - Multi community posts
-    
-    
+    - Single community support
+    - Multi community support
+
+

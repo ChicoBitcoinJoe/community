@@ -7,8 +7,8 @@
     
     <!-- Angular Material style sheet -->
     <link rel="stylesheet" href="angular-includes/angular-material-1.1.0.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="other-includes/googleapis-fonts/material-icons.css">
+    <link rel="stylesheet" href="other-includes/googleapis-fonts/roboto.css">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="views/community/communityView.css">
     <link rel="stylesheet" href="sidenav.css">
@@ -37,7 +37,7 @@
             <div class="sidenav-header" layout="row">
                 <h3 class="sidenav-header-text">Multis</h3>
                 <span flex></span>
-                <md-button class="sidenav-settings-button" ng-click="toggleSettings = !toggleSettings"><md-icon md-svg-src="images/icons/ic_settings_white_24px.svg"></md-icon></md-button>
+                <md-button class="sidenav-settings-button" ng-click="toggleSettings = !toggleSettings" aria-label="settings"><md-icon md-svg-src="images/icons/ic_settings_white_24px.svg"></md-icon></md-button>
             </div>
             <md-list >
                 <div class="sidenav-list-item" ng-show="toggleSettings">
@@ -47,12 +47,12 @@
                             <input style="height:36px;" type="text" ng-model="newMulti">
                         </div>
                         <span flex></span>
-                        <md-button style="margin:0px;" ng-click="createMulti(newMulti)"><md-icon md-svg-src="images/icons/ic_add_box_white_24px.svg"></md-icon></md-button>
+                        <md-button style="margin:0px;" ng-click="createMulti(newMulti)" aria-label="create multi"><md-icon md-svg-src="images/icons/ic_add_box_white_24px.svg"></md-icon></md-button>
                     </md-input-container>
                 </div>
                 <div class="sidenav-list-item" ng-class="{selected: (multi==activeView && viewType=='m')}" ng-repeat="multi in multis" layout="row">
                     <a style="height:36;" ng-href="#/m/{{multi}}" layout layout-align="left center" flex>{{multi | capitalize}}</a>
-                    <md-button ng-show="toggleSettings && multi !== 'all' && multi !== 'ungrouped'" style="margin:0px;" ng-click="deleteMulti(multi)"><md-icon md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg"></md-icon></md-button>
+                    <md-button ng-show="toggleSettings && multi !== 'all' && multi !== 'ungrouped'" style="margin:0px;" ng-click="deleteMulti(multi)" aria-label="remove multi"><md-icon md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg"></md-icon></md-button>
                 </div>
             </md-list>
             <br>
@@ -67,12 +67,12 @@
                             <input style="height:36px;" type="text" ng-model="newCommunity">
                         </div>
                         <span flex></span>
-                        <md-button style="margin:0px;" ng-click="addCommunity(newCommunity)"><md-icon md-svg-src="images/icons/ic_add_box_white_24px.svg"></md-button>
+                        <md-button style="margin:0px;" ng-click="addCommunity(newCommunity)" aria-label="add community"><md-icon md-svg-src="images/icons/ic_add_box_white_24px.svg"></md-button>
                     </md-input-container>
                 </div>
                 <div ng-hide="viewType == 'c'" class="sidenav-list-item" ng-repeat="community in communities" layout="row">
                     <a style="height:36px;" ng-href="#/c/{{community}}" layout layout-align="left center" flex>{{community | capitalize}}</a>
-                    <md-button ng-show="toggleSettings && activeView !== 'all'" style="margin:0px;" ng-click="removeCommunity(community)"><md-icon md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg"></md-button>
+                    <md-button ng-show="toggleSettings && activeView !== 'all'" style="margin:0px;" ng-click="removeCommunity(community)" aria-label="remove community"><md-icon md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg"></md-button>
                 </div>
             </md-list>
         </md-content>
@@ -91,8 +91,8 @@
         <md-toolbar class="md-theme-light">
             <h1 class="md-toolbar-tools">Settings</h1>
         </md-toolbar>
-        <md-content>
-            
+        <md-content layout-padding="5">
+            <p>Soon(tm)</p>
         </md-content>
     </md-sidenav>
     
@@ -108,12 +108,15 @@
     
     <!-- Other Libraries -->
     <script src="other-includes/web3.js"></script>
+    <script src="other-includes/ipfs.js"></script>
     
     <!-- Application Files  -->
     <script src="app.js"></script>
     
+    <script src="services/Community.js"></script>
     <script src="services/LinkDB.js"></script>
     <script src="services/ProfileDB.js"></script>
+    <script src="services/ipfsService.js"></script>
     
     <script src="views/community/communityViewController.js"></script>
     <script src="views/multi/multiViewController.js"></script>

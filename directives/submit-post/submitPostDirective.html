@@ -3,18 +3,18 @@
         <form style="margin:0px;">
             <h3 layout="row" layout-align="center center">Submit Post</h3>
             <md-radio-group ng-model="newPost.postType" layout="row" layout-align="center center">
-                <md-radio-button value="self">self</md-radio-button>
+                <md-radio-button value="self">Self</md-radio-button>
                 <md-radio-button value="web"> Link </md-radio-button>
-                <md-radio-button value="image">image</md-radio-button>
-                <md-radio-button value="video">video</md-radio-button>
-                <md-radio-button value="audio">audio</md-radio-button>
-                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                <md-radio-button value="image">Image</md-radio-button>
+                <md-radio-button value="video">Video</md-radio-button>
+                <md-radio-button value="audio">Audio</md-radio-button>
+                <span ng-show="newPost.postType !== 'null'">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
                 <md-radio-button ng-show="newPost.postType !== 'null'" value="null">Clear</md-radio-button>
             </md-radio-group>
             <br>
             <md-input-container ng-show="newPost.postType !== 'null'" class="md-block">
                 <label>Title</label>
-                <input ng-model="newPost.postTitle">
+                <input ng-model="newPost.postTitle" placeholder="Check your spelling!">
             </md-input-container>
             <md-input-container ng-show="newPost.postType !== 'null' && newPost.postType !== 'self'" class="md-block">
                 <label>{{newPost.postType | capitalize}} Link</label>
@@ -22,7 +22,7 @@
             </md-input-container>
             <md-input-container ng-show="newPost.postType !== 'null'" class="md-block">
                 <label>Comment:</label>
-                <textarea ng-model="newPost.postComment" md-maxlength="15000" rows="5" md-select-on-focus></textarea>
+                <textarea ng-model="newPost.postComment" md-maxlength="15000" rows="5" placeholder="Be polite when interacting with others." md-select-on-focus></textarea>
             </md-input-container>
         </form>
     </md-card>
@@ -54,7 +54,7 @@
                         <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
                     </md-button>
                 </md-card-icon-actions>
-                <md-button>Click here to Post</md-button>
+                <md-button ng-click="submitPost()">Click here to Post</md-button>
             </md-card-actions>
         </div>
         <div ng-if="newPost.postType == 'video'" class="card-video" layout="column" layout-align="center">

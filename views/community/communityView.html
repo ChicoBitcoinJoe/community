@@ -1,5 +1,5 @@
 <md-content layout="column" flex>
-    <create-community ng-show="!created && loaded" created="created"></create-community>
+    <create-community ng-show="!created && loaded" community="activeView"></create-community>
     <submit-post ng-show="created" community="activeView"></submit-post>
     <div ng-repeat="post in posts track by $index" ng-show="created">
         <post-card post="post"></post-card>

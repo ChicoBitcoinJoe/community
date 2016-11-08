@@ -10,8 +10,12 @@ Community.config(function ($routeProvider) {
         templateUrl: 'views/community/communityView.html',
         controller: 'CommunityViewController'
     }).
+    when('/c/:community/tx/:txHash', {
+        templateUrl: 'views/community/communityView.html',
+        controller: 'CommunityViewController'
+    }).
 	otherwise({
-      redirectTo: '/c/all'
+      redirectTo: '/c/community'
     });
 });
 
@@ -30,8 +34,8 @@ Community.run(['$rootScope','$location', function($rootScope,$location) {
     
     $rootScope.$on('$routeChangeSuccess', function() {
         var locationUrlArray = $location.url().split('/');
-        $rootScope.header = locationUrlArray[2];
-        $rootScope.$broadcast('headerChange',$rootScope.header);
+        $rootScope.activeView = locationUrlArray[2];
+        $rootScope.$broadcast('headerChange',$rootScope.activeView);
     });
 }]);
 

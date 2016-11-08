@@ -1,4 +1,4 @@
-Community.service( 'ProfileDB',['$q','$window', function (LinkDB,$q,$window) {
+Community.service( 'ProfileDB',['$q', function (LinkDB,$q) {
     console.log('Loading ProfileDB account ');
     var ProfileDB = null;
     var currentAccount;
@@ -21,7 +21,7 @@ Community.service( 'ProfileDB',['$q','$window', function (LinkDB,$q,$window) {
         }
         
         if (web3.eth.accounts[0] !== currentAccount)
-            $window.location.reload();
+            window.location.reload();
     }, 100);
     
     var saveProfile = function(){
