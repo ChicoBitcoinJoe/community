@@ -1,18 +1,30 @@
-Community.controller('CommunityViewController', ['$scope','Community',
-function($scope, Community) {
-    console.log('Loading community View: ' + $scope.activeView);
+Community.controller('CommunityViewController', ['$scope','Community','ProfileDB',
+function($scope, Community, ProfileDB) {
+    console.log('Loading community view: ' + $scope.activeView);
     
     $scope.posts = [];
     $scope.created = false;
-    var asyncGetPosts = Community.getPosts($scope.activeView).then(
-    function(created){
-        if(created){
-            $scope.created = true;
-            $scope.posts = created;
-        } else {
-            $scope.loaded = true;
+    
+    var communities = [];
+    if($scope.viewType === 'c'){
+        var asyncGetPosts = Community.getPosts($scope.activeView).then(
+        function(created){
+            //console.log(created);
+            if(created){
+                $scope.created = true;
+                $scope.posts = created;
+            } else {
+                $scope.loaded = true;
+            }
+        }, function(err){
+            console.error(err);
+        });
+    } else if($scope.viewType === 'm'){
+        var communities = ProfileDB.getCommunitiesInMulti($scope.activeView);
+        $scope.posts = {};
+        for(var community in communities){
+            console.log(community);
         }
-    }, function(err){
-        console.error(err);
-    });
+    }
+        
 }]);

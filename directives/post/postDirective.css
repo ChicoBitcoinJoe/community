@@ -32,6 +32,7 @@ md-card-actions {
     max-height: 152px;
     max-width: 152px;
     overflow: hidden;
+    padding-right: 3px;
 }
 
 .md-subhead {

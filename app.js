@@ -34,6 +34,7 @@ Community.run(['$rootScope','$location', function($rootScope,$location) {
     
     $rootScope.$on('$routeChangeSuccess', function() {
         var locationUrlArray = $location.url().split('/');
+        $rootScope.viewType = locationUrlArray[1];
         $rootScope.activeView = locationUrlArray[2];
         $rootScope.$broadcast('headerChange',$rootScope.activeView);
     });
@@ -60,3 +61,9 @@ Community.filter('capitalize', function() {
         };
     }
 });
+
+Community.filter('trustAsResourceUrl', ['$sce', function($sce) {
+    return function(val) {
+        return $sce.trustAsResourceUrl(val);
+    };
+}]);

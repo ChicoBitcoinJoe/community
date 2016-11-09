@@ -5,14 +5,14 @@ Community.service( 'IpfsService',['$q','$sce', function ($q,$sce) {
 	var service = {
 		getIpfsData: function (ipfsHash) {
             var deferred = $q.defer();
-            console.log(ipfsHash);
+            //console.log(ipfsHash);
             var post = ipfs.catJson(ipfsHash, function(err, ipfsData) {
                 if(err || !ipfsData){ 
                     deferred.reject(err);
                 } else {
+                    //console.log(ipfsData);
                     deferred.resolve(ipfsData);
                 }
-    
             });
             //$sce.trustAsResourceUrl(data)
             return deferred.promise;

@@ -36,6 +36,12 @@ Community.service('LinkDB', ['$q', function ($q) {
         localStorage.setItem('LinkDB',JSON.stringify(LinkDB));
     }
     
+    var storePost = function(shardName,event){
+        if(!LinkDB.Broadcast_events[shardName])
+            LinkDB.Broadcast_events[shardName] = {events:{}};
+        
+        LinkDB.Broadcast_events[shardName].events[event.args.metadata] = event;        
+    }
     
     var saveLinkDB = function(){
         localStorage.setItem('LinkDB',JSON.stringify(LinkDB));
@@ -91,8 +97,6 @@ Community.service('LinkDB', ['$q', function ($q) {
             if(!LinkDB.Broadcast_events[shardName])
                 LinkDB.Broadcast_events[shardName] = {events:{}};
             
-            //Add event listener to populate events
-            
             return LinkDB.Broadcast_events[shardName].events;
         },
         getShardAddress: function(shardName){
@@ -123,17 +127,19 @@ Community.service('LinkDB', ['$q', function ($q) {
             return Shard;
         },
         getFromBlock: function(shardName){
+            if(!LinkDB.Broadcast_events[shardName])
+                LinkDB.Broadcast_events[shardName] = {lastBlock:null, events:{}};
+            
             var deferred = $q.defer();
-            var fromBlock = LinkDB.Broadcast_events[shardName].lastBlock;
-            if(fromBlock){
-                deferred.resolve(fromBlock);
-            } else {
-                service.getShardAddress(shardName).then(
-                function(shardAddress){
+            service.getShardAddress(shardName).then(
+            function(shardAddress){
+                if(!shardAddress)
+                    deferred.resolve(false);
+                else {
                     var ShardInstance = ShardContract.at(shardAddress);
                     ShardInstance.getShardInfo( function(error, info){
                         if(!error){
-                            console.log(info);
+                            //console.log(info);
                             LinkDB.Broadcast_events[shardName].lastBlock = info[1].c[0];
                             saveLinkDB();
                             deferred.resolve(info[1].c[0]);
@@ -141,23 +147,15 @@ Community.service('LinkDB', ['$q', function ($q) {
                             deferred.reject(error);
                         }
                     });
-                }, function(err){
-                    console.error(err);
-                });
-            }
+                }
+            },function(err){
+                deferred.reject(err);
+            });
             
             return deferred.promise;
         },
         storeEvent: function(shardName, event){
-            if(event.event === 'Broadcast_event'){
-                //console.log('Post_event',event);
-                //console.log("shardName,event: " + shardName, event);
-                storePost(event,shardName);
-            } else if(event.event === 'Vote_event'){
-                //console.log('Post_event',event);
-                storeVote(event);
-            }
-                
+            storePost(shardName,event);
             //save changes to local storage
             saveLinkDB();
         },

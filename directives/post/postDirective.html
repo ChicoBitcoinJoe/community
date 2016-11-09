@@ -1,13 +1,23 @@
 <md-card md-theme="dark-theme" layout="row" flex>
-    <div ng-if="post.postType == 'image'" class="card-image-{{orientation}}" layout="{{layout}}" layout-align="center">
-        <img class="card-image" src="{{post.postLink}}" alt="post image: {{post.postLink}}">
+    <div ng-if="post.postType == 'image'" class="card-image-{{orientation}}" layout="{{layout}}" layout-align="top center">
+        <img class="card-image" ng-src="{{imageSource}}" alt="post image: {{post.postLink}}">
     </div>
     <div layout="column" flex>
         <md-card-title  style="padding-bottom:0px !important;">
-            <md-card-title-text><div style="max-height:143px; overflow:hidden">
-                {{post.postTitle}}<small style="color:rgba(255,255,255,0.5)">&nbsp {{post.postLink}}</small>
+            <md-card-title-text>
+                <div style="max-height:143px; overflow:hidden">
+                    <h4 style="margin:0px;margin-bottom:4px;">{{post.postTitle}}<small style="color:rgba(255,255,255,0.5)">
+                    &nbsp {{post.postType}}
+                    &nbsp <span ng-show="post.postType !== 'self'">{{post.postLink}}</span></small></h4>
                 </div>
-                <span class="md-subhead">{{post.postCommunity}}</span>
+                <div layout="row" ng-show="post.poster">
+                    <h5 style="margin:0px; line-height: 16px;">
+                        Posted by &nbsp
+                        <span style="line-height: 16px;" class="md-subhead">{{post.poster}}</span>
+                        &nbsp to &nbsp
+                        <span style="line-height: 16px;" class="md-subhead">{{post.postCommunity}}</span>
+                    </h5>
+                </div>
             </md-card-title-text>
         </md-card-title>
         <md-card-actions layout="row" layout-align="start center">
@@ -19,10 +29,10 @@
                     <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
                 </md-button>
             </md-card-icon-actions>
-            <md-button>Comments</md-button>
+            <md-button ng-click="submitPost()">Comment</md-button>
         </md-card-actions>
     </div>
-    <div ng-if="post.postType == 'video'" class="card-video" layout="column" layout-align="center">
-        <iframe width="190" height="120" src=""></iframe><!-- https://www.youtube.com/v/xSGW7CwD5GM&rel=0" -->
+    <div ng-if="post.postType == 'video'">
+        <video-frame url="videoSourceUrl"></video-frame>
     </div>
 </md-card>

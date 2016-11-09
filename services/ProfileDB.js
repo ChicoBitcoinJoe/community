@@ -22,7 +22,7 @@ Community.service( 'ProfileDB',['$q', function (LinkDB,$q) {
         
         if (web3.eth.accounts[0] !== currentAccount)
             window.location.reload();
-    }, 100);
+    }, 500);
     
     var saveProfile = function(){
         if(web3.eth.accounts[0] !== undefined)

@@ -1,7 +1,8 @@
 <md-content layout="column" flex>
     <create-community ng-show="!created && loaded" community="activeView"></create-community>
-    <submit-post ng-show="created" community="activeView"></submit-post>
-    <div ng-repeat="post in posts track by $index" ng-show="created">
-        <post-card post="post"></post-card>
+    <submit-post ng-show="created && viewType == 'c'" community="activeView"></submit-post>
+    <div ng-repeat="event in posts track by $index" ng-show="created">
+        <post-card event="event"></post-card>
     </div>
+    <span style="margin-bottom:8px;"></span>
 </md-content>

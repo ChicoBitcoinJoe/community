@@ -42,17 +42,21 @@ Community.service('Community', ['$q','LinkDB','IpfsService', function ($q, LinkD
                     var Shard = LinkDB.getShardInstance(shardAddress);
                     var asyncFromBlock = LinkDB.getFromBlock(community).then(
                     function(fromBlock){
-                        console.log(fromBlock);
-                        var events = Shard.allEvents({fromBlock: fromBlock}, function(err,event){
-                            if(!err){
-                                console.log(event);
-                                //LinkDB.storeEvent(community,event); 
-                            } else {
-                                deferred.reject(err);
-                            }
-                        });
-                    
-                        deferred.resolve(LinkDB.getShardEvents(community));
+                        if(fromBlock){
+                            var events = Shard.allEvents({fromBlock: fromBlock}, function(err,event){
+                                if(!err){
+                                    //console.log(event);
+                                    LinkDB.storeEvent(community,event);
+                                } else {
+                                    deferred.reject(err);
+                                }
+                            });
+                            
+                            deferred.resolve(LinkDB.getShardEvents(community));
+                            
+                        } else {
+                            deferred.reject(false);
+                        }
                         
                     }, function(err){
                         deferred.reject(err);

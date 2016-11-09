@@ -13,24 +13,22 @@ This is an implementation of Community using Material Design. This will probably
 - header
     - toolbar height not consistent for all widths (noncritical)
 
-- Settings Sidenav 
+- Settings Sidenav
+    - Turn into directive (noncritical)
     - image preview size (noncritical)
     - Adjustable themes (noncritical)
     
 - Posts
-    - display correct posts for community (critical)
-    - display correct posts for multi (critical)
+    - display correct posts for multi (critical?)
     
 - Comments (critical)
     - Material design comments
-    - display on small devices after clicking post
     - display comments of comments
     - disaply correct comments for selected post
     - Mark up support
     
 - LinkDB.js (critical)
     - Finalize contracts
-    - Single community support
     - Multi community support
 
 
