@@ -54,7 +54,6 @@ function($scope, $mdSidenav, $location, ProfileDB) {
         if($scope.oldPercent != $scope.alternativePercent)
             $scope.ethereumPercent = Math.round($scope.alternativePercent/2);
         
-        
         $scope.metamaskPercent = $scope.alternativePercent - $scope.ethereumPercent;
         $scope.oldPercent = $scope.alternativePercent;
     },100);

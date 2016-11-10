@@ -16,16 +16,8 @@ Community.service('LinkDB', ['$q', function ($q) {
         LinkDB = {
             Broadcast_events:{
             /*  shard:{
-                    lastBlock:1700000,
-                    events:{
-                        txHash: {
-                            txHash: event.transactionHash,
-                            community: community,
-                            poster: poster,
-                            block: event.blockNumber,
-                            metadata: event.args.metadata
-                        }
-                    }
+                    lastBlockSeen:1700000,
+                    events:[]
                 }//*/
             },
             Shard_addresses:{
@@ -37,10 +29,13 @@ Community.service('LinkDB', ['$q', function ($q) {
     }
     
     var storePost = function(shardName,event){
-        if(!LinkDB.Broadcast_events[shardName])
-            LinkDB.Broadcast_events[shardName] = {events:{}};
+        exists(shardName);
         
-        LinkDB.Broadcast_events[shardName].events[event.args.metadata] = event;        
+        var events = LinkDB.Broadcast_events[shardName].events;
+        if(events.indexOf(event.args.metadata) == '-1')
+            LinkDB.Broadcast_events[shardName].events.push(event.args.metadata);
+        else
+            console.log(event.args.metadata + " already exists in " + shardName);
     }
     
     var saveLinkDB = function(){
@@ -53,18 +48,26 @@ Community.service('LinkDB', ['$q', function ($q) {
         console.log("saved shard " + shardName + " at address: " + shardAddress);
     }
     
+    var exists = function(shardName){
+        if(!LinkDB.Broadcast_events[shardName]){
+            LinkDB.Broadcast_events[shardName] = {
+                lastSeenBlock:null,
+                events:[]
+            };
+        }
+    }
+    
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     var service = {
         getShardEvents: function(shardName){
-            if(!LinkDB.Broadcast_events[shardName])
-                LinkDB.Broadcast_events[shardName] = {events:{}};
-            
+            exists(shardName);
             return LinkDB.Broadcast_events[shardName].events;
         },
         getShardAddress: function(shardName){
+            exists(shardName);
             var deferred = $q.defer();
 
             var shardAddress = LinkDB.Shard_addresses[shardName];
@@ -92,8 +95,7 @@ Community.service('LinkDB', ['$q', function ($q) {
             return Shard;
         },
         getFromBlock: function(shardName){
-            if(!LinkDB.Broadcast_events[shardName])
-                LinkDB.Broadcast_events[shardName] = {lastBlock:null, events:{}};
+            exists(shardName);
             
             var deferred = $q.defer();
             service.getShardAddress(shardName).then(
@@ -116,7 +118,7 @@ Community.service('LinkDB', ['$q', function ($q) {
             },function(err){
                 deferred.reject(err);
             });
-            
+
             return deferred.promise;
         },
         storeEvent: function(shardName, event){
@@ -124,7 +126,13 @@ Community.service('LinkDB', ['$q', function ($q) {
             //save changes to local storage
             saveLinkDB();
         },
+        updateLastSeenBlock: function(shardName,lastSeenBlock){
+            exists(shardName);
+            LinkDB.Broadcast_events[shardName].lastSeenBlock = lastSeenBlock;
+        },
         createShard: function(shardName){
+            exists(shardName);
+            
             var deferred = $q.defer();
             LinkInstance.createShard(shardName, {from:web3.eth.accounts[0],gas: 4700000}, 
             function(error, txHash){
@@ -134,6 +142,7 @@ Community.service('LinkDB', ['$q', function ($q) {
                     deferred.reject(error);
                 }
             });
+
             return deferred.promise;
         }
     }

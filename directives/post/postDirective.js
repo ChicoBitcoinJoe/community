@@ -3,14 +3,14 @@ function(IpfsService,$location,$window) {
 	return {
 		restrict: 'E',
 		scope: {
-            event: '=',
+            ipfsHash: '=',
 		},
 		replace: true,
 		templateUrl: 'directives/post/postDirective.html',
 		controller: function($scope){
             //console.log($scope.event);
             
-            $scope.post = IpfsService.getIpfsData($scope.event.args.metadata).then(
+            $scope.post = IpfsService.getIpfsData($scope.ipfsHash).then(
             function(ipfsData){
                 $scope.post = ipfsData;
                 

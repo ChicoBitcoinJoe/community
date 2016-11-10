@@ -19,12 +19,5 @@ function($scope, Community, ProfileDB) {
         }, function(err){
             console.error(err);
         });
-    } else if($scope.viewType === 'm'){
-        var communities = ProfileDB.getCommunitiesInMulti($scope.activeView);
-        $scope.posts = {};
-        for(var community in communities){
-            console.log(community);
-        }
-    }
-        
+    }   
 }]);

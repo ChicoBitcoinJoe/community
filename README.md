@@ -1,17 +1,16 @@
 #README
 This is an implementation of Community using Material Design. This will probably be the main reference implementation for using LinkDB to create a decentralized, distributed, and censorship resistant content network.
 
-#To do's
---------
 
 Critical
+========
 - Metamask loading late
-- Multi support
 - Comments
+- Dev Funding
 
 
 NonCritical
-
+===========
 - Commnity Sidenav
     - Turn into directive
     - Account panel username not editable (need name registry)

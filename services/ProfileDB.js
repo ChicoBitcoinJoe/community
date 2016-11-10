@@ -20,8 +20,8 @@ Community.service( 'ProfileDB',['$q', function (LinkDB,$q) {
             web3 = new Web3(web3.currentProvider);
         }
         
-        if (web3.eth.accounts[0] !== currentAccount)
-            window.location.reload();
+        //if (web3.eth.accounts[0] !== currentAccount)
+            //window.location.reload();
     }, 500);
     
     var saveProfile = function(){
@@ -38,10 +38,10 @@ Community.service( 'ProfileDB',['$q', function (LinkDB,$q) {
         console.log('Could not find a profile using default');
         ProfileDB = {
             SavedMultis:{
-                'all':['cats','dogs','horses','bitcoin','ethereum','monero','politics'],
-                'cryptocurrencies':['cats','bitcoin','ethereum','monero'],
+                'all':['community','cats','dogs','horses','bitcoin','ethereum','monero','politics'],
+                'cryptocurrencies':['bitcoin','ethereum','monero'],
                 'animals':['cats','dogs','horses'],
-                'ungrouped':['politics']
+                'ungrouped':['community','politics']
             },
             SavedPosts:{
             /*  community:{

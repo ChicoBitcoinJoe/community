@@ -53,7 +53,6 @@ Community.service('Community', ['$q','LinkDB','IpfsService', function ($q, LinkD
                             });
                             
                             deferred.resolve(LinkDB.getShardEvents(community));
-                            
                         } else {
                             deferred.reject(false);
                         }
