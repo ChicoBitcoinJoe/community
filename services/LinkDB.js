@@ -75,7 +75,7 @@ Community.service('LinkDB', ['$q', function ($q) {
                 LinkInstance.getShardAddress(shardName, function(error,shard_address){
                     if(!error){
                         if(shard_address === '0x0000000000000000000000000000000000000000' || shard_address === '0x'){
-                            deferred.resolve(null);
+                            deferred.resolve(false);
                         } else {
                             saveShardAddress(shardName,shard_address);
                             deferred.resolve(shard_address);    

@@ -7,7 +7,7 @@ Community.service( 'IpfsService',['$q','$sce', function ($q,$sce) {
             var deferred = $q.defer();
             var local = localStorage.getItem(ipfsHash);
             if(local){
-                console.log("retrieving locally");
+                //console.log("retrieving locally");
                 deferred.resolve(JSON.parse(local));
             } else {
                 console.log("fetching from ipfs");

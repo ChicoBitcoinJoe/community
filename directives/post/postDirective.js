@@ -26,7 +26,21 @@ function(IpfsService,$location,$window) {
                             $scope.layout = 'row';
                         }
                     }
-                    img.src = $scope.post.postLink;
+                    
+                    var url;
+                    if($scope.post.postLink){
+                        var slice = $scope.post.postLink.slice(0,2);
+                        //console.log($scope.post.postLink);
+                        if(slice === 'Qm'){
+                            var absUrl = $location.absUrl();
+                            var index = absUrl.indexOf('ipfs');
+                            var urlSlice = absUrl.slice(0,index+5);
+                            url = urlSlice + $scope.post.postLink;
+                        } else {
+                            url = $scope.post.postLink;
+                        }
+                    }
+                    img.src = url;
 
                     var slice = $scope.post.postLink.slice(0,2);
                     if(slice === 'Qm'){
@@ -79,15 +93,16 @@ function(IpfsService,$location,$window) {
                     if(slice === 'Qm'){
                         var absUrl = $location.absUrl();
                         var index = absUrl.indexOf('ipfs');
-                        var url = absUrl.slice(0,index+5);
-                        console.log(url + $scope.post.postLink);
-                        $window.open(url + $scope.post.postLink);
+                        var urlSlice = absUrl.slice(0,index+5);
+                        var url = urlSlice + $scope.post.postLink;
+                        $window.open(url);
                     } else {
                         var url = $location.url();
                         $window.open($scope.post.postLink);
                     }
                 } else {
                     console.log("self post");
+                    $location.url('c/' + $scope.post.postCommunity + '/post/' + $scope.ipfsHash);
                 }
             }
         },

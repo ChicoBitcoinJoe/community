@@ -9,7 +9,7 @@ Community.service('EventHandler', ['$q','LinkDB', function ($q,LinkDB) {
     var service = {
         watch: function(shardName){
             if(!watchers[shardName]){
-                console.log("Attempting to watch " + shardName);
+                //console.log("Attempting to watch " + shardName);
                 
                 var deferred = $q.defer();
                 LinkDB.getShardAddress(shardName).then(
@@ -25,15 +25,15 @@ Community.service('EventHandler', ['$q','LinkDB', function ($q,LinkDB) {
                 
                 deferred.promise.then(
                 function(shardAddress){
-                    console.log("Found " + shardName + " address: " + shardAddress);
+                    //console.log("Found " + shardName + " address: " + shardAddress);
                     var Shard = ShardContract.at(shardAddress);
                     Shard.getShardInfo(function(err, info){
-                        console.log(info);
+                        //console.log(info);
                         if(!err){
                             watchers[shardName] = Shard.allEvents({fromBlock: info[1].c[0]}, 
                             function(err,event){
                                 if(!err){
-                                    console.log(shardName, event);
+                                    //console.log(shardName, event);
                                     LinkDB.storeEvent(shardName,event);
                                     LinkDB.updateLastSeenBlock(shardName, info[1].c[0]);
                                 } else {
@@ -50,6 +50,15 @@ Community.service('EventHandler', ['$q','LinkDB', function ($q,LinkDB) {
             } else {
                 console.log("Already watching " + shardName);    
             }
+        },
+        unwatchAll: function(){
+            console.log(watchers);
+            for(index in watchers){
+                console.log("Stopped watching " + watchers[index]);
+                watchers[index].stopWatching();
+            }
+            
+            watchers = [];
         }
     }
     

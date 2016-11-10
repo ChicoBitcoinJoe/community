@@ -1,4 +1,4 @@
-<md-card md-theme="dark-theme" layout="row" flex>
+<md-card md-theme="dark-theme" style="background-color:rgba(50,50,50,1);" layout="row" flex>
     <div ng-if="post.postType == 'image'" class="card-image-{{orientation}}" layout="{{layout}}" layout-align="top center">
         <img class="card-image" ng-src="{{imageSource}}" alt="post image: {{post.postLink}}">
     </div>
@@ -19,6 +19,7 @@
                     </h5>
                 </div>
             </md-card-title-text>
+            <div style="padding: 0px 10px; max-height:40px; margin: 8px; background-color:rgba(55,55,55,1)" class="md-whiteframe-4dp" layout layout-align="center center"> <h3 style="margin:0px;"><small style="color:rgba(255,255,255,0.5); font-size:small">score</small><large>1337</large></h3> </div>
         </md-card-title>
         <md-card-actions layout="row" layout-align="start center">
             <md-card-icon-actions>
@@ -29,7 +30,7 @@
                     <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
                 </md-button>
             </md-card-icon-actions>
-            <md-button ng-href="#/c/{{post.postCommunity}}/post/{{event.args.metadata}}">Comment</md-button>
+            <md-button ng-href="#/c/{{post.postCommunity}}/post/{{ipfsHash}}">Comment</md-button>
         </md-card-actions>
     </div>
     <div ng-if="post.postType == 'video'">

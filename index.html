@@ -53,15 +53,19 @@
                 </div>
                 <div class="sidenav-list-item" ng-class="{selected: (multi==activeView && viewType=='m')}" ng-repeat="multi in multis" layout="row">
                     <a style="height:36;" ng-href="#/m/{{multi}}" layout layout-align="left center" flex>{{multi | capitalize}}</a>
+                    <md-button style="color:rgba(255,255,255,0.5); margin:0px;" ng-hide="toggleSettings" style="margin:0px;">9001&nbsp<md-icon md-svg-src="images/icons/ic_assessment_white_18px.svg"></md-icon> </md-button>
                     <md-button ng-show="toggleSettings && multi !== 'all' && multi !== 'ungrouped'" style="margin:0px;" ng-click="deleteMulti(multi)" aria-label="remove multi"><md-icon md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg"></md-icon></md-button>
                 </div>
             </md-list>
             <br>
-            <div class="sidenav-header" layout="row" layout-align="left center">
-                <h3 class="sidenav-header-text sidenavGreen">{{activeView | capitalize}}</h3>
+            <div ng-show="viewType == 'm'" class="sidenav-header" layout="row" layout-align="left center">
+                <h3 class="sidenav-header-text" style="padding-left:20px; background-color:#1c6965;">{{activeView | capitalize}}</h3>
+            </div>
+            <div ng-show="viewType == 'c'" class="sidenav-header" layout="row" layout-align="left center">
+                <h3 class="sidenav-header-text" style="padding: 10px 20px; background-color:#1c6965;">All</h3>
             </div>
             <md-list>
-                <div class="sidenav-list-item" ng-show="toggleSettings && activeView != 'ungrouped' && viewType == 'm'">
+                <div class="sidenav-list-item" ng-show="toggleSettings && activeView != 'ungrouped'">
                     <md-input-container style="margin:0px; margin-top:15px; height:36px; padding:0px;" layout="row" flex>
                         <div>
                             <label>Add Community</label>
@@ -72,7 +76,11 @@
                     </md-input-container>
                 </div>
                 <div ng-hide="viewType == 'c'" class="sidenav-list-item" ng-repeat="community in communities" layout="row">
-                    <a style="height:36px;" ng-href="#/c/{{community}}" layout layout-align="left center" flex>{{community | capitalize}}</a>
+                    <a style="height:36px;" ng-href="#/c/{{community}}" layout layout-align="left center" flex>{{community | capitalize}}</a></span><md-button ng-hide="toggleSettings" style="margin:0px; color:rgba(255,255,255,0.5)">500&nbsp<md-icon md-svg-src="images/icons/ic_loyalty_white_18px.svg"></md-icon></md-button>
+                    <md-button ng-show="toggleSettings && activeView !== 'all'" style="margin:0px;" ng-click="removeCommunity(community)" aria-label="remove community"><md-icon md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg"></md-button>
+                </div>
+                <div ng-show="viewType == 'c'" ng-class="{selected: (community==activeView && viewType=='c')}" class="sidenav-list-item" ng-repeat="community in all" layout="row">
+                    <a style="height:36px;" ng-href="#/c/{{community}}" layout layout-align="left center" flex>{{community | capitalize}}</a><md-button ng-hide="toggleSettings" style="margin:0px; color:rgba(255,255,255,0.5)">500&nbsp<md-icon md-svg-src="images/icons/ic_loyalty_white_18px.svg"></md-icon></md-button>
                     <md-button ng-show="toggleSettings && activeView !== 'all'" style="margin:0px;" ng-click="removeCommunity(community)" aria-label="remove community"><md-icon md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg"></md-button>
                 </div>
             </md-list>
@@ -93,17 +101,16 @@
             <h1 class="md-toolbar-tools">Settings</h1>
         </md-toolbar>
         <md-content layout-padding="5" layout="column">
-            
-            
-            <h3 style="margin-bottom:0px; margin-right:15px;" layout="row">Public Opinion <span flex></span><md-checkbox ng-model="isDisabled"><small>Disable</small></md-checkbox></h3>
+            <h3 style="margin-bottom:0px; margin-right:30px;" layout="row">Public Opinion<span flex></span>%</h3>
             <md-slider-container ng-disabled="isDisabled">
                 <md-icon md-svg-src="images/icons/ic_people_white_24px.svg"></md-icon>
                 <md-slider ng-model="publicOpinionWeight" aria-label="public opinion weight" flex md-discrete ng-readonly="readonly"></md-slider>
-                <md-input-container>
+                <md-input-container style="width:65px;min-width:65px;">
                     <input flex type="number" ng-model="publicOpinionWeight" aria-label="green" aria-controls="green-slider">
                 </md-input-container>
             </md-slider-container>
-            <span style="margin-top:10px;"></span>
+            <md-checkbox ng-model="isDisabled" style="margin-left:15px;"><small>Disable public opinion</small></md-checkbox>
+            <span></span>
             <h3 style="margin-bottom:0px; margin-right:30px;" layout="row">Donation Distribution <span flex></span>%</h3>
             <span class="md-body-1">Community Development</span>
             <md-slider-container>

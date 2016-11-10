@@ -1,23 +1,20 @@
-Community.controller('CommunityViewController', ['$scope','Community','ProfileDB',
-function($scope, Community, ProfileDB) {
+Community.controller('CommunityViewController', ['$scope','LinkDB',
+function($scope, LinkDB){
     console.log('Loading community view: ' + $scope.activeView);
     
     $scope.posts = [];
     $scope.created = false;
     
-    var communities = [];
-    if($scope.viewType === 'c'){
-        var asyncGetPosts = Community.getPosts($scope.activeView).then(
-        function(created){
-            //console.log(created);
-            if(created){
-                $scope.created = true;
-                $scope.posts = created;
-            } else {
-                $scope.loaded = true;
-            }
-        }, function(err){
-            console.error(err);
-        });
-    }   
+    var communities = [$scope.activeView];
+    var asyncGetPosts = LinkDB.getShardAddress($scope.activeView).then(
+    function(created){
+        if(created){
+            $scope.created = true;
+            $scope.posts = LinkDB.getShardEvents($scope.activeView);
+        } else {
+            $scope.loaded = true;
+        }
+    }, function(err){
+        console.error(err);
+    });
 }]);

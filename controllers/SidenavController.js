@@ -10,6 +10,7 @@ function($scope, $mdSidenav, $location, ProfileDB) {
     $scope.activeView = locationUrlArray[2];
     $scope.multis = ProfileDB.getSavedMultis();
     $scope.communities = ProfileDB.getCommunitiesInMulti($scope.activeView);
+    $scope.all = ProfileDB.getCommunitiesInMulti('all');
     
     $scope.$on('$routeChangeSuccess', function(newHeader) {
         var locationUrlArray = $location.url().split('/');
