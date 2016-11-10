@@ -2,33 +2,24 @@
 This is an implementation of Community using Material Design. This will probably be the main reference implementation for using LinkDB to create a decentralized, distributed, and censorship resistant content network.
 
 #To do's
+--------
 
-- General
-    - web3 injected by MetaMask still loading late sometimes (critical)
-    
+Critical
+- Metamask loading late
+- Multi support
+- Comments
+
+
+NonCritical
+
 - Commnity Sidenav
-    - Turn into directive (noncritical)
-    - Account panel username not editable (need name registry) (critical?)
+    - Turn into directive
+    - Account panel username not editable (need name registry)
     
 - header
-    - toolbar height not consistent for all widths (noncritical)
+    - toolbar height not consistent for all widths
 
 - Settings Sidenav
-    - Turn into directive (noncritical)
-    - image preview size (noncritical)
-    - Adjustable themes (noncritical)
-    
-- Posts
-    - display correct posts for multi (critical?)
-    
-- Comments (critical)
-    - Material design comments
-    - display comments of comments
-    - disaply correct comments for selected post
-    - Mark up support
-    
-- LinkDB.js (critical)
-    - Finalize contracts
-    - Multi community support
-
-
+    - Turn into directive
+    - post-card sizes (compact,comfortable,loose)
+    - Adjustable themes

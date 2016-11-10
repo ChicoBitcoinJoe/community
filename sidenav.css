@@ -40,7 +40,7 @@
     display:flex;
     justify-content: flex-start;
     align-items: center;
-    cursor:pointer;
+    cursor: pointer; cursor: hand;
 }
 
 .sidenav-list-item:hover {
@@ -71,4 +71,8 @@ md-sidenav {
 
 .sidenav-community-header {
     margin: 12px 0px;
+}
+
+md-slider-container {
+    height:45px;
 }

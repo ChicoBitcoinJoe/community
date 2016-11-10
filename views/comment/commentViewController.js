@@ -1,5 +1,5 @@
-Community.controller('CommunityViewController', ['$scope','Community','ProfileDB',
-function($scope, Community, ProfileDB) {
+Community.controller('CommentViewController', ['$scope',
+function($scope) {
     console.log('Loading comment view: ' + $scope.activeView);
     
 

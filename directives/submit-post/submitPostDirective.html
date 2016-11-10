@@ -33,7 +33,7 @@
     
     <md-card ng-show="newPost.postType !== 'null'" md-theme="dark-theme" layout="row" flex>
         <div ng-if="newPost.postType == 'image'" class="card-image-{{orientation}}" layout="{{layout}}" layout-align="center">
-            <img class="card-image" src="{{newPost.postLink}}" alt="post image: {{newPost.postLink}}">
+            <img class="card-image" ng-src="{{newPost.postLink}}" alt="post image: {{newPost.postLink}}">
         </div>
         <div layout="column" flex>
             <md-card-title  style="padding-bottom:0px !important;">
@@ -58,7 +58,7 @@
             </md-card-actions>
         </div>
         <div ng-if="newPost.postType == 'video'" class="card-video" layout="column" layout-align="center">
-            <iframe width="190" height="120" src=""></iframe><!-- https://www.youtube.com/v/xSGW7CwD5GM&rel=0" -->
+            <iframe width="190" height="120"></iframe>
         </div>
     </md-card>
     

@@ -58,41 +58,6 @@ Community.service('LinkDB', ['$q', function ($q) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     var service = {
-        getPosts: function(shardName){
-            var old_posts = [
-                {
-                    postType:"self",
-                    postCommunity:"community",
-                    postTitle:"Very eu much fugiat so dolore, very enim much reprehenderit such ut very padding. Such consequat much minim very pariatur so enim very ad very dolore."
-                    
-                },{ 
-                    postType:"image",
-                    postCommunity:"community",
-                    postTitle:"Very eu much fugiat so dolore, very enim much reprehenderit such ut very padding. Such consequat much minim very pariatur so enim very ad very dolore.",
-                    postLink:"images/red_flowers.jpg"
-                    
-                },{
-                    postType:"link",
-                    postCommunity:"community",
-                    postTitle:"Very eu much fugiat so dolore, very enim much reprehenderit such ut very padding. Such consequat much minim very pariatur so enim very ad very dolore.",
-                    postLink:"https://github.com/ChicoBitcoinJoe/Community"
-                    
-                },{
-                    postType:"video",
-                    postCommunity:"community",
-                    postTitle:"Very eu much fugiat so dolore, very enim much reprehenderit such ut very padding. Such consequat much minim very pariatur so enim very ad very dolore.",
-                    postLink:"m.youtube.com/watch?v=xSGW7CwD5GM"
-
-                },{ 
-                    postType:"image",
-                    postCommunity:"community",
-                    postTitle:"Very eu much fugiat so dolore, very enim much reprehenderit such ut very padding. Such consequat much minim very pariatur so enim very ad very dolore.",
-                    postLink:"images/bumble_bee.jpg"
-                }
-            ];
-            
-            return old_posts;
-        },
         getShardEvents: function(shardName){
             if(!LinkDB.Broadcast_events[shardName])
                 LinkDB.Broadcast_events[shardName] = {events:{}};

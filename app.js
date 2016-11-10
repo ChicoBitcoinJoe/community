@@ -10,9 +10,9 @@ Community.config(function ($routeProvider) {
         templateUrl: 'views/community/communityView.html',
         controller: 'CommunityViewController'
     }).
-    when('/c/:community/tx/:txHash', {
-        templateUrl: 'views/community/communityView.html',
-        controller: 'CommunityViewController'
+    when('/c/:community/post/:postHash', {
+        templateUrl: 'views/comment/commentView.html',
+        controller: 'CommentViewController'
     }).
 	otherwise({
       redirectTo: '/c/community'

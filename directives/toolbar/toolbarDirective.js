@@ -9,7 +9,7 @@ function($mdSidenav, $location, ProfileDB) {
 		replace: true,
 		templateUrl: 'directives/toolbar/toolbarDirective.html',
 		controller: function($scope, $mdSidenav){
-            console.log($scope.community, $scope.viewType);
+            console.log('Loading toolbar');
             
             if($scope.viewType == 'c' && ProfileDB.communityIsSaved($scope.community))
                 $scope.star = "star";

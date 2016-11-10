@@ -5,17 +5,18 @@ function($scope, $mdSidenav, $location, ProfileDB) {
     $scope.account = ProfileDB.getCurrentAccount();
     $scope.username = 'Username';
     
-    $scope.viewType = $location.url().split('/')[1];
-    $scope.activeView = $location.url().split('/')[2];
-    
+    var locationUrlArray = $location.url().split('/');
+    $scope.viewType = locationUrlArray[1];
+    $scope.activeView = locationUrlArray[2];
     $scope.multis = ProfileDB.getSavedMultis();
     $scope.communities = ProfileDB.getCommunitiesInMulti($scope.activeView);
     
-    $scope.$on('$routeChangeSuccess', function() {
-        $scope.viewType = $location.url().split('/')[1];
-        $scope.activeView = $location.url().split('/')[2];
-        $scope.communities = ProfileDB.getCommunitiesInMulti($scope.activeView);
+    $scope.$on('$routeChangeSuccess', function(newHeader) {
+        var locationUrlArray = $location.url().split('/');
+        $scope.viewType = locationUrlArray[1];
+        $scope.activeView = locationUrlArray[2];if($scope.viewType === 'c')
         $scope.multis = ProfileDB.getSavedMultis();
+        $scope.communities = ProfileDB.getCommunitiesInMulti($scope.activeView);
     });
     
     $scope.toggleSettings = false;
@@ -40,4 +41,23 @@ function($scope, $mdSidenav, $location, ProfileDB) {
         $scope.multis = ProfileDB.getSavedMultis();
     }
     
+    $scope.publicOpinionWeight = 50;
+    
+    $scope.communityPercent = 75;
+    $scope.alternativePercent = 25;
+    $scope.ethereumPercent = 20;
+    $scope.metamaskPercent = 5;
+    $scope.oldPercent = 25;
+    
+    setInterval(function(){
+        $scope.alternativePercent = 100 - $scope.communityPercent;
+        if($scope.oldPercent != $scope.alternativePercent)
+            $scope.ethereumPercent = Math.round($scope.alternativePercent/2);
+        
+        
+        $scope.metamaskPercent = $scope.alternativePercent - $scope.ethereumPercent;
+        $scope.oldPercent = $scope.alternativePercent;
+    },100);
+        
+    $scope.isDisabled = true;
 }]);

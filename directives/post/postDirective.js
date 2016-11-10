@@ -1,5 +1,5 @@
-Community.directive('postCard', ['IpfsService','$location',
-function(IpfsService,$location) {
+Community.directive('postCard', ['IpfsService','$location','$window',
+function(IpfsService,$location,$window) {
 	return {
 		restrict: 'E',
 		scope: {
@@ -25,8 +25,6 @@ function(IpfsService,$location) {
                             $scope.orientation = 'vertical';
                             $scope.layout = 'row';
                         }
-
-                        $scope.$apply();
                     }
                     img.src = $scope.post.postLink;
 
@@ -72,7 +70,26 @@ function(IpfsService,$location) {
                 }
             },function(err){
                 console.error(err);
-            });           
+            });  
+            
+            $scope.followLink = function(){
+                if($scope.post.postLink){
+                    var slice = $scope.post.postLink.slice(0,2);
+                    console.log($scope.post.postLink);
+                    if(slice === 'Qm'){
+                        var absUrl = $location.absUrl();
+                        var index = absUrl.indexOf('ipfs');
+                        var url = absUrl.slice(0,index+5);
+                        console.log(url + $scope.post.postLink);
+                        $window.open(url + $scope.post.postLink);
+                    } else {
+                        var url = $location.url();
+                        $window.open($scope.post.postLink);
+                    }
+                } else {
+                    console.log("self post");
+                }
+            }
         },
 		link : function($scope, $element, $attrs) {
             //console.log($scope.postUrl);

@@ -96,7 +96,10 @@ Community.service( 'ProfileDB',['$q', function (LinkDB,$q) {
             return Object.keys(ProfileDB.SavedMultis);
         },
         getCommunitiesInMulti: function(multiName){
-            return ProfileDB.SavedMultis[multiName];
+            if(ProfileDB.SavedMultis[multiName])
+                return ProfileDB.SavedMultis[multiName];
+            else
+                return false;
         },
         communityIsSaved: function(communityName){
             communityName = communityName.toLowerCase();
@@ -113,6 +116,7 @@ Community.service( 'ProfileDB',['$q', function (LinkDB,$q) {
             return false;
         },
         addCommunity: function(communityName,multiName){
+            communityName = communityName.toLowerCase();
             if(multiName && communityName && ProfileDB.SavedMultis[multiName]){
                 if(multiName == 'all'){
                     //If communityName does not exist in 'all' it does not exist in any multi so we can just add it
