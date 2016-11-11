@@ -1,3 +1,18 @@
-<md-card>
- 
+<md-card md-theme="dark-theme">
+    <md-card-content>
+        {{post.postComment}}
+    </md-card-content>
+    <md-card-actions>
+        <md-card-actions layout="row" layout-align="start center">
+            <md-card-icon-actions>
+                <md-button class="md-icon-button" aria-label="Favorite">
+                    <md-icon md-svg-icon="img/icons/favorite.svg"></md-icon>
+                </md-button>
+                <md-button class="md-icon-button" aria-label="Share">
+                    <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
+                </md-button>
+            </md-card-icon-actions>
+            <md-button>Reply</md-button>
+        </md-card-actions>
+    </md-card-actions>
 </md-card>

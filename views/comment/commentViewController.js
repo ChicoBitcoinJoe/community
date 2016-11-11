@@ -6,6 +6,4 @@ function($scope,$location) {
     $scope.viewType = locationUrlArray[1];
     $scope.activeView = locationUrlArray[2];
     $scope.ipfsHash = locationUrlArray[4];
-    
-    $scope.comments = [];
 }]);
