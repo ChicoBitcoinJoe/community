@@ -1,8 +1,14 @@
-<md-card md-theme="dark-theme">
-    <md-card-content>
+<md-card md-theme="dark-theme" style="margin: 8px {{marginRight}}px {{marginBottom}}px {{marginLeft}}px; padding: 8px 0px 4px {{paddingLeft}}px; border-left: {{borderWidth}}px solid #242424; border-top: {{borderTop}}px solid #242424; border-bottom:4px solid #242424; background-color:rgba(55,55,55,1);" class="md-whiteframe-0dp">
+    <md-card-content class="comment-hover-fx" ng-click="showExtras = !showExtras" style="margin-right:8px;">
+        <div layout="row" ng-if="commentDepth != 0">
+            <h5 style="margin:0px 0px 5px 0px; line-height: 16px;">
+                Posted by &nbsp
+                <span style="line-height: 16px;" class="md-subhead">{{post.poster}}</span>
+            </h5>
+        </div>
         {{post.postComment}}
     </md-card-content>
-    <md-card-actions>
+    <md-card-actions ng-show="showExtras">
         <md-card-actions layout="row" layout-align="start center">
             <md-card-icon-actions>
                 <md-button class="md-icon-button" aria-label="Favorite">
@@ -15,4 +21,7 @@
             <md-button>Reply</md-button>
         </md-card-actions>
     </md-card-actions>
+    <div ng-if="commentDepth < 4" ng-repeat="commentHash in comments track by $index">
+        <comment-card ipfs-hash="commentHash" comment-depth="commentDepth + 1"></comment-card>
+    </div>
 </md-card>
