@@ -39,10 +39,9 @@ Community.directive('submitPost', ['ProfileDB','$location','Community', function
             $scope.submitPost = function(){
                 console.log($scope.newPost);
                 Community.submitPost($scope.newPost).then(
-                function(txHash){
-                    if(txHash){
-                        
-                        $location.url('c/'+ $scope.community + /tx/ + txHash);
+                function(ipfsHash){
+                    if(ipfsHash){
+                        $location.url('c/'+ $scope.community + /post/ + ipfsHash);
                     } else {
                         console.log('Not a valid post. Aborting.');
                     }

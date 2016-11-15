@@ -14,7 +14,6 @@ Critical
 - Metamask loading late
 - Comments
 - lastBlock not being checked before sending out events request
-- Unwatch communities after were done with them (services/EventHandler.js)
 
 
 NonCritical
@@ -35,4 +34,5 @@ NonCritical
 Notes
 =====
 - Post: Has a title and at least a comment or link
-- Comment: Must have at least one parent and at least a comment or link
+- Comment: Must have at least one parent and at least a comment
+- Xpost: shard name of broadcast contract and post.postCommunity do not match

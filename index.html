@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="directives/toolbar/toolbarDirective.css">
     <link rel="stylesheet" href="directives/post/postDirective.css">
     <link rel="stylesheet" href="directives/comment/commentDirective.css">
+    <link rel="stylesheet" href="directives/submit-comment/submitCommentDirective.css">
     
     <title>Community</title>
     
@@ -132,7 +133,7 @@
             <span class="md-body-1">Metamask Development</span>
             <md-slider-container>
                 <md-icon md-svg-src="images/icons/ic_supervisor_account_white_24px.svg"></md-icon>
-                <md-slider ng-disabled="true" ng-model="metamaskPercent" min="0" max="{{alternativePercent}}" aria-label="regular slider"></md-slider>
+                <md-slider ng-model="metamaskPercent" min="0" max="{{alternativePercent}}" aria-label="regular slider"></md-slider>
                 <md-input-container style="width:65px;min-width:65px;">
                     <input flex type="number" ng-model="metamaskPercent" aria-label="regular-slider">
                 </md-input-container>
@@ -165,7 +166,6 @@
     <script src="services/LinkDB.js"></script>
     <script src="services/ProfileDB.js"></script>
     <script src="services/ipfsService.js"></script>
-    <script src="services/EventHandler.js"></script>
     
     <!-- Controllers -->
     <script src="controllers/SidenavController.js"></script>
@@ -183,6 +183,7 @@
     <script src="directives/create-community/createCommunityDirective.js"></script>
     <script src="directives/submit-post/submitPostDirective.js"></script>
     <script src="directives/video-frame/videoFrameDirective.js"></script>
+    <script src="directives/submit-comment/submitCommentDirective.js"></script>
             
 </body>
 </html>

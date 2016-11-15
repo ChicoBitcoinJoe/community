@@ -1,5 +1,5 @@
-Community.directive('commentCard', ['$location','RecursionHelper','LinkDB','ProfileDB','IpfsService',
-function($location,RecursionHelper,LinkDB,ProfileDB,IpfsService) {
+Community.directive('commentCard', ['$location','RecursionHelper','Community','IpfsService',
+function($location,RecursionHelper,Community,IpfsService) {
 	return {
 		restrict: 'E',
 		scope: {
@@ -17,38 +17,44 @@ function($location,RecursionHelper,LinkDB,ProfileDB,IpfsService) {
             });
         },
 		controller: function($scope){
-            console.log($scope.ipfsHash,$scope.commentDepth);
+            $scope.activeView = $location.url().split('/')[2];
+            console.log($scope.activeView,$scope.ipfsHash,$scope.commentDepth);
             
-            $scope.post = IpfsService.getIpfsData($scope.ipfsHash).then(
+            $scope.comments1 = Community.getChildren($scope.activeView, $scope.ipfsHash).comments;
+            console.log($scope.comments1);
+            
+            $scope.comments = Community.getChildren($scope.activeView, $scope.ipfsHash).comments[$scope.ipfsHash];
+            console.log($scope.comments);
+            
+            var promise = IpfsService.getIpfsData($scope.ipfsHash).then(
             function(ipfsData){
                 $scope.post = ipfsData;
             }, function(err){
                 console.error(err); 
             });
             
-            $scope.comments = ['QmSnK24E4E9c8tCsc866NU7Q2hpUhQnCsa2ZuJHBUDbgSm','QmSnK24E4E9c8tCsc866NU7Q2hpUhQnCsa2ZuJHBUDbgSm','QmSnK24E4E9c8tCsc866NU7Q2hpUhQnCsa2ZuJHBUDbgSm']; //LinkDB.getComments($scope.ipfsHash);
-            
             $scope.borderWidth = 0;
-            $scope.borderTop = 4;
+            $scope.borderTop = 8;
             $scope.marginLeft = 8;
             $scope.marginBottom = 8;
             $scope.marginRight = 8;
             $scope.paddingLeft = 0;
             
+            $scope.showExtras = true;
+            
             if($scope.commentDepth > 0){
-                $scope.borderTop = 8;
                 $scope.marginLeft = 0;
-                $scope.marginBottom = 4;
-                $scope.paddingLeft = 4;
+                $scope.marginBottom = 0;
                 $scope.marginRight = 0;
+                $scope.paddingLeft = 4;
+                
+                $scope.showExtras = false;
             }
             
             if($scope.commentDepth > 1){
                 $scope.borderWidth = 4;
                 $scope.borderTop = 4;
             }
-            
-            $scope.showExtras = false;
 		}
 	}
 }]);

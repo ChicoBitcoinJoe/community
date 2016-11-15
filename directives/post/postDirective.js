@@ -105,6 +105,11 @@ function(IpfsService,$location,$window) {
                     $location.url('c/' + $scope.post.postCommunity + '/post/' + $scope.ipfsHash);
                 }
             }
+            
+            var locationUrlArray = $location.url().split('/');
+            $scope.commentView = false;
+            if(locationUrlArray[3] == 'post')
+                $scope.commentView = true;
         },
 		link : function($scope, $element, $attrs) {
             //console.log($scope.postUrl);

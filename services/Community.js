@@ -1,11 +1,124 @@
 Community.service('Community', ['$q','LinkDB','IpfsService', function ($q, LinkDB, IpfsService) {
     console.log('Loading Community');
     
+    var Community = JSON.parse(localStorage.getItem('CommunityDB'));
+    if(!Community){
+        var Community = {
+            communities:{},
+            active:{
+                posts:[]
+            }
+        };
+    
+        localStorage.setItem('CommunityDB',JSON.stringify(Community));
+    }
+    
+    var sortEvent = function(event){
+        console.log(event);
+        var ipfsHash = event.args.ipfsHash;
+        IpfsService.getIpfsData(ipfsHash).then(
+        function(post){
+            localStorage.setItem(ipfsHash,JSON.stringify(post));
+            
+            var keys = Object.keys(Community.communities);
+            var index = keys.indexOf(post.postCommunity);
+            if(index == '-1'){
+                Community.communities[post.postCommunity] = {};
+                Community.communities[post.postCommunity].comments = {};
+                Community.communities[post.postCommunity].comments[ipfsHash] = [];
+                Community.communities[post.postCommunity].posts = [];
+                Community.communities[post.postCommunity].lastBlock = null;
+                
+                Community.communities[post.postCommunity].comments[ipfsHash] = [];
+                console.log("Creating " + post.postCommunity + " for " + ipfsHash);
+                localStorage.setItem('CommunityDB',JSON.stringify(Community));
+            }
+        
+            if(post.postType && !post.postParent && post.postTitle && post.postCommunity && 
+                post.poster &&(post.postLink || post.postComment)){
+                console.log("Post event");
+
+                Community.active.posts.push(ipfsHash);
+                
+                if(Community.communities[post.postCommunity].posts.indexOf(ipfsHash) == '-1'){
+                    Community.communities[post.postCommunity].posts.push(ipfsHash);
+                    console.log("Pushing " + ipfsHash + " to post list " + post.postCommunity);
+                } else {
+                    console.log(ipfsHash + " already in "  + post.postCommunity + " post list.");
+                }
+
+                if(!Community.communities[post.postCommunity].comments[ipfsHash]){
+                    Community.communities[post.postCommunity].comments[ipfsHash] = [];
+                    console.log("Started a comment list for " + ipfsHash);
+                } else {
+                    console.log("Comment list for " + ipfsHash + " already exists");
+                }
+
+                console.log(Community);
+            } else if(post.postCommunity && post.poster && post.postComment && post.postParent && 
+                      !post.postTitle){
+                console.log("Comment event");
+                
+                var parentIndex = Community.communities[post.postCommunity].comments[post.postParent].indexOf(ipfsHash);
+                if(parentIndex == '-1'){
+                    Community.communities[post.postCommunity].comments[post.postParent].push(ipfsHash);
+                    console.log("Adding " + ipfsHash + " to parent " + post.postParent + " in " + post.postCommunity);
+                } else {
+                    console.log(ipfsHash + " already added to parent " + post.postParent + " in " + post.postCommunity);
+                }
+
+                if(!Community.communities[post.postCommunity].comments[ipfsHash]){
+                    Community.communities[post.postCommunity].comments[ipfsHash] = [];
+                    console.log("Creating comment list for " + ipfsHash);
+                } else {
+                    console.log("Comment list for " + ipfsHash + " already exists");
+                }
+
+                console.log(Community);
+            } else {
+                console.log("Invalid event.");
+            }
+        }, function(err){
+            console.error(err);
+        });
+    }
+    
     var service = {
         submitPost: function(post){
             var deferred = $q.defer();
    
             if(post.postType && post.postTitle && post.postCommunity && post.poster &&(post.postLink || post.postComment)){
+                //Add to ipfs
+                var promise_ipfsHash = IpfsService.getIpfsHash(post)
+                .then(function (ipfsHash) {
+                    console.log(ipfsHash, web3.eth.accounts[0]);
+                    var asyncShardAddress = LinkDB.getShardAddress(post.postCommunity).then(
+                    function(shardAddress){
+                        var Shard = LinkDB.getShardInstance(shardAddress);
+                        var submitPost = Shard.broadcast(ipfsHash, {from: web3.eth.accounts[0], gas: 4700000}, 
+                        function(err, txHash){
+                            if(!err)
+                                deferred.resolve(ipfsHash);
+                            else
+                                deferred.reject(err);
+                        });   
+                    }, function(err){
+                        deferred.reject(err);
+                    });
+                    
+                }, function(err) {
+                    deferred.reject(err);
+                });
+            } else {
+                deferred.resolve(false);
+            }
+            
+            return deferred.promise;
+        },
+        submitComment: function(post){
+            var deferred = $q.defer();
+   
+            if(post.postCommunity && post.poster && post.postComment && post.postParent){
                 //Add to ipfs
                 var promise_ipfsHash = IpfsService.getIpfsHash(post)
                 .then(function (ipfsHash) {
@@ -33,44 +146,69 @@ Community.service('Community', ['$q','LinkDB','IpfsService', function ($q, LinkD
             
             return deferred.promise;
         },
-        getPosts: function(community){
+        exists: function(community){
             var deferred = $q.defer();
             
-            var localShardAddress = LinkDB.getShardAddress(community).then(
-            function(shardAddress){
-                if(shardAddress){
-                    var Shard = LinkDB.getShardInstance(shardAddress);
-                    var asyncFromBlock = LinkDB.getFromBlock(community).then(
-                    function(fromBlock){
-                        if(fromBlock){
-                            var events = Shard.allEvents({fromBlock: fromBlock}, function(err,event){
-                                if(!err){
-                                    //console.log(event);
-                                    LinkDB.storeEvent(community,event);
-                                } else {
-                                    deferred.reject(err);
-                                }
-                            });
-                            
-                            deferred.resolve(LinkDB.getShardEvents(community));
-                        } else {
-                            deferred.reject(false);
-                        }
-                        
-                    }, function(err){
-                        deferred.reject(err);
-                    });
-                    
+            var async = LinkDB.getShardAddress(community).then(
+            function(communityAddress){
+                if(communityAddress){
+                    deferred.resolve(true)
                 } else {
                     deferred.resolve(false);
-                } 
+                }
             }, function(err){
                 deferred.reject(err);
-            });
+            })
             
             return deferred.promise;
+        },
+        getPosts: function(communities){
+            Community.active.posts = [];
+            for(index in communities){
+                console.log("Getting posts from " + communities[index]);
+                //Add events from each community
+                LinkDB.getEvents(communities[index]).then(
+                function(Shard){
+                    var async_events = Shard.get(function(err,events){
+                        if(!err){
+                            for(index in events){
+                                sortEvent(events[index]);
+                            }
+                            console.log(Community);
+                            localStorage.setItem('CommunityDB',JSON.stringify(Community));
+                        } else {
+                            console.error(err);
+                        }
+                    });
+                }, function(err){
+                    console.error(err);
+                });
+            }
+            console.log(Community);
+            return Community.active.posts;
+        },
+        getChildren: function(community,ipfsHash){
+            var keys = Object.keys(Community.communities);
+            var index = keys.indexOf(community);
+            if(index == '-1'){
+                Community.communities[community] = {};
+                Community.communities[community].comments = {};
+                Community.communities[community].comments[ipfsHash] = [];
+                Community.communities[community].posts = [];
+                Community.communities[community].lastBlock = null;
+                
+                Community.communities[community].comments[ipfsHash] = [];
+                console.log("Creating " + community + " for " + ipfsHash);
+                localStorage.setItem('CommunityDB',JSON.stringify(Community));
+            }
+            console.log(Community.communities[community]);
+            
+            return Community.communities[community];
+        },
+        createCommunity: function(shardName){
+            return LinkDB.createShard(shardName);
         }
     }
     
     return service;
-}]); 
+}]);

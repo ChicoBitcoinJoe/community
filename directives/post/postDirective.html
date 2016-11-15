@@ -26,7 +26,7 @@
                 </h3> 
             </div>
         </md-card-title>
-        <md-card-actions layout="row" layout-align="start center">
+        <md-card-actions layout="row" layout-align="left center" ng-hide="commentView" style="">
             <md-card-icon-actions>
                 <md-button class="md-icon-button" aria-label="Favorite">
                     <md-icon md-svg-icon="img/icons/favorite.svg"></md-icon>
@@ -34,8 +34,9 @@
                 <md-button class="md-icon-button" aria-label="Share">
                     <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
                 </md-button>
+                <span flex></span>
+                <md-button ng-href="#/c/{{post.postCommunity}}/post/{{ipfsHash}}">Comment</md-button>
             </md-card-icon-actions>
-            <md-button ng-href="#/c/{{post.postCommunity}}/post/{{ipfsHash}}">Comment</md-button>
         </md-card-actions>
     </div>
     <div ng-if="post.postType == 'video'">
