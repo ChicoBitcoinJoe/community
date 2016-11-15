@@ -1,5 +1,5 @@
-Community.directive('commentCard', ['$location','RecursionHelper','Community','IpfsService',
-function($location,RecursionHelper,Community,IpfsService) {
+Community.directive('commentCard', ['$location','RecursionHelper','Community','IpfsService','ProfileDB',
+function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
 	return {
 		restrict: 'E',
 		scope: {
@@ -17,6 +17,10 @@ function($location,RecursionHelper,Community,IpfsService) {
             });
         },
 		controller: function($scope){
+            $scope.mouseoverExtras = function(){
+                $scope.hovered = true;
+            };
+            
             $scope.activeView = $location.url().split('/')[2];
             console.log($scope.activeView,$scope.ipfsHash,$scope.commentDepth);
             
@@ -29,6 +33,7 @@ function($location,RecursionHelper,Community,IpfsService) {
             var promise = IpfsService.getIpfsData($scope.ipfsHash).then(
             function(ipfsData){
                 $scope.post = ipfsData;
+                $scope.userScore = ProfileDB.getUserScore($scope.post.poster);
             }, function(err){
                 console.error(err); 
             });
@@ -55,6 +60,19 @@ function($location,RecursionHelper,Community,IpfsService) {
                 $scope.borderWidth = 4;
                 $scope.borderTop = 4;
             }
+            
+            $scope.show = false;
+            $scope.replyText = "Reply";
+            $scope.showSubmitCommentPanel = function(){
+                $scope.show = !$scope.show;
+                if($scope.show){
+                    $scope.replyText = "Close";
+                } else {
+                    $scope.replyText = "Reply";   
+                }
+                
+                return $scope.show;
+            };
 		}
 	}
 }]);

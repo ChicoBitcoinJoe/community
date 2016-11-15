@@ -62,10 +62,8 @@ Community.service( 'ProfileDB',['$q', function (LinkDB,$q) {
             AutoModerator:{
                 users:{
                 /*  user:{
-                        conformist:{posts: []},
-                        contrarian:{posts: []},
-                        spam:{posts: []},
-                        troll:{posts: []}
+                        honestVotes:[];
+                        dishonestVotes:[];
                     }*/        
                 }
             }
@@ -230,6 +228,18 @@ Community.service( 'ProfileDB',['$q', function (LinkDB,$q) {
 
                 saveProfile();
             }
+        },
+        getUserScore(user){
+            if(!ProfileDB.AutoModerator.users[user]){
+                ProfileDB.AutoModerator.users[user] = {};
+                ProfileDB.AutoModerator.users[user].honestVotes = [];
+                ProfileDB.AutoModerator.users[user].dishonestVotes = [];
+            }
+            
+            var honest = ProfileDB.AutoModerator.users[user].honestVotes.length;
+            var dishonest = ProfileDB.AutoModerator.users[user].dishonestVotes.length;
+            
+            return honest - dishonest*2;
         }
 	};
 

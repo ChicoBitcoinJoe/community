@@ -1,5 +1,7 @@
 pragma solidity ^0.4.4;
 
+import "Shard.sol";
+
 contract Link {
     
     uint total_shards = 0;
@@ -24,13 +26,5 @@ contract Link {
     
     function getShardAddress(string shardName) constant returns(address){
         return shardList[shardName];
-    }
-}
-
-contract Shard{
-    event Broadcast_event(string metadata);
-
-    function broadcast(string metadata){
-        Broadcast_event(metadata);
     }
 }

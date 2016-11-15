@@ -7,13 +7,13 @@ Unsorted
 - Multi sidenav stats button
 - Community fund button
 - settings sidenav backend
-
+- all lists need to be sorted properly
 
 Critical
 ========
 - Metamask loading late
-- Comments
-- lastBlock not being checked before sending out events request
+- lastBlock not being updated
+- post scores
 
 
 NonCritical
@@ -28,7 +28,9 @@ NonCritical
 - Settings Sidenav
     - Turn into directive
     - post-card sizes (compact,comfortable,loose)
-    - Adjustable themes
+    - Adjustable theme colors
+    
+    
     
     
 Notes
