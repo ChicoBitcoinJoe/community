@@ -4,7 +4,8 @@ Community.directive('submitComment', ['ProfileDB','Community', function(ProfileD
 		scope: {
             community:'=',
             ipfsHash:'=',
-            commentDepth:'='
+            commentDepth:'=',
+            rootIpfsHash:'='
 		},
 		replace: true,
 		templateUrl: 'directives/submit-comment/submitCommentDirective.html',
@@ -18,7 +19,8 @@ Community.directive('submitComment', ['ProfileDB','Community', function(ProfileD
                 postType:'self',
                 postCommunity: $scope.community,
                 postComment: '',
-                postParent: $scope.ipfsHash
+                postParent: $scope.ipfsHash,
+                postRootParent:$scope.rootIpfsHash
             };
             
             $scope.borderWidth = 0;

@@ -7,18 +7,24 @@ Community.service('Community', ['$q','LinkDB','IpfsService', function ($q, LinkD
             communities:{},
             active:{
                 posts:[]
-            }
+            },
+            posters:{}
         };
     
         localStorage.setItem('CommunityDB',JSON.stringify(Community));
     }
     
     var postIsValid = function(post){
-        return post.postType && !post.postParent && post.postTitle && post.postCommunity && post.poster &&(post.postLink || post.postComment);
+        return post.postType && !post.rootPostParent && post.postTitle && post.postCommunity && post.poster &&(post.postLink || post.postComment);
     }
     
     var commentIsValid = function(post){
-        return post.postCommunity && post.poster && post.postComment && post.postParent && !post.postTitle;
+        return post.postCommunity && post.poster && post.postComment && post.postParent && !post.postTitle && post.rootPostParent;
+    }
+    
+    var postersExist = function(ipfsHash){
+        if(Object.keys(Community.posters).indexOf(ipfsHash) == -1)
+            Community.posters[ipfsHash] = [];
     }
     
     var sortEvent = function(event){
@@ -28,6 +34,9 @@ Community.service('Community', ['$q','LinkDB','IpfsService', function ($q, LinkD
         function(post){
             if(postIsValid(post)){
                 console.log("Post event");
+                
+                postersExist(ipfsHash);
+                addPoster(ipfsHash,post.poster);
                 
                 var index = Community.active.posts.indexOf(ipfsHash);
                 if(index == '-1')
@@ -50,7 +59,10 @@ Community.service('Community', ['$q','LinkDB','IpfsService', function ($q, LinkD
                 console.log(Community);
             } else if(commentIsValid(post)){
                 console.log("Comment event");
-               
+                
+                postersExist(ipfsHash);
+                addPoster(post.postRootParent,post.poster);
+                
                 var parentIndex = Community.communities[post.postCommunity].comments[post.postParent].indexOf(ipfsHash);
                 if(parentIndex == '-1'){
                     Community.communities[post.postCommunity].comments[post.postParent].push(ipfsHash);
@@ -216,6 +228,10 @@ Community.service('Community', ['$q','LinkDB','IpfsService', function ($q, LinkD
         },
         createCommunity: function(shardName){
             return LinkDB.createShard(shardName);
+        },
+        getPosters: function(ipfsHash){
+            postersExist(ipfsHash);
+            return Community.posters[ipfsHash];
         }
     }
     

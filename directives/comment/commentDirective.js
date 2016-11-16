@@ -22,6 +22,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             };
             
             $scope.activeView = $location.url().split('/')[2];
+            $scope.rootIpfsHash = $location.url().split('/')[4];
             $scope.comments = Community.getChildren($scope.activeView, $scope.ipfsHash).comments[$scope.ipfsHash];
             $scope.hasVoted = false;
             
