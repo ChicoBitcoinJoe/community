@@ -20,8 +20,7 @@ Organized Code | 0% Complete
 Good Code Comments | 0% Complete
 All code is open source | Complete
 
-### Version 2 ###
-Goals
+### Version 2 Goals###
 
 - De-Angular LinkDB for use in generic js apps
 - Make developing Community so easy an amateur web developer can do it
@@ -37,7 +36,7 @@ Goals
 Teir 1 gives me the minimum amount of money for one year of development. If the goal is not reached I will work for X months where X is the total amount funded divided by $700 (rent+internet+electricity)
     
 #### Teir 2: $6000 - $12000 ####
-Teir 2 funding will be spent towards hiring another developer to help implement my project vision.      
+Teir 2 funding will be spent towards hiring other developers to help implement my project vision.
       
 #### Teir 3: $0+ ####
 Teir 3 funding is flex funds to be used at my discretion for things like
