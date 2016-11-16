@@ -1,4 +1,4 @@
-Community.service( 'ProfileDB',['$q', function (LinkDB,$q) {
+Community.service( 'ProfileDB',['Community', function (Community) {
     console.log('Loading ProfileDB account ');
     var ProfileDB = null;
     var currentAccount;
@@ -53,11 +53,6 @@ Community.service( 'ProfileDB',['$q', function (LinkDB,$q) {
                         }
                     }
                 },//*/
-            },
-            WebOfTrust:{
-                primary:[],
-                secondary:[],
-                banned:[]
             },
             AutoModerator:{
                 users:{
@@ -293,6 +288,16 @@ Community.service( 'ProfileDB',['$q', function (LinkDB,$q) {
                 return 'dishonest'; 
             
             return false;
+        },
+        getPostScore: function(community,ipfsHash){
+            var posters = Community.getPosters(community,ipfsHash);
+            
+            var score;
+            for(index in posters){
+                score += service.getUserScore(posters[index]);
+            }
+            
+            return score;
         }
 	};
 

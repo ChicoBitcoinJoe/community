@@ -13,17 +13,22 @@ Community.service('Community', ['$q','LinkDB','IpfsService', function ($q, LinkD
         localStorage.setItem('CommunityDB',JSON.stringify(Community));
     }
     
+    var postIsValid = function(post){
+        return post.postType && !post.postParent && post.postTitle && post.postCommunity && post.poster &&(post.postLink || post.postComment);
+    }
+    
+    var commentIsValid = function(post){
+        return post.postCommunity && post.poster && post.postComment && post.postParent && !post.postTitle;
+    }
+    
     var sortEvent = function(event){
         console.log(event);
         var ipfsHash = event.args.ipfsHash;
         IpfsService.getIpfsData(ipfsHash).then(
         function(post){
-            localStorage.setItem(ipfsHash,JSON.stringify(post));
-        
-            if(post.postType && !post.postParent && post.postTitle && post.postCommunity && 
-                post.poster &&(post.postLink || post.postComment)){
+            if(postIsValid(post)){
                 console.log("Post event");
-
+                
                 var index = Community.active.posts.indexOf(ipfsHash);
                 if(index == '-1')
                     Community.active.posts.push(ipfsHash);
@@ -43,10 +48,9 @@ Community.service('Community', ['$q','LinkDB','IpfsService', function ($q, LinkD
                 }
 
                 console.log(Community);
-            } else if(post.postCommunity && post.poster && post.postComment && post.postParent && 
-                      !post.postTitle){
+            } else if(commentIsValid(post)){
                 console.log("Comment event");
-                
+               
                 var parentIndex = Community.communities[post.postCommunity].comments[post.postParent].indexOf(ipfsHash);
                 if(parentIndex == '-1'){
                     Community.communities[post.postCommunity].comments[post.postParent].push(ipfsHash);
