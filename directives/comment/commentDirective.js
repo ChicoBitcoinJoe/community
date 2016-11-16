@@ -22,17 +22,13 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             };
             
             $scope.activeView = $location.url().split('/')[2];
-            console.log($scope.activeView,$scope.ipfsHash,$scope.commentDepth);
-            
-            $scope.comments1 = Community.getChildren($scope.activeView, $scope.ipfsHash).comments;
-            console.log($scope.comments1);
-            
             $scope.comments = Community.getChildren($scope.activeView, $scope.ipfsHash).comments[$scope.ipfsHash];
-            console.log($scope.comments);
+            $scope.hasVoted = false;
             
             var promise = IpfsService.getIpfsData($scope.ipfsHash).then(
             function(ipfsData){
                 $scope.post = ipfsData;
+                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.ipfsHash);
                 $scope.userScore = ProfileDB.getUserScore($scope.post.poster);
             }, function(err){
                 console.error(err); 
@@ -72,6 +68,18 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
                 }
                 
                 return $scope.show;
+            };
+            
+            $scope.honestVote = function(){
+                ProfileDB.honestVote($scope.post.poster, $scope.ipfsHash);
+                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.ipfsHash);
+                $scope.userScore = ProfileDB.getUserScore($scope.post.poster);
+            };
+            
+            $scope.dishonestVote = function(){
+                ProfileDB.dishonestVote($scope.post.poster, $scope.ipfsHash);
+                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.ipfsHash);
+                $scope.userScore = ProfileDB.getUserScore($scope.post.poster);
             };
 		}
 	}

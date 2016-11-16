@@ -11,11 +11,11 @@
                         <span style="line-height: 16px;" class="md-subhead"><small>{{post.poster}}</small></span>
                     </h5>
                     <span flex></span>
-                    <h4 style="margin:0px;">{{userScore}}</h4>
+                    <h4 ng-show="hasVoted" style="margin:0px;">{{userScore}}</h4>
                 </div>
                 <div ng-hide="minimized" style="margin-top:5px;">{{post.postComment}}</div>
             </md-card-content>
-            <md-card-actions ng-show="showExtras || commentDepth == 0">
+            <md-card-actions ng-show="showExtras || commentDepth == 0" style="margin-bottom:8px !important;">
                 <md-card-actions layout="row" layout-align="start center">
                     <md-card-icon-actions>
                         <md-button class="md-icon-button" aria-label="Favorite">
@@ -24,8 +24,16 @@
                         <md-button class="md-icon-button" aria-label="Share">
                             <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
                         </md-button>
+                        <md-button ng-hide="hasVoted" aria-label="vote user honest" ng-click="honestVote()">
+                            <md-icon md-svg-icon="images/icons/ic_arrow_upward_white_24px.svg"></md-icon>
+                            Honest
+                        </md-button>
+                        <md-button ng-hide="hasVoted" aria-label="vote user dishonest" ng-click="dishonestVote()">
+                            <md-icon md-svg-icon="images/icons/ic_arrow_downward_white_24px.svg"></md-icon>
+                            Dishonest
+                        </md-button>
                         <span flex></span>
-                        <md-button ng-click="showSubmitCommentPanel()" style="margin-bottom:8px;">{{replyText}}</md-button>
+                        <md-button ng-click="showSubmitCommentPanel()">{{replyText}}</md-button>
                     </md-card-icon-actions>
                 </md-card-actions>
             </md-card-actions>

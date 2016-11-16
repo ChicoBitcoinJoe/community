@@ -14,7 +14,7 @@ Community.service( 'ProfileDB',['$q', function (LinkDB,$q) {
         currentAccount = localStorage.getItem('ProfileDB.lastUsedAccount');
     }
 
-    var saveProfile = function(){
+    var saveProfileDB = function(){
         if(web3.eth.accounts[0] !== undefined)
             localStorage.setItem(web3.eth.accounts[0],JSON.stringify(ProfileDB));
     };
@@ -69,9 +69,30 @@ Community.service( 'ProfileDB',['$q', function (LinkDB,$q) {
             }
         };
         
-        saveProfile();
+        saveProfileDB();
     }
     
+    var createUserProfile = function(user){
+        var keys = Object.keys(ProfileDB.AutoModerator.users);
+        if(keys.indexOf(user) == '-1'){
+            ProfileDB.AutoModerator.users[user] = {};
+            ProfileDB.AutoModerator.users[user].honestVotes = [];
+            ProfileDB.AutoModerator.users[user].dishonestVotes = [];
+        }
+    }
+    
+    var updateUserScore = function(user){
+        var honest = ProfileDB.AutoModerator.users[user].honestVotes.length;
+        var dishonest = ProfileDB.AutoModerator.users[user].dishonestVotes.length;
+        
+        var score = 50 + (honest - dishonest*2);
+        if(score > 100)
+            score = 100;
+        if(score < 0)
+            score = 0;
+        
+        ProfileDB.AutoModerator.users[user].score = score;
+    }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -140,7 +161,7 @@ Community.service( 'ProfileDB',['$q', function (LinkDB,$q) {
                 }
             }
             
-            saveProfile();
+            saveProfileDB();
         },
         createMulti: function(multiName){
             multiName = multiName.toLowerCase();
@@ -151,7 +172,7 @@ Community.service( 'ProfileDB',['$q', function (LinkDB,$q) {
                     service.addCommunity(multiName, multiName);
                 }
                 
-                saveProfile();
+                saveProfileDB();
             }
         },
         removeCommunity: function(communityName, multiName){
@@ -175,7 +196,7 @@ Community.service( 'ProfileDB',['$q', function (LinkDB,$q) {
                         ProfileDB.SavedMultis['all'].splice(index, 1);
                         console.log("Deleted " + communityName + " from " + 'all');
                         
-                        saveProfile();
+                        saveProfileDB();
                         return true;
                     }
                 } else {
@@ -203,7 +224,7 @@ Community.service( 'ProfileDB',['$q', function (LinkDB,$q) {
                             console.log("Added " + communityName + " to 'ungrouped'");
                         }
                         
-                        saveProfile();
+                        saveProfileDB();
                         return true;
                     }
                 }
@@ -226,20 +247,52 @@ Community.service( 'ProfileDB',['$q', function (LinkDB,$q) {
                 delete ProfileDB.SavedMultis[multiName];
                 console.log("Deleted Multi: " + multiName);
 
-                saveProfile();
+                saveProfileDB();
             }
         },
-        getUserScore(user){
-            if(!ProfileDB.AutoModerator.users[user]){
-                ProfileDB.AutoModerator.users[user] = {};
-                ProfileDB.AutoModerator.users[user].honestVotes = [];
-                ProfileDB.AutoModerator.users[user].dishonestVotes = [];
-            }
+        getUserScore: function(user){
+            createUserProfile(user);
             
-            var honest = ProfileDB.AutoModerator.users[user].honestVotes.length;
-            var dishonest = ProfileDB.AutoModerator.users[user].dishonestVotes.length;
+            return ProfileDB.AutoModerator.users[user].score;
+        },
+        honestVote: function(user,ipfsHash){
+            createUserProfile(user);
+            console.log(ProfileDB.AutoModerator.users[user].dishonestVotes);
+            var index = ProfileDB.AutoModerator.users[user].dishonestVotes.indexOf(ipfsHash);
+            if(index > -1)
+                ProfileDB.AutoModerator.users[user].dishonestVotes.splice(index,1);
+            console.log(ProfileDB.AutoModerator.users[user].dishonestVotes);
+            if(ProfileDB.AutoModerator.users[user].honestVotes.indexOf(ipfsHash) == '-1')
+               ProfileDB.AutoModerator.users[user].honestVotes.push(ipfsHash);
             
-            return honest - dishonest*2;
+            updateUserScore(user);
+            saveProfileDB();
+        },
+        dishonestVote: function(user,ipfsHash){
+            createUserProfile(user);
+            console.log(ProfileDB.AutoModerator.users[user].honestVotes);
+            var index = ProfileDB.AutoModerator.users[user].honestVotes.indexOf(ipfsHash);
+            if(index > -1)
+                ProfileDB.AutoModerator.users[user].honestVotes.splice(index,1);
+            console.log(ProfileDB.AutoModerator.users[user].honestVotes);
+            if(ProfileDB.AutoModerator.users[user].dishonestVotes.indexOf(ipfsHash) == '-1')
+               ProfileDB.AutoModerator.users[user].dishonestVotes.push(ipfsHash);
+            
+            updateUserScore(user);
+            saveProfileDB();
+        },
+        hasVoted: function(user,ipfsHash){
+            createUserProfile(user);
+            
+            var index = ProfileDB.AutoModerator.users[user].honestVotes.indexOf(ipfsHash);
+            if(index !== -1)
+                return 'honest'; 
+               
+            var index2 = ProfileDB.AutoModerator.users[user].dishonestVotes.indexOf(ipfsHash);
+            if(index2 !== -1)
+                return 'dishonest'; 
+            
+            return false;
         }
 	};
 

@@ -19,26 +19,14 @@ Community.service('Community', ['$q','LinkDB','IpfsService', function ($q, LinkD
         IpfsService.getIpfsData(ipfsHash).then(
         function(post){
             localStorage.setItem(ipfsHash,JSON.stringify(post));
-            
-            var keys = Object.keys(Community.communities);
-            var index = keys.indexOf(post.postCommunity);
-            if(index == '-1'){
-                Community.communities[post.postCommunity] = {};
-                Community.communities[post.postCommunity].comments = {};
-                Community.communities[post.postCommunity].comments[ipfsHash] = [];
-                Community.communities[post.postCommunity].posts = [];
-                Community.communities[post.postCommunity].lastBlock = null;
-                
-                Community.communities[post.postCommunity].comments[ipfsHash] = [];
-                console.log("Creating " + post.postCommunity + " for " + ipfsHash);
-                localStorage.setItem('CommunityDB',JSON.stringify(Community));
-            }
         
             if(post.postType && !post.postParent && post.postTitle && post.postCommunity && 
                 post.poster &&(post.postLink || post.postComment)){
                 console.log("Post event");
 
-                Community.active.posts.push(ipfsHash);
+                var index = Community.active.posts.indexOf(ipfsHash);
+                if(index == '-1')
+                    Community.active.posts.push(ipfsHash);
                 
                 if(Community.communities[post.postCommunity].posts.indexOf(ipfsHash) == '-1'){
                     Community.communities[post.postCommunity].posts.push(ipfsHash);
@@ -164,6 +152,26 @@ Community.service('Community', ['$q','LinkDB','IpfsService', function ($q, LinkD
         },
         getPosts: function(communities){
             Community.active.posts = [];
+            
+            for(index in communities){
+                var keys = Object.keys(Community.communities);
+                var qindex = keys.indexOf(communities[index]);
+                if(qindex == '-1'){
+                    Community.communities[communities[index]] = {};
+                    Community.communities[communities[index]].comments = {};
+                    Community.communities[communities[index]].posts = [];
+                    Community.communities[communities[index]].lastBlock = null;
+                    localStorage.setItem('CommunityDB',JSON.stringify(Community));
+                } else {
+                    for(windex in Community.communities[communities[index]].posts){
+                        if(Community.active.posts.indexOf(Community.communities[communities[index]].posts[windex]))
+                            Community.active.posts.push(Community.communities[communities[index]].posts[windex]);
+                    }
+                }
+            }
+            
+            console.log(Community.active.posts);
+            
             for(index in communities){
                 console.log("Getting posts from " + communities[index]);
                 //Add events from each community
@@ -177,11 +185,11 @@ Community.service('Community', ['$q','LinkDB','IpfsService', function ($q, LinkD
                             console.log(Community);
                             localStorage.setItem('CommunityDB',JSON.stringify(Community));
                         } else {
-                            console.error(err);
+                            console.log(err);
                         }
                     });
                 }, function(err){
-                    console.error(err);
+                    console.log(err);
                 });
             }
             console.log(Community);
@@ -196,9 +204,6 @@ Community.service('Community', ['$q','LinkDB','IpfsService', function ($q, LinkD
                 Community.communities[community].comments[ipfsHash] = [];
                 Community.communities[community].posts = [];
                 Community.communities[community].lastBlock = null;
-                
-                Community.communities[community].comments[ipfsHash] = [];
-                console.log("Creating " + community + " for " + ipfsHash);
                 localStorage.setItem('CommunityDB',JSON.stringify(Community));
             }
             console.log(Community.communities[community]);
