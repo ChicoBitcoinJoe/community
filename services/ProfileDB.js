@@ -15,8 +15,7 @@ Community.service( 'ProfileDB',['Community', function (Community) {
     }
 
     var saveProfileDB = function(){
-        if(web3.eth.accounts[0] !== undefined)
-            localStorage.setItem(web3.eth.accounts[0],JSON.stringify(ProfileDB));
+        localStorage.setItem(web3.eth.accounts[0],JSON.stringify(ProfileDB));
     };
     
     var loadProfile = function(account){
@@ -73,6 +72,7 @@ Community.service( 'ProfileDB',['Community', function (Community) {
             ProfileDB.AutoModerator.users[user] = {};
             ProfileDB.AutoModerator.users[user].honestVotes = [];
             ProfileDB.AutoModerator.users[user].dishonestVotes = [];
+            ProfileDB.AutoModerator.users[user].score = 0;
         }
     }
     
@@ -254,12 +254,12 @@ Community.service( 'ProfileDB',['Community', function (Community) {
             createUserProfile(user);
             console.log(ProfileDB.AutoModerator.users[user].dishonestVotes);
             var index = ProfileDB.AutoModerator.users[user].dishonestVotes.indexOf(ipfsHash);
-            if(index > -1)
+            if(index !== '-1')
                 ProfileDB.AutoModerator.users[user].dishonestVotes.splice(index,1);
             console.log(ProfileDB.AutoModerator.users[user].dishonestVotes);
             if(ProfileDB.AutoModerator.users[user].honestVotes.indexOf(ipfsHash) == '-1')
                ProfileDB.AutoModerator.users[user].honestVotes.push(ipfsHash);
-            
+            console.log(ProfileDB.AutoModerator.users[user].honestVotes);
             updateUserScore(user);
             saveProfileDB();
         },
@@ -267,12 +267,12 @@ Community.service( 'ProfileDB',['Community', function (Community) {
             createUserProfile(user);
             console.log(ProfileDB.AutoModerator.users[user].honestVotes);
             var index = ProfileDB.AutoModerator.users[user].honestVotes.indexOf(ipfsHash);
-            if(index > -1)
+            if(index !== '-1')
                 ProfileDB.AutoModerator.users[user].honestVotes.splice(index,1);
             console.log(ProfileDB.AutoModerator.users[user].honestVotes);
             if(ProfileDB.AutoModerator.users[user].dishonestVotes.indexOf(ipfsHash) == '-1')
                ProfileDB.AutoModerator.users[user].dishonestVotes.push(ipfsHash);
-            
+            console.log(ProfileDB.AutoModerator.users[user].dishonestVotes);
             updateUserScore(user);
             saveProfileDB();
         },
@@ -291,12 +291,14 @@ Community.service( 'ProfileDB',['Community', function (Community) {
         },
         getPostScore: function(community,ipfsHash){
             var posters = Community.getPosters(community,ipfsHash);
-            
-            var score;
+            console.log(posters);
+            var score = 0;
             for(index in posters){
-                score += service.getUserScore(posters[index]);
+                var userScore = service.getUserScore(posters[index]);
+                score += userScore;
+                console.log(index,userScore,score);
             }
-            
+                        
             return score;
         }
 	};

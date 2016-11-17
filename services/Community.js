@@ -15,16 +15,21 @@ Community.service('Community', ['$q','LinkDB','IpfsService', function ($q, LinkD
     }
     
     var postIsValid = function(post){
-        return post.postType && !post.rootPostParent && post.postTitle && post.postCommunity && post.poster &&(post.postLink || post.postComment);
+        return post.postType && post.postTitle && post.postCommunity && post.poster &&(post.postLink || post.postComment);
     }
     
     var commentIsValid = function(post){
-        return post.postCommunity && post.poster && post.postComment && post.postParent && !post.postTitle && post.rootPostParent;
+        return post.postCommunity && post.poster && post.postComment && post.postParent && !post.postTitle;
     }
     
     var postersExist = function(ipfsHash){
         if(Object.keys(Community.posters).indexOf(ipfsHash) == -1)
             Community.posters[ipfsHash] = [];
+    }
+    
+    var addPoster = function(ipfsHash, poster){
+        if(Community.posters[ipfsHash].indexOf(poster) == -1)
+            Community.posters[ipfsHash].push(poster);
     }
     
     var sortEvent = function(event){

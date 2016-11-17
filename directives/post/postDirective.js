@@ -1,5 +1,5 @@
-Community.directive('postCard', ['IpfsService','$location','$window',
-function(IpfsService,$location,$window) {
+Community.directive('postCard', ['IpfsService','$location','$window','ProfileDB',
+function(IpfsService,$location,$window,ProfileDB){
 	return {
 		restrict: 'E',
 		scope: {
@@ -13,6 +13,8 @@ function(IpfsService,$location,$window) {
             $scope.post = IpfsService.getIpfsData($scope.ipfsHash).then(
             function(ipfsData){
                 $scope.post = ipfsData;
+                
+                $scope.postScore = ProfileDB.getPostScore($scope.activeView,$scope.ipfsHash);
                 
                 if($scope.post.postType === 'image'){
                     var img = new Image();

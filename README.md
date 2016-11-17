@@ -13,15 +13,17 @@ Other topics I need to expand on:
 # Prerequisites
 *Read Only Mode is available by using the ipfs gateway combined with metamask. Otherwise...
 
-1. Ipfs needs to be installed. Using Chrome on windows I also had to run in a command prompt
+1. Some method to expose the web3 object to your client
+    - [Mist](https://github.com/ethereum/mist/releases)
+    - [Geth](https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum)
+    - [Metamask](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn)
+    
+2. Ipfs needs to be installed. Using Chrome on windows I also had to run in a command prompt
     - ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin "[\"*\"]"
     - ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods "[\"PUT\", \"GET\", \"POST\"]"
     - ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials "[\"true\"]"
-2. Some method to expose the web3 object to your client (Mist/Geth/Metamask)
-
-
-# Installing
-1. Open a command prompt and run "ipfs daemon". Verify that the ipfs daemon is running appropriately. It should look something like...
+    
+3. Be running an Ipfs daemon. Open a command prompt and run "ipfs daemon". Verify that the ipfs daemon is running appropriately. It should look something like...
     * Initializing daemon...
     * Swarm listening on /ip4/127.0.0.1/tcp/4001
     * Swarm listening on /ip4/169.254.150.233/tcp/4001
@@ -35,17 +37,15 @@ Other topics I need to expand on:
     * API server listening on /ip4/127.0.0.1/tcp/5001
     * Gateway (readonly) server listening on /ip4/127.0.0.1/tcp/8080
     * Daemon is ready
-    
-2. There are two ways you can get the Community code
-    - If Git is installed run "git clone https://github.com/ChicoBitcoinJoe/Community"
-    - If you have a Ipfs hash (Qm1a2b3c...) of a certain version of Community you can run "ipfs get Qm1a2b3c..." to get that version. Todo: Add a permanent ipfs hash that autoforwards to the newest version of community
 
+# Installing
+1. If Git is installed run "git clone https://github.com/ChicoBitcoinJoe/Community". Otherwise you can download it from [here](https://github.com/ChicoBitcoinJoe/Community-Material-Design) by clicking the green "Clone or download" button.
 
-3. From a command prompt in the Community folder run "ipfs add -r -q Community | tail -n1" to get an Ipfs hash of the folder. The hash should be the same as step 2 (Unless I forget to update the hash when I push. I'll try to figure out a better way to do this).
+2. From a command prompt in the downloaded Community folder run "ipfs add -r -q Community | tail -n1" to get an Ipfs hash of the folder.
 
-4. Browse to http://localhost:8080/ipfs/IPFS_HASH_FROM_STEP_3/ (Make sure you have web3 exposed and have the ipfs daemon running!)
+3. Browse to http://localhost:8080/ipfs/IPFS_HASH_FROM_STEP_3/ (Make sure you have web3 exposed and have the ipfs daemon running!)
 
-5. Every time you make a change in the Community folder you need to repeat steps 3 and 4
+4. Every time you make a change in the Community folder you need to repeat steps 3 and 4
 
 # Tips
 - To copy straight to clipboard "ipfs add -r -q Community | tail -n1 | clip"

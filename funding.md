@@ -1,7 +1,6 @@
 # Community Funding #
 
-### Repo ###
-[Github Repo](https://github.com/ChicoBitcoinJoe/Community-Material-Design)
+## [Community Repo](https://github.com/ChicoBitcoinJoe/Community-Material-Design) ##
  
 ### Version 1 Deliverables ###
 
@@ -30,7 +29,7 @@ All code is open source | Complete
 - Better Ipfs integration (auto pinning favorited items, filecoin ...)
 - Adopt a standard for LinkDB event data
     
-### Funding Goals ###
+## Funding Goals ##
 
 #### Teir 1: $8400 ####
 Teir 1 gives me the minimum amount of money for one year of development. If the goal is not reached I will work for X months where X is the total amount funded divided by $700 (rent+internet+electricity)
@@ -40,6 +39,7 @@ Teir 2 funding will be spent towards hiring other developers to help implement m
       
 #### Teir 3: $0+ ####
 Teir 3 funding is flex funds to be used at my discretion for things like
-    - Giving extensions, raises, or hiring more developers
-    - Funding another year of teir 1 development
-    - If money to spare, give myself a raise to cover additional expenses I have (student loans+insurance+food)
+
+- Giving extensions, raises, or hiring more developers
+- Funding another year of teir 1 development
+- If money to spare, give myself a raise to cover additional expenses I have (student loans+insurance+food)
