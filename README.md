@@ -39,14 +39,14 @@ Other topics I need to expand on:
     * Daemon is ready
 
 # Installing
-1. If Git is installed run "git clone https://github.com/ChicoBitcoinJoe/Community". Otherwise you can download it from [here](https://github.com/ChicoBitcoinJoe/Community-Material-Design) by clicking the green "Clone or download" button.
+1. If Git is installed run "git clone https://github.com/ChicoBitcoinJoe/Community-Material-Design". Otherwise you can download it from [here](https://github.com/ChicoBitcoinJoe/Community-Material-Design)
 
-2. From a command prompt in the downloaded Community folder run "ipfs add -r -q Community | tail -n1" to get an Ipfs hash of the folder.
+2. Open a command prompt same folder as the Community folder and run "ipfs add -r -q Community | tail -n1" to get an Ipfs hash of the Community folder.
 
-3. Browse to http://localhost:8080/ipfs/IPFS_HASH_FROM_STEP_3/ (Make sure you have web3 exposed and have the ipfs daemon running!)
+3. Browse to http://localhost:8080/ipfs/COPY_IPFS_HASH_FROM_STEP_2_HERE/ (Make sure you have web3 exposed and have the ipfs daemon running!)
 
-4. Every time you make a change in the Community folder you need to repeat steps 3 and 4
+4. Every time you make a change in the Community folder you need to repeat steps 2 and 3
 
 # Tips
-- To copy straight to clipboard "ipfs add -r -q Community | tail -n1 | clip"
-- For more verbose output "ipfs add -r Community"
+- To copy the ipfs hash straight to the clipboard use "ipfs add -r -q Community | tail -n1 | clip"
+- For more verbose output use "ipfs add -r Community"
