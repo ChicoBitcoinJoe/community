@@ -1,6 +1,7 @@
 # Community Funding #
 
-## [Community Repo](https://github.com/ChicoBitcoinJoe/Community-Material-Design) ##
+- [Community Repo](https://github.com/ChicoBitcoinJoe/Community-Material-Design) ##
+- [Slide Show](https://docs.google.com/presentation/d/1oiCmJcrn15-kK3xS-UzPbx5M1LAyRlGRRJ6q4qllw0E/edit?usp=sharing)
  
 ### Version 1 Deliverables ###
 
@@ -26,8 +27,9 @@ All code is open source | Complete
 - Remove reliance on running an ipfs node or using a read only gateway
 - Custom themes
 - Custom AutoModerators/Automoderator Market
-- Better Ipfs integration (auto pinning favorited items, filecoin ...)
+- Better Ipfs integration (auto pinning favorited items, filecoin, save encrypted copy of profile ...)
 - Adopt a standard for LinkDB event data
+- Community Grants
     
 ## Funding Goals ##
 

@@ -1,7 +1,13 @@
 ## Community
 Community is a reference implementation of a Reddit clone using the LinkDB Contract.
 
+*new*
+Community is the birth of a completely open, uncensorable, and shared network effect. User submitted content is shared amongst all apps using the LinkDB network to broadcast their content as well as giving new developers a way to bootstrap users and content to their own sites. The network is spam resistant, troll resistant, and completely ad free.
+*new*
+
+*old*
 When looking at Facebook, Twitter, Reddit, Instagram ... etc, you can generalize them as a third party hooking together content with an audience. There is huge amounts of overlap between the userbases and by extension the content (through xposting) and the only difference between these third parties is how that content is delivered to the audience. LinkDB is a completely open hub for submitting content, decoupling third parties from their userbases and content, allowing anyone to tap into the existing LinkDB network effect. Any developer with a new vision for delivering content can tap into LinkDBs network effect without having to maintain a server, accrue users, throw annoying ads at users to pay for said servers, and many other hassles. Link aims to make creating a social media/news site so easy an ametuer web designer can pick it up with little to no issues.
+*old*
 
 Other topics I need to expand on:
 - Open Source
@@ -41,12 +47,12 @@ Other topics I need to expand on:
 # Installing
 1. If Git is installed run "git clone https://github.com/ChicoBitcoinJoe/Community-Material-Design". Otherwise you can download it from [here](https://github.com/ChicoBitcoinJoe/Community-Material-Design)
 
-2. Open a command prompt same folder as the Community folder and run "ipfs add -r -q Community | tail -n1" to get an Ipfs hash of the Community folder.
+2. Open a command prompt in the same folder as the Community folder and run "ipfs add -r -q Community-Folder_Name | tail -n1" to get an Ipfs hash of the Community folder.
 
 3. Browse to http://localhost:8080/ipfs/COPY_IPFS_HASH_FROM_STEP_2_HERE/ (Make sure you have web3 exposed and have the ipfs daemon running!)
 
 4. Every time you make a change in the Community folder you need to repeat steps 2 and 3
 
 # Tips
-- To copy the ipfs hash straight to the clipboard use "ipfs add -r -q Community | tail -n1 | clip"
-- For more verbose output use "ipfs add -r Community"
+- To copy the ipfs hash straight to the clipboard use "ipfs add -r -q Community-Folder_Name | tail -n1 | clip"
+- For more verbose output use "ipfs add -r Community-Folder_Name"
