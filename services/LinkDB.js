@@ -108,9 +108,6 @@ Community.service('LinkDB', ['$q','IpfsService', function ($q,IpfsService) {
         /////////////////////////
         // Shard.sol Functions //
         /////////////////////////
-        getShardInfo: function(){
-            
-        },
         broadcast: function(data){
             //Add to ipfs
             var promise_ipfsHash = IpfsService.getIpfsHash(post)

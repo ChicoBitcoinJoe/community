@@ -1,6 +1,5 @@
 # Community Funding #
 
-- [Community Repo](https://github.com/ChicoBitcoinJoe/Community-Material-Design) ##
 - [Slide Show](https://docs.google.com/presentation/d/1oiCmJcrn15-kK3xS-UzPbx5M1LAyRlGRRJ6q4qllw0E/edit?usp=sharing)
  
 ### Version 1 Deliverables ###
