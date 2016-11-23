@@ -16,11 +16,11 @@ Community.directive('submitComment', ['ProfileDB','Community', function(ProfileD
             
             $scope.newComment = {
                 poster: ProfileDB.getCurrentAccount(),
-                postType:'self',
-                postCommunity: $scope.community,
-                postComment: '',
-                postParent: $scope.ipfsHash,
-                postRootParent:$scope.rootIpfsHash
+                media:'self',
+                community: $scope.community,
+                comment: null,
+                parent: $scope.ipfsHash,
+                root_parent: $scope.rootIpfsHash
             };
             
             $scope.borderWidth = 0;

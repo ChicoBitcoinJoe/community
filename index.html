@@ -7,8 +7,8 @@
     
     <!-- Angular Material style sheet -->
     <link rel="stylesheet" href="angular-includes/angular-material-1.1.0.min.css">
-    <link rel="stylesheet" href="other-includes/googleapis-fonts/material-icons.css">
-    <link rel="stylesheet" href="other-includes/googleapis-fonts/roboto.css">
+    <link rel="stylesheet" href="libs/googleapis-fonts/material-icons.css">
+    <link rel="stylesheet" href="libs/googleapis-fonts/roboto.css">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="views/community/communityView.css">
     <link rel="stylesheet" href="views/comment/commentView.css">
@@ -77,11 +77,11 @@
                     </md-input-container>
                 </div>
                 <div ng-hide="viewType == 'c'" class="sidenav-list-item" ng-repeat="community in communities" layout="row">
-                    <a style="height:36px;" ng-href="#/c/{{community}}" layout layout-align="left center" flex>{{community | capitalize}}</a></span><md-button ng-hide="toggleSettings" style="margin:0px; color:rgba(255,255,255,0.5)">500&nbsp<md-icon md-svg-src="images/icons/ic_loyalty_white_18px.svg"></md-icon></md-button>
+                    <a style="height:36px;" ng-href="#/c/{{community}}" layout layout-align="left center" flex>{{community | capitalize}}</a></span><md-button ng-href="#/c/{{community}}/fund" ng-hide="toggleSettings" style="margin:0px; color:rgba(255,255,255,0.5)">500&nbsp<md-icon md-svg-src="images/icons/ic_loyalty_white_18px.svg"></md-icon></md-button>
                     <md-button ng-show="toggleSettings && activeView !== 'all'" style="margin:0px;" ng-click="removeCommunity(community)" aria-label="remove community"><md-icon md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg"></md-button>
                 </div>
                 <div ng-show="viewType == 'c'" ng-class="{selected: (community==activeView && viewType=='c')}" class="sidenav-list-item" ng-repeat="community in all" layout="row">
-                    <a style="height:36px;" ng-href="#/c/{{community}}" layout layout-align="left center" flex>{{community | capitalize}}</a><md-button ng-hide="toggleSettings" style="margin:0px; color:rgba(255,255,255,0.5)">500&nbsp<md-icon md-svg-src="images/icons/ic_loyalty_white_18px.svg"></md-icon></md-button>
+                    <a style="height:36px;" ng-href="#/c/{{community}}" layout layout-align="left center" flex>{{community | capitalize}}</a><md-button ng-href="#/c/{{community}}/fund" ng-hide="toggleSettings" style="margin:0px; color:rgba(255,255,255,0.5)">500&nbsp<md-icon md-svg-src="images/icons/ic_loyalty_white_18px.svg"></md-icon></md-button>
                     <md-button ng-show="toggleSettings && activeView !== 'all'" style="margin:0px;" ng-click="removeCommunity(community)" aria-label="remove community"><md-icon md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg"></md-button>
                 </div>
             </md-list>
@@ -112,32 +112,7 @@
             </md-slider-container>
             <md-checkbox ng-model="isDisabled" style="margin-left:15px;"><small>Disable public opinion</small></md-checkbox>
             <span></span>
-            <h3 style="margin-bottom:0px; margin-right:30px;" layout="row">Donation Distribution <span flex></span>%</h3>
-            <span class="md-body-1">Community Development</span>
-            <md-slider-container>
-                <md-icon md-svg-src="images/icons/ic_tag_faces_white_24px.svg"></md-icon>
-                <md-slider ng-model="communityPercent" min="0" max="100" aria-label="regular slider"></md-slider>
-                <md-input-container style="width:65px;min-width:65px;">
-                    <input flex type="number" ng-model="communityPercent" aria-label="regular-slider">
-                </md-input-container>
-            </md-slider-container>
-            <h4 layout="row" style="margin-right:28px;">Alternative Development <span flex></span>{{alternativePercent}}</h4>
-            <span class="md-body-1">Ethereum Development</span>
-            <md-slider-container>
-                <md-icon md-svg-src="images/icons/ic_supervisor_account_white_24px.svg"></md-icon>
-                <md-slider ng-model="ethereumPercent" min="0" max="{{alternativePercent}}" aria-label="regular slider"></md-slider>
-                <md-input-container style="width:65px;min-width:65px;">
-                    <input flex type="number" ng-model="ethereumPercent" aria-label="regular-slider">
-                </md-input-container>
-            </md-slider-container>
-            <span class="md-body-1">Metamask Development</span>
-            <md-slider-container>
-                <md-icon md-svg-src="images/icons/ic_supervisor_account_white_24px.svg"></md-icon>
-                <md-slider ng-model="metamaskPercent" min="0" max="{{alternativePercent}}" aria-label="regular slider"></md-slider>
-                <md-input-container style="width:65px;min-width:65px;">
-                    <input flex type="number" ng-model="metamaskPercent" aria-label="regular-slider">
-                </md-input-container>
-            </md-slider-container>
+            
         </md-content>
     </md-sidenav>
     
@@ -152,8 +127,8 @@
     <script src="angular-includes/angular-svg-assets-cache.js"></script>
     
     <!-- Other Libraries -->
-    <script src="other-includes/web3.js"></script>
-    <script src="other-includes/ipfs.js"></script>
+    <script src="libs/web3.js"></script>
+    <script src="libs/ipfs.js"></script>
     
     <!-- Application Files  -->
     <script src="app.js"></script>
@@ -162,11 +137,13 @@
     <script src="modules/RecursionHelper.js"></script>
     
     <!-- Services -->
-    <script src="services/Community.js"></script>
+    <script src="services/IpfsService.js"></script>
+    <script src="services/Web3Service.js"></script>
     <script src="services/LinkDB.js"></script>
+    <script src="services/Community.js"></script>
     <script src="services/ProfileDB.js"></script>
-    <script src="services/ipfsService.js"></script>
-    
+    <script src="services/VoteHub.js"></script>
+            
     <!-- Controllers -->
     <script src="controllers/SidenavController.js"></script>
             
@@ -174,6 +151,7 @@
     <script src="views/community/communityViewController.js"></script>
     <script src="views/comment/commentViewController.js"></script>
     <script src="views/multi/multiViewController.js"></script>
+    <script src="views/fund/fundViewController.js"></script>
     
     <!-- Directives -->
     <script src="directives/toolbar/toolbarDirective.js"></script>

@@ -1,0 +1,83 @@
+<md-content md-theme="dark-theme" style="background-color:rgba(33,33,33,1);" layout="column" layout-padding="5" flex>
+<div>
+    <md-card>
+        <md-card-title>
+            <md-card-title-text>
+            <span class="md-headline">Community Development Funding</span>
+            <span class="sidenavGreen md-whiteframe-4dp" style="padding:15px; margin-top:10px; margin-bottom:10px;">Funding Community development will help provide the best experience possible for <b>you</b>. In return you will also be given tokens to use for public voting.</span>
+            </md-card-title-text>
+        </md-card-title>
+        <md-card-content>
+            <h4>Token Behavior</h4>
+            <ul>
+                <li>Tokens cannot be bought for another user nor sent anywhere other than the voting contract (sybil resistance).</li>
+                <li>Tokens are watermarked to a single Community (brigade resistance)</li>
+                <li>Gives a measurable representation of what is important to you. For example: A user has 75% of their tokens voting on a post about cats and 25% voting on a post about dogs. We can deduce that the post about cats is three times more important to this user than the post about dogs</li>
+            </ul>
+        </md-card-content>
+    </md-card>
+</div>
+<div>
+    <md-card>
+        <md-card-title>
+            <md-card-title-text>
+                <span class="md-headline"><small>Current {{activeView | capitalize}} Tokens: 0</small></span>
+            </md-card-title-text>
+        </md-card-title>
+        <md-card-content layout="row">
+            <div flex="40" layout="column">
+                <md-input-container>
+                    <label>Ether</label>
+                    <input md-select-on-focus type="number" ng-model="fundAmount">
+                </md-input-container>
+                <md-button ng-click="fundDevelopment()" class="sidenavGreen">Fund Development</md-button>
+            </div>
+            <div flex="60">
+                <div layout="column" layout-align="center center">
+                    <div>{{fundAmount}} Ether of funding will net you:</div>
+                    <ul>
+                        <li><b>{{fundAmount * 100000}}</b> vote tokens for the <b>{{activeView | capitalize}}</b> Community</span><span flex></span></li>
+                        <li>Fund <b>{{fundAmount*60 | round}}</b> minutes of Community development</li>
+                        <li>Helping build a decentralized world</li>
+                    </ul>
+                </div>
+            </div>
+        </md-card-content>
+        <md-card-actions layout="row">
+            <span flex></span>
+        </md-card-actions>
+    </md-card>
+</div>
+<!--
+<div>
+    <md-card>
+        <h3 style="margin-bottom:10px; margin-right:30px;" layout="row">Donation Distribution <span flex></span>%</h3>
+        <span class="md-body-1">Community Development</span>
+        <md-slider-container>
+            <md-icon md-svg-src="images/icons/ic_tag_faces_white_24px.svg"></md-icon>
+            <md-slider ng-model="communityPercent" min="0" max="100" aria-label="regular slider"></md-slider>
+            <md-input-container style="width:65px;min-width:65px;">
+                <input flex type="number" ng-model="communityPercent" aria-label="regular-slider">
+            </md-input-container>
+        </md-slider-container>
+        <h4 layout="row" style="margin-right:28px;">Alternative Development <span flex></span></h4>
+        <span class="md-body-1">Ethereum Development</span>
+        <md-slider-container>
+            <md-icon md-svg-src="images/icons/ic_supervisor_account_white_24px.svg"></md-icon>
+            <md-slider ng-model="ethereumPercent" min="0" max="{{alternativePercent}}" aria-label="regular slider"></md-slider>
+            <md-input-container style="width:65px;min-width:65px;">
+                <input flex type="number" ng-model="ethereumPercent" aria-label="regular-slider">
+            </md-input-container>
+        </md-slider-container>
+        <span class="md-body-1">Metamask Development</span>
+        <md-slider-container>
+            <md-icon md-svg-src="images/icons/ic_supervisor_account_white_24px.svg"></md-icon>
+            <md-slider ng-disabled="true" ng-model="metamaskPercent" min="0" max="{{alternativePercent}}" aria-label="regular slider"></md-slider>
+            <md-input-container style="width:65px;min-width:65px;">
+                <input flex type="number" ng-model="metamaskPercent" aria-label="regular-slider">
+            </md-input-container>
+        </md-slider-container>    
+    </md-card>
+</div>
+-->
+</md-content>

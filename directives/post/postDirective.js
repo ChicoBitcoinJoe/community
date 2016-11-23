@@ -12,7 +12,8 @@ function(IpfsService,$location,$window,ProfileDB){
             
             $scope.post = IpfsService.getIpfsData($scope.ipfsHash).then(
             function(ipfsData){
-                $scope.post = ipfsData;
+                $scope.post = ipfsData.ipfsData;
+                console.log(ipfsData);
                 
                 $scope.postScore = ProfileDB.getPostScore($scope.activeView,$scope.ipfsHash);
                 

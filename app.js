@@ -10,12 +10,16 @@ Community.config(function ($routeProvider) {
         templateUrl: 'views/community/communityView.html',
         controller: 'CommunityViewController'
     }).
+    when('/c/:community/fund', {
+        templateUrl: 'views/fund/fundView.html',
+        controller: 'fundViewController'
+    }).
     when('/c/:community/post/:postHash', {
         templateUrl: 'views/comment/commentView.html',
         controller: 'CommentViewController'
     }).
 	otherwise({
-      redirectTo: '/m/all'
+      redirectTo: '/c/community'
     });
 });
 
@@ -65,5 +69,11 @@ Community.filter('capitalize', function() {
 Community.filter('trustAsResourceUrl', ['$sce', function($sce) {
     return function(val) {
         return $sce.trustAsResourceUrl(val);
+    };
+}]);
+
+Community.filter('round', [function() {
+    return function(val) {
+        return val.toFixed(1);
     };
 }]);

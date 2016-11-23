@@ -1,28 +1,16 @@
-Community.service( 'ProfileDB',['Community', function (Community) {
+Community.service('ProfileDB',['Web3Service', function(Web3Service){
     console.log('Loading ProfileDB account ');
     var ProfileDB = null;
-    var currentAccount;
-    
-    if (typeof web3 !== 'undefined') {
-        // Use Mist/MetaMask's provider
-        web3 = new Web3(web3.currentProvider);
-        currentAccount = web3.eth.accounts[0];
-        localStorage.setItem('ProfileDB.lastUsedAccount',currentAccount);
-    } else {
-        // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-        //web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-        currentAccount = localStorage.getItem('ProfileDB.lastUsedAccount');
-    }
 
     var saveProfileDB = function(){
-        localStorage.setItem(web3.eth.accounts[0],JSON.stringify(ProfileDB));
+        localStorage.setItem(Web3Service.getCurrentAccount(),JSON.stringify(ProfileDB));
     };
     
     var loadProfile = function(account){
        return JSON.parse(localStorage.getItem(account));
     };
     
-    ProfileDB = loadProfile(web3.eth.accounts[0]);
+    ProfileDB = loadProfile(Web3Service.getCurrentAccount());
     if(ProfileDB == null){
         console.log('Could not find a profile using default');
         ProfileDB = {
@@ -32,32 +20,17 @@ Community.service( 'ProfileDB',['Community', function (Community) {
                 'animals':['cats','dogs','horses'],
                 'ungrouped':['community','politics']
             },
-            SavedPosts:{
-            /*  community:{
-                    posts:{
-                        'QmdpL1cf2ti3m98tvEc5NPZuQbZQjreiXbTVWsf3TvMMJS':{
-                            comments:[QmgkL15f2Ci3D98nvE25N1ZuQAZQjr6iXbTVWsf3TvMMpq,...],
-                        },
-                        'Qm7kL1qf2zi3g983vE95NjZuQtZQjTeeXbTVgsf4T4M4Eb':{
-                            comments:[]
-                        }
-                    },
-                }//*/
-            },
-            SavedComments:{
-            /*  community:{
-                    comments:{
-                        'QmgkL15f2Ci3D98nvE25N1ZuQAZQjr6iXbTVWsf3TvMMpq':{
-                            comments:[]
-                        }
-                    }
-                },//*/
+            favorited:{
+            /*  community:[],
+                ... */
             },
             AutoModerator:{
                 users:{
                 /*  user:{
-                        honestVotes:[];
-                        dishonestVotes:[];
+                        score:0,
+                        upvotes:[],
+                        downvotes:[],
+                        downvoteStreak:0
                     }*/        
                 }
             }
@@ -70,31 +43,25 @@ Community.service( 'ProfileDB',['Community', function (Community) {
         var keys = Object.keys(ProfileDB.AutoModerator.users);
         if(keys.indexOf(user) == '-1'){
             ProfileDB.AutoModerator.users[user] = {};
-            ProfileDB.AutoModerator.users[user].honestVotes = [];
-            ProfileDB.AutoModerator.users[user].dishonestVotes = [];
+            ProfileDB.AutoModerator.users[user].upvotes = [];
+            ProfileDB.AutoModerator.users[user].downvotes = [];
+            ProfileDB.AutoModerator.users[user].downvoteStreak = 0;
             ProfileDB.AutoModerator.users[user].score = 0;
         }
     }
     
     var updateUserScore = function(user){
-        var honest = ProfileDB.AutoModerator.users[user].honestVotes.length;
-        var dishonest = ProfileDB.AutoModerator.users[user].dishonestVotes.length;
+        var honest = ProfileDB.AutoModerator.users[user].upvotes.length;
+        var dishonest = ProfileDB.AutoModerator.users[user].downvotes.length;
         
-        var score = 50 + (honest - dishonest*2);
-        if(score > 100)
-            score = 100;
-        if(score < 0)
-            score = 0;
+        var score = 100 + (honest - dishonest*2);
         
         ProfileDB.AutoModerator.users[user].score = score;
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
     
-	var service = {
+    var service = {
         getCurrentAccount: function(){
-            return web3.eth.accounts[0];
+            return Web3Service.getCurrentAccount();
         },
         getSavedMultis: function(){
             return Object.keys(ProfileDB.SavedMultis);
@@ -250,55 +217,47 @@ Community.service( 'ProfileDB',['Community', function (Community) {
             
             return ProfileDB.AutoModerator.users[user].score;
         },
-        honestVote: function(user,ipfsHash){
+        upvote: function(user,ipfsHash){
             createUserProfile(user);
-            console.log(ProfileDB.AutoModerator.users[user].dishonestVotes);
-            var index = ProfileDB.AutoModerator.users[user].dishonestVotes.indexOf(ipfsHash);
+            console.log(ProfileDB.AutoModerator.users[user].downvotes);
+            var index = ProfileDB.AutoModerator.users[user].downvotes.indexOf(ipfsHash);
             if(index !== '-1')
-                ProfileDB.AutoModerator.users[user].dishonestVotes.splice(index,1);
-            console.log(ProfileDB.AutoModerator.users[user].dishonestVotes);
-            if(ProfileDB.AutoModerator.users[user].honestVotes.indexOf(ipfsHash) == '-1')
-               ProfileDB.AutoModerator.users[user].honestVotes.push(ipfsHash);
-            console.log(ProfileDB.AutoModerator.users[user].honestVotes);
+                ProfileDB.AutoModerator.users[user].downvotes.splice(index,1);
+            console.log(ProfileDB.AutoModerator.users[user].downvotes);
+            if(ProfileDB.AutoModerator.users[user].upvotes.indexOf(ipfsHash) == '-1')
+               ProfileDB.AutoModerator.users[user].upvotes.push(ipfsHash);
+            console.log(ProfileDB.AutoModerator.users[user].upvotes);
             updateUserScore(user);
             saveProfileDB();
         },
-        dishonestVote: function(user,ipfsHash){
+        downvote: function(user,ipfsHash){
             createUserProfile(user);
-            console.log(ProfileDB.AutoModerator.users[user].honestVotes);
-            var index = ProfileDB.AutoModerator.users[user].honestVotes.indexOf(ipfsHash);
+            console.log(ProfileDB.AutoModerator.users[user].upvotes);
+            var index = ProfileDB.AutoModerator.users[user].upvotes.indexOf(ipfsHash);
             if(index !== '-1')
-                ProfileDB.AutoModerator.users[user].honestVotes.splice(index,1);
-            console.log(ProfileDB.AutoModerator.users[user].honestVotes);
-            if(ProfileDB.AutoModerator.users[user].dishonestVotes.indexOf(ipfsHash) == '-1')
-               ProfileDB.AutoModerator.users[user].dishonestVotes.push(ipfsHash);
-            console.log(ProfileDB.AutoModerator.users[user].dishonestVotes);
+                ProfileDB.AutoModerator.users[user].upvotes.splice(index,1);
+            console.log(ProfileDB.AutoModerator.users[user].upvotes);
+            if(ProfileDB.AutoModerator.users[user].downvotes.indexOf(ipfsHash) == '-1')
+               ProfileDB.AutoModerator.users[user].downvotes.push(ipfsHash);
+            console.log(ProfileDB.AutoModerator.users[user].downvotes);
             updateUserScore(user);
             saveProfileDB();
         },
         hasVoted: function(user,ipfsHash){
             createUserProfile(user);
             
-            var index = ProfileDB.AutoModerator.users[user].honestVotes.indexOf(ipfsHash);
+            var index = ProfileDB.AutoModerator.users[user].upvotes.indexOf(ipfsHash);
             if(index !== -1)
                 return 'honest'; 
                
-            var index2 = ProfileDB.AutoModerator.users[user].dishonestVotes.indexOf(ipfsHash);
+            var index2 = ProfileDB.AutoModerator.users[user].downvotes.indexOf(ipfsHash);
             if(index2 !== -1)
                 return 'dishonest'; 
             
             return false;
         },
-        getPostScore: function(community,ipfsHash){
-            var posters = Community.getPosters(community,ipfsHash);
-            console.log(posters);
+        getPostScore: function(){
             var score = 0;
-            for(index in posters){
-                var userScore = service.getUserScore(posters[index]);
-                score += userScore;
-                console.log(index,userScore,score);
-            }
-                        
             return score;
         }
 	};

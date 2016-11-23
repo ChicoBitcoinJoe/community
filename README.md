@@ -1,35 +1,23 @@
 ## Community
-Community is a reference implementation of a Reddit clone using the LinkDB Contract.
+This repo is an implementation of a *Reddit-like* site using the LinkDB Contract backend and a Material Design UX.
 
-*new*
-Community is the birth of a completely open, uncensorable, and shared network effect. User submitted content is shared amongst all apps using the LinkDB network to broadcast their content as well as giving new developers a way to bootstrap users and content to their own sites. The network is spam resistant, troll resistant, and completely ad free.
-*new*
+A presentation detailing how Community works can be found at [this slide show](https://docs.google.com/presentation/d/1oiCmJcrn15-kK3xS-UzPbx5M1LAyRlGRRJ6q4qllw0E/edit?usp=sharing)
 
-*old*
-When looking at Facebook, Twitter, Reddit, Instagram ... etc, you can generalize them as a third party hooking together content with an audience. There is huge amounts of overlap between the userbases and by extension the content (through xposting) and the only difference between these third parties is how that content is delivered to the audience. LinkDB is a completely open hub for submitting content, decoupling third parties from their userbases and content, allowing anyone to tap into the existing LinkDB network effect. Any developer with a new vision for delivering content can tap into LinkDBs network effect without having to maintain a server, accrue users, throw annoying ads at users to pay for said servers, and many other hassles. Link aims to make creating a social media/news site so easy an ametuer web designer can pick it up with little to no issues.
-*old*
-
-Other topics I need to expand on:
-- Open Source
-- Freedom of Speech
-- Self Moderation
-- Ad free
-- Proper incentives
 
 # Prerequisites
-*Read Only Mode is available by using the ipfs gateway combined with metamask. Otherwise...
+*Read Only Mode is available by using the ipfs gateway combined with metamask. Otherwise you need...
 
 1. Some method to expose the web3 object to your client
     - [Mist](https://github.com/ethereum/mist/releases)
     - [Geth](https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum)
     - [Metamask](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn)
     
-2. Ipfs needs to be installed. Using Chrome on windows I also had to run in a command prompt
+2. [Ipfs](https://ipfs.io/docs/install/) needs to be installed. Using Chrome on windows I also had to run in a command prompt
     - ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin "[\"*\"]"
     - ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods "[\"PUT\", \"GET\", \"POST\"]"
     - ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials "[\"true\"]"
     
-3. Be running an Ipfs daemon. Open a command prompt and run "ipfs daemon". Verify that the ipfs daemon is running appropriately. It should look something like...
+3. Run an Ipfs daemon. Open a command prompt and run "ipfs daemon". Verify that the ipfs daemon is running appropriately. It should look something like...
     * Initializing daemon...
     * Swarm listening on /ip4/127.0.0.1/tcp/4001
     * Swarm listening on /ip4/169.254.150.233/tcp/4001
@@ -45,7 +33,7 @@ Other topics I need to expand on:
     * Daemon is ready
 
 # Installing
-1. If Git is installed run "git clone https://github.com/ChicoBitcoinJoe/Community-Material-Design". Otherwise you can download it from [here](https://github.com/ChicoBitcoinJoe/Community-Material-Design)
+1. If Git is installed run "git clone https://github.com/ChicoBitcoinJoe/Community-Material-Design". Otherwise you can download it directly using github.
 
 2. Open a command prompt in the same folder as the Community folder and run "ipfs add -r -q Community-Folder_Name | tail -n1" to get an Ipfs hash of the Community folder.
 
@@ -54,5 +42,5 @@ Other topics I need to expand on:
 4. Every time you make a change in the Community folder you need to repeat steps 2 and 3
 
 # Tips
-- To copy the ipfs hash straight to the clipboard use "ipfs add -r -q Community-Folder_Name | tail -n1 | clip"
-- For more verbose output use "ipfs add -r Community-Folder_Name"
+- To copy the ipfs hash straight to the clipboard use "ipfs add -r -q Community_Folder_Name | tail -n1 | clip"
+- For more verbose ipfs output use "ipfs add -r Community_Folder_Name"

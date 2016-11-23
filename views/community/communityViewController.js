@@ -14,7 +14,7 @@ function($scope, Community){
             $scope.loaded = true;
     }, function(err){
         console.error(err);
-    }); 
+    });
     
     $scope.posts = Community.getPosts(communities);
 }]);

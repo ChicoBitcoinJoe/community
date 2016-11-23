@@ -1,9 +1,20 @@
 pragma solidity ^0.4.4;
 
 contract Shard{
-    event Broadcast_event(string metadata);
+    
+    string shardName;
+    
+    event Broadcast_event(address indexed sender, string ipfsHash);
 
-    function broadcast(string metadata){
-        Broadcast_event(metadata);
+    function Shard(string shard_name){
+        shardName = shard_name;
+    }
+    
+    function getShardName() constant returns(string){
+        return shardName;
+    }
+    
+    function broadcast(string ipfsHash){
+        Broadcast_event(msg.sender, ipfsHash);
     }
 }

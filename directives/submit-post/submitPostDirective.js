@@ -9,11 +9,11 @@ Community.directive('submitPost', ['ProfileDB','$location','Community', function
 		controller: function($scope){
             $scope.newPost = {
                 poster: ProfileDB.getCurrentAccount(),
-                postType: 'null',
-                postTitle: '',
-                postCommunity: $scope.community,
-                postLink: '',
-                postComment: ''
+                media: 'null',
+                title: null,
+                community: $scope.community,
+                link: null,
+                comment: null
             };
             
             var pictureCheckInterval = setInterval(function() {
@@ -36,16 +36,20 @@ Community.directive('submitPost', ['ProfileDB','$location','Community', function
                 }
             }, 1000);
             
+            $scope.submitButtonText = "Click Here To Post";
             $scope.submitPost = function(){
                 console.log($scope.newPost);
+                $scope.submitButtonText = "Waiting for Post to be Broadcast";
                 Community.submitPost($scope.newPost).then(
                 function(ipfsHash){
                     if(ipfsHash){
+                        console.log(ipfsHash);
                         $location.url('c/'+ $scope.community + /post/ + ipfsHash);
                     } else {
                         console.log('Not a valid post. Aborting.');
                     }
-                }, function(error){
+                }, function(err){
+                    $scope.submitButtonText = "Oops! An error occured...";
                     console.error(err);
                 });
                 clearInterval(pictureCheckInterval);
