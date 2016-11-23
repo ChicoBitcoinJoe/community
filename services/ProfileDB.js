@@ -1,23 +1,26 @@
-Community.service('ProfileDB',['Web3Service', function(Web3Service){
+Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
     console.log('Loading ProfileDB account ');
     var ProfileDB = null;
-
+    
     var saveProfileDB = function(){
-        localStorage.setItem(Web3Service.getCurrentAccount(),JSON.stringify(ProfileDB));
+        if(Web3Service.getCurrentAccount())
+            localStorage.setItem(Web3Service.getCurrentAccount(),JSON.stringify(ProfileDB));
+        else   
+            console.log("Tried to save profile but no account to save to.");
     };
     
     var loadProfile = function(account){
        return JSON.parse(localStorage.getItem(account));
     };
     
+    console.log(Web3Service.getCurrentAccount());
     ProfileDB = loadProfile(Web3Service.getCurrentAccount());
     if(ProfileDB == null){
         console.log('Could not find a profile using default');
         ProfileDB = {
             SavedMultis:{
-                'all':['community','cats','dogs','horses','bitcoin','ethereum','monero','politics'],
+                'all':['community','bitcoin','ethereum','monero','politics'],
                 'cryptocurrencies':['bitcoin','ethereum','monero'],
-                'animals':['cats','dogs','horses'],
                 'ungrouped':['community','politics']
             },
             favorited:{
@@ -35,9 +38,11 @@ Community.service('ProfileDB',['Web3Service', function(Web3Service){
                 }
             }
         };
-        
+
         saveProfileDB();
     }
+    
+    console.log("ProfileDB done loading");
     
     var createUserProfile = function(user){
         var keys = Object.keys(ProfileDB.AutoModerator.users);
@@ -61,7 +66,7 @@ Community.service('ProfileDB',['Web3Service', function(Web3Service){
     
     var service = {
         getCurrentAccount: function(){
-            return Web3Service.getCurrentAccount();
+            return web3.eth.accounts[0];
         },
         getSavedMultis: function(){
             return Object.keys(ProfileDB.SavedMultis);

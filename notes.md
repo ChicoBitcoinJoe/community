@@ -1,5 +1,10 @@
 # To Do's #
 
+## Unsorted ##
+- Create Community does not properly watch for submission into block before showing submit post card
+- When submitting a post and waiting for a txreceipt: inpage-provider.js:89 Uncaught Error: The MetaMask Web3 object does not support synchronous methods like eth_uninstallFilter without a callback parameter.
+- Need to calculate estimated gas fee
+
 ## Critical ##
 -General
     - Metamask loading late
@@ -26,8 +31,6 @@
 - Settings Sidenav
     - Turn into directive
     
-## Unsorted ##
-- None
 
 
 

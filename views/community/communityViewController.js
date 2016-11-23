@@ -5,8 +5,8 @@ function($scope, Community){
     $scope.created = false;
     $scope.loaded = false;
     
-    var communities = [$scope.activeView];
-    Community.exists($scope.activeView).then(
+    var community = [$scope.activeView];
+    Community.communityExists($scope.activeView).then(
     function(exists){
         if(exists)
             $scope.created = true;
@@ -16,5 +16,5 @@ function($scope, Community){
         console.error(err);
     });
     
-    $scope.posts = Community.getPosts(communities);
+    $scope.posts = Community.getPosts(community);
 }]);

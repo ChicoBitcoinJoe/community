@@ -2,7 +2,7 @@ Community.service('LinkDB', ['$q','IpfsService','Web3Service', function ($q,Ipfs
     console.log('Loading LinkDB');
     
     //var LinkAddress = '0x3D58740553f31267577CB85BabF4D0Ed64f54541'; //PrivateNet
-    var LinkAddress = '0xb6a664E612b2F90b2E1627c9EA68B8f6F4d9c883'; //TestNet
+    var LinkAddress = '0x45848De584283e5EC459B5454b12281e10694200'; //TestNet
     var LinkContract = web3.eth.contract(
         [{"constant":false,"inputs":[{"name":"shardName","type":"string"}],"name":"createShard","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"getShardName","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"shardName","type":"string"}],"name":"getShardAddress","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getTotalShards","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"shardName","type":"string"}],"name":"CreateShard_event","type":"event"}]);
     var LinkInstance = LinkContract.at(LinkAddress);
@@ -81,7 +81,9 @@ Community.service('LinkDB', ['$q','IpfsService','Web3Service', function ($q,Ipfs
                             deferred.resolve(false);
                         } else {
                             console.log("saved shard " + shardName + " at address: " + shardAddress);
-                            LinkDB.Shard_addresses[shardName] = shardAddress;
+                            LinkDB.Shard_addresses[shardName] = {};
+                            LinkDB.Shard_addresses[shardName].shardAddress = shardAddress;
+                            LinkDB.Shard_addresses[shardName].last_block_seen = 0; //eventually shardInfo.block_created 
                             saveLinkDB();
                             deferred.resolve(shardAddress);    
                         }
@@ -104,7 +106,7 @@ Community.service('LinkDB', ['$q','IpfsService','Web3Service', function ($q,Ipfs
             console.log(data);
             var promise_ipfsHash = IpfsService.getIpfsHash(data).then(
             function (ipfsHash) {
-                console.log(ipfsHash, Web3Service.getCurrentAccount());
+                console.log(ipfsHash, Web3Service.getCurrentAccount(),data);
                 var asyncShardAddress = service.getShardAddress(data.community).then(
                 function(shardAddress){
                     if(shardAddress){
@@ -150,15 +152,12 @@ Community.service('LinkDB', ['$q','IpfsService','Web3Service', function ($q,Ipfs
                     var async_toBlock = web3.eth.getBlockNumber(
                     function(err, toBlock){
                         if(!err){
-                            var fromBlock = toBlock - 200000; //roughly one month
-                            if(fromBlock < 0)
-                                fromBlock = 0;
+                            var fromBlock = 0; //LinkDB.Shard_addresses[shardName].last_block_seen;
                             console.log('Fetching events from block ' + fromBlock + ' to ' + toBlock);
                             var args = {fromBlock:fromBlock,toBlock:toBlock};
                             Shard.allEvents(args).get(
                             function(err, events){
                                 if(!err){
-                                    LinkDB.Shard_addresses[shardAddress].last_block_seen = toBlock;
                                     saveLinkDB();
                                     deferred.resolve(events);
                                 } else {

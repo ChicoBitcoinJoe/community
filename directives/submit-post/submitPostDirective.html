@@ -30,8 +30,8 @@
         <h4>- preview -</h4>
     </div>
     <md-card ng-show="newPost.media !== 'null'" md-theme="dark-theme" layout="row" flex>
-        <div ng-if="newPost.media == 'image'" class="card-image-{{orientation}}" layout="{{layout}}" layout-align="center">
-            <img class="card-image" ng-src="{{newPost.link}}" alt="post image: {{newPost.link}}">
+        <div ng-if="newPost.media == 'image'" class="card-image-{{orientation}}" layout="{{layout}}" layout-align="top center">
+            <img class="card-image" ng-src="{{imageSource}}" alt="post image: {{newPost.link}}">
         </div>
         <div layout="column" flex>
             <md-card-title  style="padding-bottom:0px !important;">

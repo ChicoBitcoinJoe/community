@@ -4,13 +4,14 @@ function($scope, $mdSidenav, $location, ProfileDB) {
     
     $scope.account = ProfileDB.getCurrentAccount();
     $scope.username = 'Username';
-    
+
     var locationUrlArray = $location.url().split('/');
     $scope.viewType = locationUrlArray[1];
     $scope.activeView = locationUrlArray[2];
     $scope.multis = ProfileDB.getSavedMultis();
     $scope.communities = ProfileDB.getCommunitiesInMulti($scope.activeView);
     $scope.all = ProfileDB.getCommunitiesInMulti('all');
+
     
     $scope.$on('$routeChangeSuccess', function(newHeader) {
         var locationUrlArray = $location.url().split('/');

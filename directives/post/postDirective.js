@@ -8,16 +8,14 @@ function(IpfsService,$location,$window,ProfileDB){
 		replace: true,
 		templateUrl: 'directives/post/postDirective.html',
 		controller: function($scope){
-            //console.log($scope.event);
-            
+            console.log($scope.ipfsHash);
+            $scope.postScore = ProfileDB.getPostScore($scope.activeView,$scope.ipfsHash);
             $scope.post = IpfsService.getIpfsData($scope.ipfsHash).then(
-            function(ipfsData){
-                $scope.post = ipfsData.ipfsData;
-                console.log(ipfsData);
+            function(post){
+                console.log(post);
+                $scope.post = post;
                 
-                $scope.postScore = ProfileDB.getPostScore($scope.activeView,$scope.ipfsHash);
-                
-                if($scope.post.postType === 'image'){
+                if($scope.post.media == 'image'){
                     var img = new Image();
                     img.onload= function() {
                         //console.log("Image loaded");
@@ -31,29 +29,30 @@ function(IpfsService,$location,$window,ProfileDB){
                     }
                     
                     var url;
-                    if($scope.post.postLink){
-                        var slice = $scope.post.postLink.slice(0,2);
-                        //console.log($scope.post.postLink);
+                    if($scope.post.link){
+                        var slice = $scope.post.link.slice(0,2);
+                        //console.log($scope.post.link);
                         if(slice === 'Qm'){
                             var absUrl = $location.absUrl();
                             var index = absUrl.indexOf('ipfs');
                             var urlSlice = absUrl.slice(0,index+5);
-                            url = urlSlice + $scope.post.postLink;
+                            url = urlSlice + $scope.post.link;
                         } else {
-                            url = $scope.post.postLink;
+                            url = $scope.post.link;
                         }
                     }
                     img.src = url;
 
-                    var slice = $scope.post.postLink.slice(0,2);
+                    var slice = $scope.post.link.slice(0,2);
                     if(slice === 'Qm'){
                         var url = $location.absUrl().split('/');
-                        $scope.imageSource = url[0] + '//' + url[2] + '/' + url[3] + '/' + $scope.post.postLink;
+                        $scope.imageSource = url[0] + '//' + url[2] + '/' + url[3] + '/' + $scope.post.link;
+                        console.log($scope.imageSource);
                     } else {
-                        $scope.imageSource = $scope.post.postLink;
+                        $scope.imageSource = $scope.post.link;
                     }
-                } else if($scope.post.postType === 'video'){
-                    var url = $scope.post.postLink;
+                } else if($scope.post.media === 'video'){
+                    var url = $scope.post.link;
                     //console.log(url);
                     
                     function getParm(url, base) {
@@ -90,22 +89,22 @@ function(IpfsService,$location,$window,ProfileDB){
             });  
             
             $scope.followLink = function(){
-                if($scope.post.postLink){
-                    var slice = $scope.post.postLink.slice(0,2);
-                    console.log($scope.post.postLink);
+                if($scope.post.link){
+                    var slice = $scope.post.link.slice(0,2);
+                    console.log($scope.post.link);
                     if(slice === 'Qm'){
                         var absUrl = $location.absUrl();
                         var index = absUrl.indexOf('ipfs');
                         var urlSlice = absUrl.slice(0,index+5);
-                        var url = urlSlice + $scope.post.postLink;
+                        var url = urlSlice + $scope.post.link;
                         $window.open(url);
                     } else {
                         var url = $location.url();
-                        $window.open($scope.post.postLink);
+                        $window.open($scope.post.link);
                     }
                 } else {
                     console.log("self post");
-                    $location.url('c/' + $scope.post.postCommunity + '/post/' + $scope.ipfsHash);
+                    $location.url('c/' + $scope.post.community + '/post/' + $scope.ipfsHash);
                 }
             }
             

@@ -1,37 +1,16 @@
 Community.service( 'Web3Service',['$q','$sce', function ($q,$sce) {
     console.log('Loading Web3Service');
-	var currentAccount = null;
-    
-    var discoverWeb3 = function(){
-        // Use Mist/MetaMask's provider
-        console.log("Discovered web3");
-        web3 = new Web3(web3.currentProvider);
-        currentAccount = web3.eth.accounts[0];
-        localStorage.setItem('ProfileDB.lastUsedAccount',currentAccount);
-    };
     
     if (typeof web3 !== 'undefined') {
-        discoverWeb3();
+        web3 = new Web3(web3.currentProvider);
     } else {
         // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
         web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-        var local = localStorage.getItem('ProfileDB.lastUsedAccount');
-        if(local)
-            currentAccount = local;
     }
     
-    if(!currentAccount){
-        var interval = setInterval(function(){
-            if (typeof web3 !== 'undefined') {
-                discoverWeb3();
-                clearInterval(interval);
-            } 
-        }, 100);
-    }
-
-	var service = {
+    var service = {
 		getCurrentAccount: function(){
-           return currentAccount;
+           return web3.eth.accounts[0];
         },
 		getTransactionReceipt: function(txHash){
             var deferred = $q.defer();

@@ -44,17 +44,28 @@ Community.service('Community', ['$q','LinkDB','IpfsService','ProfileDB', functio
     };
     
     var addPostToCommunities = function(ipfsHash,ipfsData){
-        if(Community.communities[ipfsData.postCommunity].posts.indexOf(ipfsHash) == '-1'){
-            Community.communities[ipfsData.postCommunity].posts.push(ipfsHash);
-            console.log("Pushing " + ipfsHash + " to post list " + ipfsData.postCommunity);
+        var community = ipfsData.community;
+        var keys = Object.keys(Community.communities);
+        var index = keys.indexOf(community);
+        if(index == '-1'){
+            Community.communities[community] = {};
+            Community.communities[community].comments = {};
+            Community.communities[community].comments[ipfsHash] = [];
+            Community.communities[community].posts = [];
+            Community.communities[community].lastBlock = null;
+        }
+        
+        if(Community.communities[ipfsData.community].posts.indexOf(ipfsHash) == '-1'){
+            Community.communities[ipfsData.community].posts.push(ipfsHash);
+            console.log("Pushing " + ipfsHash + " to post list " + ipfsData.community);
         } else {
-            console.log(ipfsHash + " already in "  + ipfsData.postCommunity + " post list.");
+            cosole.log(ipfsHash + " already in "  + ipfsData.community + " post list.");
         }  
     };
     
     var createCommentSection = function(ipfsHash,ipfsData){
-        if(!Community.communities[ipfsData.postCommunity].comments[ipfsHash]){
-            Community.communities[ipfsData.postCommunity].comments[ipfsHash] = [];
+        if(!Community.communities[ipfsData.community].comments[ipfsHash]){
+            Community.communities[ipfsData.community].comments[ipfsHash] = [];
             console.log("Started a comment list for " + ipfsHash);
         } else {
             console.log("Comment list for " + ipfsHash + " already exists");
@@ -62,13 +73,13 @@ Community.service('Community', ['$q','LinkDB','IpfsService','ProfileDB', functio
     };
     
     var addCommentToParent = function(ipfsHash,ipfsData){
-        var comments = Community.communities[ipfsData.postCommunity].comments[ipfsData.postParent];
+        var comments = Community.communities[ipfsData.community].comments[ipfsData.postParent];
         var parentIndex = comments.indexOf(ipfsHash);
         if(parentIndex == '-1'){
             comments.push(ipfsHash);
-            console.log("Adding " + ipfsHash + " to parent " + ipfsData.postParent + " in " + ipfsData.postCommunity);
+            console.log("Adding " + ipfsHash + " to parent " + ipfsData.postParent + " in " + ipfsData.community);
         } else {
-            console.log(ipfsHash + " already added to parent " + ipfsData.postParent + " in " + ipfsData.postCommunity);
+            console.log(ipfsHash + " already added to parent " + ipfsData.postParent + " in " + ipfsData.community);
         }
     };
     
@@ -111,7 +122,7 @@ Community.service('Community', ['$q','LinkDB','IpfsService','ProfileDB', functio
                 console.log("Invalid event.");
             }
             
-            localStorage.setItem(ipfsHash,JSON.stringify(data));
+            localStorage.setItem(data.eventData.txHash,JSON.stringify(data));
         }, function(err){
             console.error(err);
         });
@@ -152,7 +163,7 @@ Community.service('Community', ['$q','LinkDB','IpfsService','ProfileDB', functio
             
             return deferred.promise;
         },
-        exists: function(community){
+        communityExists: function(community){
             var deferred = $q.defer();
             
             var async = LinkDB.getShardAddress(community).then(
@@ -171,36 +182,37 @@ Community.service('Community', ['$q','LinkDB','IpfsService','ProfileDB', functio
         getPosts: function(communities){
             Community.active.posts = [];
             
-            //If a community does not exist create it then get posts and add to active posts
+            //If a community does not exist create it otherwise get the local posts and add to active posts
             for(index in communities){
                 var keys = Object.keys(Community.communities);
-                var qindex = keys.indexOf(communities[index]);
-                if(qindex == '-1'){
-                    Community.communities[communities[index]] = {};
-                    Community.communities[communities[index]].comments = {};
-                    Community.communities[communities[index]].posts = [];
-                    Community.communities[communities[index]].lastBlock = null;
-                    localStorage.setItem('CommunityDB',JSON.stringify(Community));
+                var exists = keys.indexOf(communities[index]);
+                var community = Community.communities[communities[index]];
+                if(exists == '-1'){
+                    community = {};
+                    community.comments = {};
+                    community.posts = [];
+                    community.lastBlock = null;
                 } else {
-                    for(windex in Community.communities[communities[index]].posts){
-                        if(Community.active.posts.indexOf(Community.communities[communities[index]].posts[windex]))
-                            Community.active.posts.push(Community.communities[communities[index]].posts[windex]);
+                    for(post in community.posts){
+                        if(Community.active.posts.indexOf(community.posts[post]) == '-1')
+                            Community.active.posts.push(community.posts[post]);
                     }
-                    console.log('Active Posts',Community.active.posts);
                 }
+                localStorage.setItem('CommunityDB',JSON.stringify(Community));
             }
             
-            //console.log(Community.active.posts);
+            console.log('Active Posts before lookup',Community.active.posts);
             
             for(index in communities){
                 console.log("Getting posts from " + communities[index]);
                 //Add events from each community
                 LinkDB.getShardEvents(communities[index]).then(
                 function(events){
+                    console.log(events);
                     for(index in events){
                         parseEvent(events[index]);
                     }
-
+                    console.log('Active Posts after look up',Community.active.posts);
                     localStorage.setItem('CommunityDB',JSON.stringify(Community));
                 }, function(err){
                     console.log(err);
