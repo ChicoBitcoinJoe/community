@@ -14,7 +14,8 @@ Community.service( 'Web3Service',['$q','$sce', function ($q,$sce) {
         },
 		getTransactionReceipt: function(txHash){
             var deferred = $q.defer();
-            var async_filter = web3.eth.filter('latest', function(err, blockHash) {
+            var async_filter = web3.eth.filter('latest', 
+            function(err, blockHash) {
                 if(!err){
                     var async_reciept = web3.eth.getTransactionReceipt(txHash, 
                     function(err,receipt){
@@ -27,10 +28,12 @@ Community.service( 'Web3Service',['$q','$sce', function ($q,$sce) {
                                 console.log("Tx not included in this block. Waiting for reciept.");
                             }
                         } else {
+                            async_filter.stopWatching();
                             deferred.reject(err);
                         } 
                     });
                 } else {
+                    async_filter.stopWatching();
                     deferred.reject(err);
                 }
             });
