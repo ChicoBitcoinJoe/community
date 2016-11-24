@@ -2,7 +2,7 @@ pragma solidity ^0.4.4;
 
 import "Shard.sol";
 
-contract LinkDB {
+contract Share{
     
     event CreateShard_event(string shardName);
     

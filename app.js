@@ -14,7 +14,7 @@ Community.config(function ($routeProvider) {
         templateUrl: 'views/fund/fundView.html',
         controller: 'fundViewController'
     }).
-    when('/c/:community/post/:postHash', {
+    when('/c/:community/post/:postTxHash', {
         templateUrl: 'views/comment/commentView.html',
         controller: 'CommentViewController'
     }).

@@ -3,7 +3,7 @@ function(IpfsService,$location,$window,ProfileDB){
 	return {
 		restrict: 'E',
 		scope: {
-            ipfsHash: '=',
+            txHash: '=',
 		},
 		replace: true,
 		templateUrl: 'directives/post/postDirective.html',

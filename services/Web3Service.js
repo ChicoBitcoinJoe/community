@@ -1,4 +1,4 @@
-Community.service( 'Web3Service',['$q','$sce', function ($q,$sce) {
+Community.service( 'Web3Service',['$q','$route', function ($q,$route) {
     console.log('Loading Web3Service');
     
     if (typeof web3 !== 'undefined') {
