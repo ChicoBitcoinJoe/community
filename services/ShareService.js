@@ -1,7 +1,7 @@
 Community.service('ShareService', ['$q','Web3Service', function ($q,Web3Service) {
     console.log('Loading Share Service');
     
-    var ShareAddress = '0xe075925cea303a64d66c81f1f4388a6d16850a66'; //TestNet
+    var ShareAddress = '0x06ed61e6d020621dd5b70eabc4e1bb30e31c2f1a'; //TestNet
     var ShareContract = web3.eth.contract(
         [{"constant":false,"inputs":[{"name":"shardName","type":"string"}],"name":"createShard","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"getShardName","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"shardName","type":"string"}],"name":"getShardAddress","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getTotalShards","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"shardName","type":"string"}],"name":"CreateShard_event","type":"event"}]);
     var ShareInstance = ShareContract.at(ShareAddress);

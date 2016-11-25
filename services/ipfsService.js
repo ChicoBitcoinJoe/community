@@ -27,7 +27,7 @@ Community.service( 'IpfsService',['$q','$sce', function ($q,$sce) {
 		getIpfsHash: function (data) {
             var deferred = $q.defer();
             
-            console.log("Calculating ipfs hash for", data);
+            //console.log("Calculating ipfs hash for", data);
 			var promise = ipfs.addJson(data, function(err, hash){
                 if(err || !hash){
                     deferred.reject(err);

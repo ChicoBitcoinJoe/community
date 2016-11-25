@@ -1,12 +1,11 @@
 # To Do's #
 
 ## Unsorted ##
-- Create Community does not properly watch for submission into block before showing submit post card
-- When submitting a post and waiting for a txreceipt: inpage-provider.js:89 Uncaught Error: The MetaMask Web3 object does not support synchronous methods like eth_uninstallFilter without a callback parameter.
-- Need to calculate estimated gas fee
+- none
+
 
 ## Critical ##
--General
+- General
     - Metamask loading late
         - only on slow internet connections?
 
@@ -19,6 +18,8 @@
 - Need Name Registry
     - Account panel username
 
+- Need to calculate more accurate estimated gas fee
+
 
 ## NonCritical ##
 - Community Sidenav
@@ -27,10 +28,12 @@
     
 - postView
     - submit post does not preview the comment section
+    - video preview frame not updating when link provided
 
 - Settings Sidenav
     - Turn into directive
     
+- Create Community card is dreadful
 
 
 
@@ -41,3 +44,11 @@
 - A "Tweet": No root parent, no title, at least a link or body
 - Xpost: event community does not equal ipfs data community
 - repost: event poster does not equal ipfs data community
+
+
+# MetaMask Improvement Proposals
+- Long Account Names Overlap with icons. Gets even messier when editing.
+- Account circle too large
+- Tx Circles too small
+- "Buy" button on testnet could say "Faucet" or "Request"
+- 

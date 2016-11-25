@@ -2,21 +2,28 @@ Community.service('Community', ['$q','ShareService','ShardService','IpfsService'
 function ($q,ShareService,ShardService,IpfsService,Web3Service) {
     console.log('Loading Community');
     
-    var CommunityDB = null; //JSON.parse(localStorage.getItem('CommunityDB'));
-    if(!CommunityDB){
+    var CommunityDB;
+    var localCommunityDB = localStorage.getItem('CommunityDB');
+    if(!localCommunityDB){
         CommunityDB = {};
         CommunityDB.communities = {};
         CommunityDB.activeView = [];
+        
+        localStorage.setItem('CommunityDB',JSON.stringify(CommunityDB));
+    } else {
+        CommunityDB = JSON.parse(localCommunityDB);
     }
     
     var touchCommunity = function(community){
+        //var communities = Object.keys(CommunityDB.communities);
+        //var exist = communities.indexOf(community);
         if(!CommunityDB.communities[community]){
             console.log(community + ' does not exists.');
             CommunityDB.communities[community] = {};
             CommunityDB.communities[community].posts = [];
             CommunityDB.communities[community].last_block = 0;
         } else {
-            console.log(community + ' exists.');
+            //console.log(community + ' exists.');
             return false;
         }
         
@@ -24,6 +31,8 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service) {
     };
     
     var addExistingToActiveView = function(community){
+        touchCommunity(community);
+        
         var posts = CommunityDB.communities[community].posts;
         for(post in posts){
             if(CommunityDB.activeView.indexOf(posts[post]) == '-1'){
@@ -33,14 +42,14 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service) {
         }
     };
     
-    var addNewToActiveView = function(event){
+    var addTxHashToActiveView = function(event){
         if(CommunityDB.activeView.indexOf(event.transactionHash) == '-1'){
             console.log("Pushing " + event.transactionHash + "to activeView");
             CommunityDB.activeView.push(event.transactionHash);
         }
     };
     
-    var addNewToCommunity = function(event){
+    var addTxHashToCommunity = function(event){
         
     };
     
@@ -53,14 +62,17 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service) {
             }, function(err){
                deferred.reject(err); 
             });
+        } else {
+            deferred.reject(false);
         }
-        deferred.resolve(false);
         
         return deferred.promise;
     };
     
     var service = {
         getPosts: function(communities){
+            CommunityDB.activeView = [];
+            
             for(index in communities){
                 var community = communities[index]; 
                 touchCommunity(community);
@@ -74,12 +86,13 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service) {
                         console.log(events);
                         for(index in events){
                             //console.log(events[index]);
-                            addNewToCommunity(events[index]);
-                            addNewToActiveView(events[index]);
+                            localStorage.setItem(events[index].transactionHash,JSON.stringify(events[index]));
+                            //console.log(localStorage.getItem(events[index].transactionHash));
+                            addTxHashToCommunity(events[index]);
+                            addTxHashToActiveView(events[index]);
                         }
-
-                        console.log(CommunityDB.activeView);
-                        localStorage.setItem('CommunityDB',JSON.stringify(Community));
+                        console.log(CommunityDB);
+                        localStorage.setItem('CommunityDB',JSON.stringify(CommunityDB));
                     }, function(err){
                         console.log(err);
                     });
@@ -87,7 +100,8 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service) {
                     console.error(err);
                 });
             }
-            console.log(CommunityDB.activeView);
+            //console.log(CommunityDB.activeView);
+            
             return CommunityDB.activeView;
         },
         submitPost: function(post){
@@ -95,10 +109,11 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service) {
             
             var async_ipfsHash = postIsValid(post).then(
             function(ipfsHash){
+                console.log(ipfsHash);
                 var async_shardAddress = ShareService.getShardAddress(post.community).then(
                 function(shardAddress){
                     var estimatedGas = 4700000;
-                    ShardService.broadcast(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount(), gas:estimatedGas}).then(
+                    ShardService.share(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount(), gas:estimatedGas}).then(
                     function(receipt){
                         console.log(receipt);
                         deferred.resolve(receipt.transactionHash);

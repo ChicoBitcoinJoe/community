@@ -1,4 +1,4 @@
-Community.service( 'Web3Service',['$q','$route', function ($q,$route) {
+Community.service( 'Web3Service',['$q','$window', function ($q,$window) {
     console.log('Loading Web3Service');
     
     if (typeof web3 !== 'undefined') {
@@ -8,9 +8,18 @@ Community.service( 'Web3Service',['$q','$route', function ($q,$route) {
         web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
     }
     
+    var currentAccount = web3.eth.accounts[0];
+    setInterval(function(){
+        //console.log(currentAccount,web3.eth.accounts[0]);
+        if(currentAccount !== 'undefined'){
+            if(currentAccount !== web3.eth.accounts[0])
+                $window.location.reload();
+        }
+    },100);
+    
     var service = {
 		getCurrentAccount: function(){
-           return web3.eth.accounts[0];
+           return currentAccount;
         },
 		getTransactionReceipt: function(txHash){
             var deferred = $q.defer();
@@ -22,7 +31,7 @@ Community.service( 'Web3Service',['$q','$route', function ($q,$route) {
                         if(!err){
                             if(receipt !== null){
                                 async_filter.stopWatching();
-                                console.log(receipt);
+                                //console.log(receipt);
                                 deferred.resolve(receipt);
                             } else {
                                 console.log("Tx not included in this block. Waiting for reciept.");

@@ -63,7 +63,7 @@
                 <h3 class="sidenav-header-text" style="padding-left:20px; background-color:#1c6965;">{{activeView | capitalize}}</h3>
             </div>
             <div ng-show="viewType == 'c'" class="sidenav-header" layout="row" layout-align="left center">
-                <h3 class="sidenav-header-text" style="padding: 10px 20px; background-color:#1c6965;">All</h3>
+                <h3 class="sidenav-header-text" style="padding: 10px 20px; background-color:#1c6965;">Communities</h3>
             </div>
             <md-list>
                 <div class="sidenav-list-item" ng-show="toggleSettings && activeView != 'ungrouped'">
@@ -102,7 +102,7 @@
             <h1 class="md-toolbar-tools">Settings</h1>
         </md-toolbar>
         <md-content layout-padding="5" layout="column">
-            <h3 style="margin-bottom:0px; margin-right:30px;" layout="row">Public Opinion<span flex></span>%</h3>
+            <h4 style="margin-bottom:0px; margin-right:30px;" layout="row">Public Opinion<span flex></span>%</h4>
             <md-slider-container ng-disabled="isDisabled">
                 <md-icon md-svg-src="images/icons/ic_people_white_24px.svg"></md-icon>
                 <md-slider ng-model="publicOpinionWeight" aria-label="public opinion weight" flex md-discrete ng-readonly="readonly"></md-slider>

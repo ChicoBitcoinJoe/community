@@ -1,20 +1,22 @@
-pragma solidity ^0.4.4;
+pragma solidity ^0.4.6;
 
 contract Shard{
     
     string shardName;
+    uint block_created;
     
-    event Broadcast_event(address indexed sender, string ipfsHash);
+    event Share_event(address indexed sender, string ipfsHash);
 
     function Shard(string shard_name){
         shardName = shard_name;
+        block_created = block.number;
     }
     
-    function getShardName() constant returns(string){
-        return shardName;
+    function getShardInfo() constant returns(string,uint){
+        return (shardName,block_created);
     }
     
-    function broadcast(string ipfsHash){
-        Broadcast_event(msg.sender, ipfsHash);
+    function share(string ipfsHash){
+        Share_event(msg.sender, ipfsHash);
     }
 }

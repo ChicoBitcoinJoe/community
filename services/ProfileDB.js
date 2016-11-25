@@ -15,7 +15,7 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
     
     console.log(Web3Service.getCurrentAccount());
     ProfileDB = loadProfile(Web3Service.getCurrentAccount());
-    if(ProfileDB == null){
+    if(!ProfileDB){
         console.log('Could not find a profile. Using default profile');
         ProfileDB = {
             SavedMultis:{

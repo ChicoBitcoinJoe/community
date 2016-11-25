@@ -8,9 +8,10 @@ function(IpfsService,$location,$window,ProfileDB){
 		replace: true,
 		templateUrl: 'directives/post/postDirective.html',
 		controller: function($scope){
-            console.log($scope.ipfsHash);
-            $scope.postScore = ProfileDB.getPostScore($scope.activeView,$scope.ipfsHash);
-            $scope.post = IpfsService.getIpfsData($scope.ipfsHash).then(
+            var eventData = JSON.parse(localStorage.getItem($scope.txHash));
+            console.log($scope.txHash,eventData);
+            $scope.postScore = ProfileDB.getPostScore($scope.activeView,eventData.args.ipfsHash);
+            $scope.post = IpfsService.getIpfsData(eventData.args.ipfsHash).then(
             function(post){
                 console.log(post);
                 $scope.post = post;

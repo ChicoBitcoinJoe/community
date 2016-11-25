@@ -133,7 +133,7 @@ Community.service('Community', ['$q','ShareService','IpfsService','ProfileDB', f
             var deferred = $q.defer();
    
            if(postIsValid(post)){
-                ShareService.broadcast(post).then(
+                ShareService.share(post).then(
                 function(ipfsHash){
                     console.log(ipfsHash);
                     deferred.resolve(ipfsHash);
@@ -150,7 +150,7 @@ Community.service('Community', ['$q','ShareService','IpfsService','ProfileDB', f
             var deferred = $q.defer();
             console.log(comment);
             if(commentIsValid(comment)){
-                ShareService.broadcast(comment).then(
+                ShareService.share(comment).then(
                 function(ipfsHash){
                     console.log(ipfsHash);
                     deferred.resolve(ipfsHash);

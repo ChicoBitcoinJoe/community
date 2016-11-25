@@ -1,8 +1,8 @@
-pragma solidity ^0.4.4;
+pragma solidity ^0.4.6;
 
 import "Shard.sol";
 
-contract Share{
+contract Share {
     
     event CreateShard_event(string shardName);
     
