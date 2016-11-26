@@ -3,7 +3,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
 	return {
 		restrict: 'E',
 		scope: {
-			ipfsHash: '=',
+			txHash: '=',
             commentDepth: '='
 		},
 		replace: true,
@@ -17,16 +17,15 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             });
         },
 		controller: function($scope){
-            $scope.mouseoverExtras = function(){
-                $scope.hovered = true;
-            };
-            
+            var eventData = JSON.parse(localStorage.getItem($scope.txHash));
+            //console.log($scope.txHash,eventData);
+            $scope.ipfsHash = eventData.args.ipfsHash;
             $scope.activeView = $location.url().split('/')[2];
             $scope.rootIpfsHash = $location.url().split('/')[4];
-            $scope.comments = Community.getChildren($scope.activeView, $scope.ipfsHash).comments[$scope.ipfsHash];
+            $scope.comments = Community.getChildren($scope.activeView, $scope.txHash);
             $scope.hasVoted = false;
             
-            var promise = IpfsService.getIpfsData($scope.ipfsHash).then(
+            var async_ipfsData = IpfsService.getIpfsData($scope.ipfsHash).then(
             function(ipfsData){
                 $scope.post = ipfsData;
                 $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.ipfsHash);
@@ -34,6 +33,10 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             }, function(err){
                 console.error(err); 
             });
+            
+            $scope.mouseoverExtras = function(){
+                $scope.hovered = true;
+            };
             
             $scope.borderWidth = 0;
             $scope.borderTop = 8;

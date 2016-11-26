@@ -9,11 +9,11 @@ function(IpfsService,$location,$window,ProfileDB){
 		templateUrl: 'directives/post/postDirective.html',
 		controller: function($scope){
             var eventData = JSON.parse(localStorage.getItem($scope.txHash));
-            console.log($scope.txHash,eventData);
+            //console.log($scope.txHash,eventData);
             $scope.postScore = ProfileDB.getPostScore($scope.activeView,eventData.args.ipfsHash);
-            $scope.post = IpfsService.getIpfsData(eventData.args.ipfsHash).then(
+            var async_ipfsData = IpfsService.getIpfsData(eventData.args.ipfsHash).then(
             function(post){
-                console.log(post);
+                //console.log(post);
                 $scope.post = post;
                 
                 if($scope.post.media == 'image'){
@@ -48,7 +48,7 @@ function(IpfsService,$location,$window,ProfileDB){
                     if(slice === 'Qm'){
                         var url = $location.absUrl().split('/');
                         $scope.imageSource = url[0] + '//' + url[2] + '/' + url[3] + '/' + $scope.post.link;
-                        console.log($scope.imageSource);
+                        //console.log($scope.imageSource);
                     } else {
                         $scope.imageSource = $scope.post.link;
                     }

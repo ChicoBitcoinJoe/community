@@ -18,16 +18,33 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service) {
         //var communities = Object.keys(CommunityDB.communities);
         //var exist = communities.indexOf(community);
         if(!CommunityDB.communities[community]){
-            console.log(community + ' does not exists.');
             CommunityDB.communities[community] = {};
             CommunityDB.communities[community].posts = [];
+            CommunityDB.communities[community].comments = {};
             CommunityDB.communities[community].last_block = 0;
-        } else {
-            //console.log(community + ' exists.');
-            return false;
         }
+    };
+    
+    var addCommentToParent = function(community,txHash,parent){
+        touchCommentList(community,parent);
         
-        return true;
+        var comments = CommunityDB.communities[community].comments[parent];
+        var parentIndex = comments.indexOf(txHash);
+        if(parentIndex == '-1'){
+            comments.push(txHash);
+            console.log("Adding " + txHash + " to parent " + parent + " in " + community);
+        } else {
+            console.log(txHash + " already added to parent " + parent + " in " + community);
+        }
+    };
+    
+    var touchCommentList = function(community,txHash){
+        if(!CommunityDB.communities[community].comments[txHash]){
+            CommunityDB.communities[community].comments[txHash] = [];
+            console.log("Started a comment list for " + txHash);
+        } else {
+            //console.log("Comment list for " + txHash + " already exists");
+        }
     };
     
     var addExistingToActiveView = function(community){
@@ -44,29 +61,61 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service) {
     
     var addTxHashToActiveView = function(event){
         if(CommunityDB.activeView.indexOf(event.transactionHash) == '-1'){
-            console.log("Pushing " + event.transactionHash + "to activeView");
+            //console.log("Pushing " + event.transactionHash + "to activeView");
             CommunityDB.activeView.push(event.transactionHash);
         }
     };
     
-    var addTxHashToCommunity = function(event){
+    var addPostToCommunity = function(community,txHash){
+        if(CommunityDB.communities[community].posts.indexOf(txHash) == '-1'){
+            CommunityDB.communities[community].posts.push(txHash);
+            console.log("Pushing " + txHash + " to post list " + community);
+        } else {
+            console.log(txHash + " already in "  + community + " post list.");
+        }  
+    };
+    
+    var addTxHashToCommunity = function(community,event){
+        //console.log(event);
+        touchCommunity(community);
         
+        var ipfsHash = event.args.ipfsHash;
+        IpfsService.getIpfsData(ipfsHash).then(
+        function(ipfsData){
+            if(postIsValid(ipfsData)){
+                console.log("post");
+                touchCommentList(community,event.transactionHash);
+                addTxHashToActiveView(event);
+                addPostToCommunity(community,event.transactionHash);
+            /*
+                handlePoster(ipfsHash,ipfsData.poster);
+                handlePostScore(ipfsHash,ipfsData.poster);
+            */  
+            } else if(commentIsValid(ipfsData)){
+                console.log("comment");
+                touchCommentList(community,event.transactionHash);
+                console.log(ipfsData.parent);
+                addCommentToParent(community,event.transactionHash,ipfsData.parent);
+            /*
+                handlePoster(ipfsData.postRootParent,data.eventData.sender);
+                handlePostScore(ipfsHash,ipfsData.poster);
+            */  
+            }
+        });
     };
     
     var postIsValid = function(post){
-        var deferred = $q.defer();
-        if(post.media && post.title && post.community && post.poster && (post.link || post.comment)){
-            var async_getIpfsHash = IpfsService.getIpfsHash(post).then(
-            function(ipfsHash){
-                deferred.resolve(ipfsHash);
-            }, function(err){
-               deferred.reject(err); 
-            });
-        } else {
-            deferred.reject(false);
-        }
-        
-        return deferred.promise;
+        if(post.media && post.title && post.community && post.poster && (post.link || post.comment))
+            return true;
+        else 
+            return false;
+    };
+    
+    var commentIsValid = function(comment){
+        if(comment.community && comment.poster && comment.comment && comment.parent && !comment.title)
+            return true;
+        else
+            return false;
     };
     
     var service = {
@@ -75,7 +124,6 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service) {
             
             for(index in communities){
                 var community = communities[index]; 
-                touchCommunity(community);
                 addExistingToActiveView(community);
                 
                 var from = CommunityDB.communities[community].last_block;
@@ -83,18 +131,14 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service) {
                 function(communityAddress){
                     ShardService.getShardEvents(communityAddress, {fromBlock:from}).then(
                     function(events){
-                        console.log(events);
                         for(index in events){
                             //console.log(events[index]);
                             localStorage.setItem(events[index].transactionHash,JSON.stringify(events[index]));
-                            //console.log(localStorage.getItem(events[index].transactionHash));
-                            addTxHashToCommunity(events[index]);
-                            addTxHashToActiveView(events[index]);
+                            addTxHashToCommunity(community,events[index]);
                         }
-                        console.log(CommunityDB);
                         localStorage.setItem('CommunityDB',JSON.stringify(CommunityDB));
                     }, function(err){
-                        console.log(err);
+                        console.error(err);
                     });
                 }, function(err){
                     console.error(err);
@@ -104,28 +148,66 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service) {
             
             return CommunityDB.activeView;
         },
+        getChildren: function(community,txHash){
+            touchCommunity(community);
+            touchCommentList(community,txHash);
+            
+            return CommunityDB.communities[community].comments[txHash];
+        },
         submitPost: function(post){
             var deferred = $q.defer();
             
-            var async_ipfsHash = postIsValid(post).then(
-            function(ipfsHash){
-                console.log(ipfsHash);
-                var async_shardAddress = ShareService.getShardAddress(post.community).then(
-                function(shardAddress){
-                    var estimatedGas = 4700000;
-                    ShardService.share(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount(), gas:estimatedGas}).then(
-                    function(receipt){
-                        console.log(receipt);
-                        deferred.resolve(receipt.transactionHash);
-                    }, function(err) {
+            if(postIsValid(post)){
+                var async_getIpfsHash = IpfsService.getIpfsHash(post).then(
+                function(ipfsHash){
+                    console.log(ipfsHash);
+                    var async_shardAddress = ShareService.getShardAddress(post.community).then(
+                    function(shardAddress){
+                        var estimatedGas = 4700000;
+                        ShardService.share(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount(), gas:estimatedGas}).then(
+                        function(receipt){
+                            console.log(receipt);
+                            deferred.resolve(receipt.transactionHash);
+                        }, function(err) {
+                            deferred.reject(err);
+                        });
+                    }, function(err){
                         deferred.reject(err);
                     });
                 }, function(err){
                     deferred.reject(err);
                 });
-            }, function(err){
-                deferred.reject(err);
-            });
+            } else {
+                deferred.resolve(false);
+            }
+            
+            return deferred.promise;
+        },
+        submitComment: function(comment){
+            var deferred = $q.defer();
+            if(commentIsValid(comment)){
+                var async_getIpfsHash = IpfsService.getIpfsHash(comment).then(
+                function(ipfsHash){
+                    console.log(ipfsHash);
+                    var async_shardAddress = ShareService.getShardAddress(comment.community).then(
+                    function(shardAddress){
+                        var estimatedGas = 4700000;
+                        ShardService.share(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount(), gas:estimatedGas}).then(
+                        function(receipt){
+                            console.log(receipt);
+                            deferred.resolve(receipt.transactionHash);
+                        }, function(err) {
+                            deferred.reject(err);
+                        });
+                    }, function(err){
+                        deferred.reject(err);
+                    });
+                }, function(err){
+                    deferred.reject(err);
+                });
+            } else {
+                deferred.resolve(false);
+            }
             
             return deferred.promise;
         },

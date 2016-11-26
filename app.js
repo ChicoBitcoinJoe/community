@@ -19,7 +19,7 @@ Community.config(function ($routeProvider) {
         controller: 'CommentViewController'
     }).
 	otherwise({
-      redirectTo: '/c/community'
+      redirectTo: '/m/all'
     });
 });
 

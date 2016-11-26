@@ -28,13 +28,14 @@ Community.service('ShardService', ['$q','Web3Service', function ($q,Web3Service)
             
             return deferred.promise;
         },
-        getShardInfo: function(Shard){
+        getShardInfo: function(shardAddress){
             var deferred = $q.defer();
-
+            
+            var Shard = ShardContract.at(shardAddress);
             var async_getShardInfo = Shard.getShardInfo(
             function(err, info){
                 if(!err){
-                    console.log(info);
+                    //console.log(info);
                     deferred.resolve(info);
                 } else {
                     deferred.reject(err);

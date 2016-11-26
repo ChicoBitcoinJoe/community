@@ -1,7 +1,6 @@
 # To Do's #
 
 ## Unsorted ##
-- none
 
 
 ## Critical ##
@@ -20,6 +19,8 @@
 
 - Need to calculate more accurate estimated gas fee
 
+- Loading up a post directly does not work if the txHash event has not already been saved
+    - submit post needs to wait for event to be seen
 
 ## NonCritical ##
 - Community Sidenav
@@ -35,13 +36,15 @@
     
 - Create Community card is dreadful
 
+- submit comment button doesnt update text after clicking
+
 
 
     
 # Notes #
-- Post: Has a title, no parents, and at least a body or link
-- Comment: Must have a root parent, a parent, a body, no title, and media=='self'
-- A "Tweet": No root parent, no title, at least a link or body
+- Post: Has a title, no parents, and at least a comment or link
+- Comment: Must have a root parent, a parent, a comment, no title, and media=='self'
+- A "Tweet": No root parent, no title, at least a link or comment
 - Xpost: event community does not equal ipfs data community
 - repost: event poster does not equal ipfs data community
 
