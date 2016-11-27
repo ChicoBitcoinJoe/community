@@ -10,7 +10,15 @@ function(IpfsService,$location,$window,ProfileDB){
 		controller: function($scope){
             var eventData = JSON.parse(localStorage.getItem($scope.txHash));
             //console.log($scope.txHash,eventData);
-            $scope.postScore = ProfileDB.getPostScore($scope.activeView,eventData.args.ipfsHash);
+            $scope.activeView = $location.url().split('/')[2];
+            
+            ProfileDB.updatePostScore($scope.activeView,$scope.txHash);
+            $scope.postScore = ProfileDB.getPostScore($scope.activeView,$scope.txHash);
+            setInterval(function(){
+                $scope.postScore = ProfileDB.getPostScore($scope.activeView,$scope.txHash);
+                $scope.$apply();
+            },100);
+            
             var async_ipfsData = IpfsService.getIpfsData(eventData.args.ipfsHash).then(
             function(post){
                 //console.log(post);

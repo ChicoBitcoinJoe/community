@@ -1,5 +1,5 @@
-Community.service('Community', ['$q','ShareService','ShardService','IpfsService','Web3Service',
-function ($q,ShareService,ShardService,IpfsService,Web3Service) {
+Community.service('Community', ['$q','ShareService','ShardService','IpfsService','Web3Service','ProfileDB',
+function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
     console.log('Loading Community');
     
     var CommunityDB;
@@ -21,6 +21,7 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service) {
             CommunityDB.communities[community] = {};
             CommunityDB.communities[community].posts = [];
             CommunityDB.communities[community].comments = {};
+            CommunityDB.communities[community].posters = {};
             CommunityDB.communities[community].last_block = 0;
         }
     };
@@ -41,6 +42,7 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service) {
     var touchCommentList = function(community,txHash){
         if(!CommunityDB.communities[community].comments[txHash]){
             CommunityDB.communities[community].comments[txHash] = [];
+            CommunityDB.communities[community].comments.posters = [];
             console.log("Started a comment list for " + txHash);
         } else {
             //console.log("Comment list for " + txHash + " already exists");
@@ -82,24 +84,21 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service) {
         var ipfsHash = event.args.ipfsHash;
         IpfsService.getIpfsData(ipfsHash).then(
         function(ipfsData){
+            console.log(event,ipfsData);
             if(postIsValid(ipfsData)){
                 console.log("post");
                 touchCommentList(community,event.transactionHash);
                 addTxHashToActiveView(event);
                 addPostToCommunity(community,event.transactionHash);
-            /*
-                handlePoster(ipfsHash,ipfsData.poster);
-                handlePostScore(ipfsHash,ipfsData.poster);
-            */  
+                addPosterToPost(community,event.transactionHash,event.poster);
+                updatePostScore(community,event.transactionHash);
             } else if(commentIsValid(ipfsData)){
                 console.log("comment");
                 touchCommentList(community,event.transactionHash);
                 console.log(ipfsData.parent);
                 addCommentToParent(community,event.transactionHash,ipfsData.parent);
-            /*
-                handlePoster(ipfsData.postRootParent,data.eventData.sender);
-                handlePostScore(ipfsHash,ipfsData.poster);
-            */  
+                addPosterToPost(community,ipfsData.root_parent,ipfsData.poster);
+                updatePostScore(community,event.transactionHash);
             }
         });
     };
@@ -116,6 +115,26 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service) {
             return true;
         else
             return false;
+    };
+    
+    var addPosterToPost = function(community, txHash, poster){
+        console.log(community,txHash,poster);
+        if(!CommunityDB.communities[community].posters[txHash])
+            CommunityDB.communities[community].posters[txHash] = [];
+            
+        if(CommunityDB.communities[community].posters[txHash].indexOf(poster) == -1)
+            CommunityDB.communities[community].posters[txHash].push(poster);  
+    };
+    
+    var updatePostScore = function(community,txHash){
+        var posters = CommunityDB.communities[community].posters[txHash];
+        
+        var score = 0;
+        for(poster in posters){
+            score += ProfileDB.getUserScore(posters[poster]);
+        }
+        
+        ProfileDB.updatePostScore(community,txHash,score);
     };
     
     var service = {
@@ -144,7 +163,6 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service) {
                     console.error(err);
                 });
             }
-            //console.log(CommunityDB.activeView);
             
             return CommunityDB.activeView;
         },
@@ -230,7 +248,14 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service) {
             
             return deferred.promise;
         },
-        
+        getPosters: function(community,txHash){
+            touchCommunity(community);
+            //console.log(CommunityDB.communities[community].posters[txHash]);
+            if(Object.keys(CommunityDB.communities[community].posters).indexOf(txHash) == -1)
+                CommunityDB.communities[community].posters[txHash] = [];
+                
+            return CommunityDB.communities[community].posters[txHash];
+        }
     }
     
     return service;

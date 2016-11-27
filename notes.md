@@ -34,6 +34,8 @@
 - Settings Sidenav
     - Turn into directive
     
+- You can upvote or downvote yourself
+
 - Create Community card is dreadful
 
 - submit comment button doesnt update text after clicking

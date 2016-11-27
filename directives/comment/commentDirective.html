@@ -15,22 +15,20 @@
                 </div>
                 <div ng-hide="minimized" style="margin-top:5px;">{{post.comment}}</div>
             </md-card-content>
-            <md-card-actions ng-show="showExtras || commentDepth == 0" style="margin-bottom:8px !important;">
+            <md-card-actions ng-show="showExtras || commentDepth == 0" style="margin-bottom:8px !important; padding-left: {{marginLeft}} px !important;">
                 <md-card-actions layout="row" layout-align="start center">
                     <md-card-icon-actions>
-                        <md-button class="md-icon-button" aria-label="Favorite">
+                        <md-button style="margin-left: {{marginLeft}}px !important;" class="md-icon-button" aria-label="Favorite">
                             <md-icon md-svg-icon="img/icons/favorite.svg"></md-icon>
                         </md-button>
                         <md-button class="md-icon-button" aria-label="Share">
                             <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
                         </md-button>
-                        <md-button ng-hide="hasVoted" aria-label="vote user honest" ng-click="honestVote()">
+                        <md-button ng-hide="hasVoted" aria-label="upvote user" ng-click="upvote()">
                             <md-icon md-svg-icon="images/icons/ic_arrow_upward_white_24px.svg"></md-icon>
-                            Honest
                         </md-button>
-                        <md-button ng-hide="hasVoted" aria-label="vote user dishonest" ng-click="dishonestVote()">
+                        <md-button ng-hide="hasVoted" aria-label="downvote user" ng-click="downvote()">
                             <md-icon md-svg-icon="images/icons/ic_arrow_downward_white_24px.svg"></md-icon>
-                            Dishonest
                         </md-button>
                         <span flex></span>
                         <md-button ng-click="showSubmitCommentPanel()">{{replyText}}</md-button>

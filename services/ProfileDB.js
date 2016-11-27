@@ -1,4 +1,4 @@
-Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
+Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Community){
     console.log('Loading ProfileDB account ');
     var ProfileDB = null;
     
@@ -27,42 +27,66 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
             /*  community:[],
                 ... */
             },
-            AutoModerator:{
-                users:{
-                /*  user:{
-                        score:0,
-                        upvotes:[],
-                        downvotes:[],
-                        downvoteStreak:0
-                    }*/        
-                }
+            users:{
+            /*  user:{
+                    score:0,
+                    upvotes:[],
+                    downvotes:[],
+                    downvoteStreak:0
+                }*/        
+            },
+            PostScores:{
+                /*  txHash:0,
+                    ... */
             }
         };
 
         saveProfileDB();
     }
     
-    console.log("ProfileDB done loading");
+    console.log("ProfileDB done loading",ProfileDB);
     
-    var createUserProfile = function(user){
-        var keys = Object.keys(ProfileDB.AutoModerator.users);
+    var touchUser = function(user){
+        var keys = Object.keys(ProfileDB.users);
         if(keys.indexOf(user) == '-1'){
-            ProfileDB.AutoModerator.users[user] = {};
-            ProfileDB.AutoModerator.users[user].upvotes = [];
-            ProfileDB.AutoModerator.users[user].downvotes = [];
-            ProfileDB.AutoModerator.users[user].downvoteStreak = 0;
-            ProfileDB.AutoModerator.users[user].score = 0;
+            ProfileDB.users[user] = {};
+            ProfileDB.users[user].upvotes = [];
+            ProfileDB.users[user].downvotes = [];
+            ProfileDB.users[user].downvoteStreak = 0;
+            ProfileDB.users[user].score = 50;
         }
-    }
+    };
+    
+    var touchPostScore = function(community,txHash){
+        if(!ProfileDB.PostScores[community]){
+            ProfileDB.PostScores[community] = {};
+            ProfileDB.PostScores[community].score = {};
+            ProfileDB.PostScores[community].score[txHash] = 0;
+        }
+    };
     
     var updateUserScore = function(user){
-        var honest = ProfileDB.AutoModerator.users[user].upvotes.length;
-        var dishonest = ProfileDB.AutoModerator.users[user].downvotes.length;
+        var upvotes = ProfileDB.users[user].upvotes.length;
+        var downvotes = ProfileDB.users[user].downvotes.length;
         
-        var score = 100 + (honest - dishonest*2);
+        var score = upvotes / (upvotes + downvotes) * 100;
+        console.log(score);
+        ProfileDB.users[user].score = score;
+    };
+    
+    var userUpvote = function(user,txHash){
+        touchUser(user);
         
-        ProfileDB.AutoModerator.users[user].score = score;
-    }
+        if(ProfileDB.users[user].upvotes.indexOf(txHash) == -1)
+            ProfileDB.users[user].upvotes.push(txHash);
+    };
+    
+    var userDownvote = function(user,txHash){
+        touchUser(user);
+        
+        if(ProfileDB.users[user].downvotes.indexOf(txHash) == -1)
+            ProfileDB.users[user].downvotes.push(txHash);
+    };
     
     var service = {
         getCurrentAccount: function(){
@@ -80,7 +104,7 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
         communityIsSaved: function(communityName){
             communityName = communityName.toLowerCase();
             var index = ProfileDB.SavedMultis['all'].indexOf(communityName);
-            if(index != '-1') 
+            if(index !== '-1') 
                 return true;
             
             return false;
@@ -96,11 +120,11 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
             if(multiName && communityName && ProfileDB.SavedMultis[multiName]){
                 if(multiName == 'all'){
                     //If communityName does not exist in 'all' it does not exist in any multi so we can just add it
-                    if(ProfileDB.SavedMultis['all'].indexOf(communityName) == "-1"){
+                    if(ProfileDB.SavedMultis['all'].indexOf(communityName) == '-1'){
                         ProfileDB.SavedMultis['all'].push(communityName);
                         console.log("Added " + communityName + " to 'all'");
                         
-                        if(ProfileDB.SavedMultis['ungrouped'].indexOf(communityName) == "-1"){
+                        if(ProfileDB.SavedMultis['ungrouped'].indexOf(communityName) == '-1'){
                             ProfileDB.SavedMultis['ungrouped'].push(communityName);
                             console.log("Added " + communityName + " to ungrouped");
                         }
@@ -110,18 +134,18 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
                 } else if(multiName == 'ungrouped'){
                     //cannot add to 'ungrouped'
                 } else {
-                    if(ProfileDB.SavedMultis[multiName].indexOf(communityName) == "-1"){
+                    if(ProfileDB.SavedMultis[multiName].indexOf(communityName) == '-1'){
                         ProfileDB.SavedMultis[multiName].push(communityName);
                         console.log("Added " + communityName + " to " + multiName);
                     }
                     
-                    if(ProfileDB.SavedMultis['all'].indexOf(communityName) == "-1"){
+                    if(ProfileDB.SavedMultis['all'].indexOf(communityName) == '-1'){
                         ProfileDB.SavedMultis['all'].push(communityName);
                         console.log("Added " + communityName + " to 'all'");
                     }
                     
                     var index = ProfileDB.SavedMultis['ungrouped'].indexOf(communityName);
-                    if(index != "-1"){
+                    if(index !== '-1'){
                         ProfileDB.SavedMultis['ungrouped'].splice(index,1);
                         console.log("Removed " + communityName + " from 'ungrouped'");
                     }
@@ -153,13 +177,13 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
                 } else if (multiName === 'ungrouped') {
                     //delete from all and ungrouped
                     var index = ProfileDB.SavedMultis['ungrouped'].indexOf(communityName);
-                    if(index != "-1"){
+                    if(index !== '-1'){
                         ProfileDB.SavedMultis['ungrouped'].splice(index, 1);
                         console.log("Deleted " + communityName + " from " + 'ungrouped');
                     }
 
                     index = ProfileDB.SavedMultis['all'].indexOf(communityName);
-                    if(index != "-1"){
+                    if(index !== '-1'){
                         ProfileDB.SavedMultis['all'].splice(index, 1);
                         console.log("Deleted " + communityName + " from " + 'all');
                         
@@ -169,7 +193,7 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
                 } else {
                     //delete communityName in multiName
                     var index = ProfileDB.SavedMultis[multiName].indexOf(communityName);
-                    if(index != "-1"){
+                    if(index !== '-1'){
                         ProfileDB.SavedMultis[multiName].splice(index, 1);
                         console.log("Deleted " + communityName + " from " + multiName);
                     
@@ -177,7 +201,7 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
                         for(var multi in ProfileDB.SavedMultis){
                             if(multi !== "all" && multi !== "ungrouped"){
                                 console.log("Searching for " + communityName + " in " + multi);
-                                if(ProfileDB.SavedMultis[multi].indexOf(communityName) != "-1"){
+                                if(ProfileDB.SavedMultis[multi].indexOf(communityName) !== '-1'){
                                     exists = true;
                                     console.log(communityName + ' exists in ' + multi);
                                     break;
@@ -201,7 +225,7 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
         },
         deleteMulti: function(multiName){
             multiName = multiName.toLowerCase();
-            if(multiName && ProfileDB.SavedMultis[multiName] && multiName != 'all' && multiName != 'ungrouped'){
+            if(multiName && ProfileDB.SavedMultis[multiName] && multiName !== 'all' && multiName !== 'ungrouped'){
                 var communities = ProfileDB.SavedMultis[multiName];
                 console.log(communities);
                 for(var index = 0; index < communities.length; index++){
@@ -218,52 +242,42 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
             }
         },
         getUserScore: function(user){
-            createUserProfile(user);
+            touchUser(user);
             
-            return ProfileDB.AutoModerator.users[user].score;
+            return ProfileDB.users[user].score;
         },
-        upvote: function(user,ipfsHash){
-            createUserProfile(user);
-            console.log(ProfileDB.AutoModerator.users[user].downvotes);
-            var index = ProfileDB.AutoModerator.users[user].downvotes.indexOf(ipfsHash);
-            if(index !== '-1')
-                ProfileDB.AutoModerator.users[user].downvotes.splice(index,1);
-            console.log(ProfileDB.AutoModerator.users[user].downvotes);
-            if(ProfileDB.AutoModerator.users[user].upvotes.indexOf(ipfsHash) == '-1')
-               ProfileDB.AutoModerator.users[user].upvotes.push(ipfsHash);
-            console.log(ProfileDB.AutoModerator.users[user].upvotes);
+        upvote: function(community,user,txHash){
+            touchPostScore(community,txHash);
+            console.log('voted!',community,user,txHash);
+            userUpvote(user,txHash);
             updateUserScore(user);
             saveProfileDB();
         },
-        downvote: function(user,ipfsHash){
-            createUserProfile(user);
-            console.log(ProfileDB.AutoModerator.users[user].upvotes);
-            var index = ProfileDB.AutoModerator.users[user].upvotes.indexOf(ipfsHash);
-            if(index !== '-1')
-                ProfileDB.AutoModerator.users[user].upvotes.splice(index,1);
-            console.log(ProfileDB.AutoModerator.users[user].upvotes);
-            if(ProfileDB.AutoModerator.users[user].downvotes.indexOf(ipfsHash) == '-1')
-               ProfileDB.AutoModerator.users[user].downvotes.push(ipfsHash);
-            console.log(ProfileDB.AutoModerator.users[user].downvotes);
+        downvote: function(community,user,txHash){
+            touchPostScore(community,txHash);
+            console.log('voted!',community,user,txHash);
+            userDownvote(user,txHash);
             updateUserScore(user);
             saveProfileDB();
         },
-        hasVoted: function(user,ipfsHash){
-            createUserProfile(user);
+        hasVoted: function(user,txHash){
+            touchUser(user);
             
-            var index = ProfileDB.AutoModerator.users[user].upvotes.indexOf(ipfsHash);
-            if(index !== -1)
-                return 'honest'; 
-               
-            var index2 = ProfileDB.AutoModerator.users[user].downvotes.indexOf(ipfsHash);
-            if(index2 !== -1)
-                return 'dishonest'; 
+            if(ProfileDB.users[user].upvotes.indexOf(txHash) == -1)
+                return false;
+            if(ProfileDB.users[user].downvotes.indexOf(txHash) == -1)
+                return false;
             
-            return false;
+            return true;
         },
-        getPostScore: function(){
-            var score = 0;
-            return score;
+        updatePostScore: function(community,txHash,score){
+            touchPostScore(community,txHash);
+            ProfileDB.PostScores[community].score[txHash] = score;
+        },
+        getPostScore: function(community,txHash){
+            touchPostScore(community,txHash);
+            
+            return ProfileDB.PostScores[community].score[txHash];
         }
 	};
 

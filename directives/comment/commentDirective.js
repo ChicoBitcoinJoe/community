@@ -21,7 +21,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             //console.log($scope.txHash,eventData);
             $scope.ipfsHash = eventData.args.ipfsHash;
             $scope.activeView = $location.url().split('/')[2];
-            $scope.rootIpfsHash = $location.url().split('/')[4];
+            $scope.rootTxHash = $location.url().split('/')[4];
             $scope.comments = Community.getChildren($scope.activeView, $scope.txHash);
             $scope.hasVoted = false;
             
@@ -29,7 +29,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             function(ipfsData){
                 $scope.post = ipfsData;
                 $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.ipfsHash);
-                $scope.userScore = ProfileDB.getUserScore($scope.post.poster);
+                //$scope.userScore = ProfileDB.getUserScore($scope.post.poster);
             }, function(err){
                 console.error(err); 
             });
@@ -74,16 +74,18 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
                 return $scope.show;
             };
             
-            $scope.honestVote = function(){
-                ProfileDB.honestVote($scope.post.poster, $scope.ipfsHash);
-                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.ipfsHash);
-                $scope.userScore = ProfileDB.getUserScore($scope.post.poster);
+            $scope.upvote = function(){
+                ProfileDB.upvote($scope.activeView, $scope.post.poster, $scope.rootTxHash);
+                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.rootTxHash);
+                //$scope.userScore = ProfileDB.getUserScore($scope.post.poster);
+                $scope.hasVoted = true;
             };
             
-            $scope.dishonestVote = function(){
-                ProfileDB.dishonestVote($scope.post.poster, $scope.ipfsHash);
-                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.ipfsHash);
-                $scope.userScore = ProfileDB.getUserScore($scope.post.poster);
+            $scope.downvote = function(){
+                ProfileDB.downvote($scope.activeView, $scope.post.poster, $scope.rootTxHash);
+                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.rootTxHash);
+                //$scope.userScore = ProfileDB.getUserScore($scope.post.poster);
+                $scope.hasVoted = true;
             };
 		}
 	}
