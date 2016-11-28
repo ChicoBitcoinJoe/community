@@ -42,10 +42,18 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
     var touchCommentList = function(community,txHash){
         if(!CommunityDB.communities[community].comments[txHash]){
             CommunityDB.communities[community].comments[txHash] = [];
-            CommunityDB.communities[community].comments.posters = [];
-            console.log("Started a comment list for " + txHash);
+            //console.log("Started a comment list for " + txHash);
         } else {
             //console.log("Comment list for " + txHash + " already exists");
+        }
+    };
+    
+    var touchPosterList = function(community,txHash){
+        if(!CommunityDB.communities[community].posters[txHash]){
+            CommunityDB.communities[community].posters[txHash] = [];
+            console.log("Started a poster list for " + txHash);
+        } else {
+            //console.log("Poster list for " + txHash + " already exists");
         }
     };
     
@@ -71,9 +79,9 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
     var addPostToCommunity = function(community,txHash){
         if(CommunityDB.communities[community].posts.indexOf(txHash) == '-1'){
             CommunityDB.communities[community].posts.push(txHash);
-            console.log("Pushing " + txHash + " to post list " + community);
+            //console.log("Pushing " + txHash + " to post list " + community);
         } else {
-            console.log(txHash + " already in "  + community + " post list.");
+            //console.log(txHash + " already in "  + community + " post list.");
         }  
     };
     
@@ -90,15 +98,15 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
                 touchCommentList(community,event.transactionHash);
                 addTxHashToActiveView(event);
                 addPostToCommunity(community,event.transactionHash);
-                addPosterToPost(community,event.transactionHash,event.poster);
-                updatePostScore(community,event.transactionHash);
+                addPosterToPost(community,event.transactionHash,event.args.sender);
+                service.updatePostScore(community,event.transactionHash);
             } else if(commentIsValid(ipfsData)){
                 console.log("comment");
                 touchCommentList(community,event.transactionHash);
                 console.log(ipfsData.parent);
                 addCommentToParent(community,event.transactionHash,ipfsData.parent);
                 addPosterToPost(community,ipfsData.root_parent,ipfsData.poster);
-                updatePostScore(community,event.transactionHash);
+                service.updatePostScore(community,ipfsData.root_parent);
             }
         });
     };
@@ -122,19 +130,8 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
         if(!CommunityDB.communities[community].posters[txHash])
             CommunityDB.communities[community].posters[txHash] = [];
             
-        if(CommunityDB.communities[community].posters[txHash].indexOf(poster) == -1)
+        if(CommunityDB.communities[community].posters[txHash].indexOf(poster) == -1 && poster !== null)
             CommunityDB.communities[community].posters[txHash].push(poster);  
-    };
-    
-    var updatePostScore = function(community,txHash){
-        var posters = CommunityDB.communities[community].posters[txHash];
-        
-        var score = 0;
-        for(poster in posters){
-            score += ProfileDB.getUserScore(posters[poster]);
-        }
-        
-        ProfileDB.updatePostScore(community,txHash,score);
     };
     
     var service = {
@@ -255,6 +252,20 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
                 CommunityDB.communities[community].posters[txHash] = [];
                 
             return CommunityDB.communities[community].posters[txHash];
+        },
+        updatePostScore: function(community,txHash){
+            touchCommunity(community);
+            touchPosterList(community,txHash);
+            
+            var posters = CommunityDB.communities[community].posters[txHash];
+            console.log(posters);
+            var score = 0;
+            for(poster in posters){
+                score += ProfileDB.getUserScore(posters[poster]);
+                //console.log("updating post score to " + score);
+            }
+            
+            ProfileDB.updatePostScore(community,txHash,score);
         }
     }
     

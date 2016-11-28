@@ -50,10 +50,3 @@
 - Xpost: event community does not equal ipfs data community
 - repost: event poster does not equal ipfs data community
 
-
-# MetaMask Improvement Proposals
-- Long Account Names Overlap with icons. Gets even messier when editing.
-- Account circle too large
-- Tx Circles too small
-- "Buy" button on testnet could say "Faucet" or "Request"
-- 

@@ -76,16 +76,16 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             
             $scope.upvote = function(){
                 ProfileDB.upvote($scope.activeView, $scope.post.poster, $scope.rootTxHash);
-                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.rootTxHash);
-                //$scope.userScore = ProfileDB.getUserScore($scope.post.poster);
-                $scope.hasVoted = true;
+                //$scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.rootTxHash);
+                Community.updatePostScore($scope.activeView,$scope.rootTxHash);
+                //$scope.hasVoted = true;
             };
             
             $scope.downvote = function(){
                 ProfileDB.downvote($scope.activeView, $scope.post.poster, $scope.rootTxHash);
-                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.rootTxHash);
-                //$scope.userScore = ProfileDB.getUserScore($scope.post.poster);
-                $scope.hasVoted = true;
+                //$scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.rootTxHash);
+                Community.updatePostScore($scope.activeView,$scope.rootTxHash);
+                //$scope.hasVoted = true;
             };
 		}
 	}

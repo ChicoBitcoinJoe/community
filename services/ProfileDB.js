@@ -32,7 +32,8 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Commu
                     score:0,
                     upvotes:[],
                     downvotes:[],
-                    downvoteStreak:0
+                    upvoteStreak:0;
+                    downvoteStreak:0;
                 }*/        
             },
             PostScores:{
@@ -44,14 +45,14 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Commu
         saveProfileDB();
     }
     
-    console.log("ProfileDB done loading",ProfileDB);
+    console.log("ProfileDB done loading");
     
     var touchUser = function(user){
-        var keys = Object.keys(ProfileDB.users);
-        if(keys.indexOf(user) == '-1'){
+        if(!ProfileDB.users[user]){
             ProfileDB.users[user] = {};
             ProfileDB.users[user].upvotes = [];
             ProfileDB.users[user].downvotes = [];
+            ProfileDB.users[user].upvoteStreak = 0;
             ProfileDB.users[user].downvoteStreak = 0;
             ProfileDB.users[user].score = 50;
         }
@@ -66,26 +67,51 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Commu
     };
     
     var updateUserScore = function(user){
-        var upvotes = ProfileDB.users[user].upvotes.length;
-        var downvotes = ProfileDB.users[user].downvotes.length;
+        console.log(ProfileDB.users[user].score);
         
-        var score = upvotes / (upvotes + downvotes) * 100;
-        console.log(score);
-        ProfileDB.users[user].score = score;
+        var upvoteStreak = ProfileDB.users[user].upvoteStreak;
+        var downvoteStreak = ProfileDB.users[user].downvoteStreak;
+        console.log(upvoteStreak,downvoteStreak);
+        
+        var points = [0,1,1,2,3,5,8,13,21,34,55];
+        ProfileDB.users[user].score += points[upvoteStreak];
+        ProfileDB.users[user].score -= points[downvoteStreak];
+        if(ProfileDB.users[user].score > 100)
+            ProfileDB.users[user].score = 100;
+        if(ProfileDB.users[user].score < 0)
+            ProfileDB.users[user].score = 0;
+        
+        console.log(ProfileDB.users[user].score);
     };
     
     var userUpvote = function(user,txHash){
         touchUser(user);
+        console.log(ProfileDB.users[user].upvoteStreak);
+        var upvoteStreak = ProfileDB.users[user].upvoteStreak;
         
-        if(ProfileDB.users[user].upvotes.indexOf(txHash) == -1)
+        if(ProfileDB.users[user].upvotes.indexOf(txHash) == -1){
             ProfileDB.users[user].upvotes.push(txHash);
+            console.log("dealing with streaks");
+        }
+        
+        ProfileDB.users[user].upvoteStreak = upvoteStreak + 1;
+        ProfileDB.users[user].downvoteStreak = 0;
+        console.log(ProfileDB.users[user].upvoteStreak);
     };
     
     var userDownvote = function(user,txHash){
         touchUser(user);
+        console.log(ProfileDB.users[user].downvoteStreak);
+        var downvoteStreak = ProfileDB.users[user].downvoteStreak;
         
-        if(ProfileDB.users[user].downvotes.indexOf(txHash) == -1)
+        if(ProfileDB.users[user].downvotes.indexOf(txHash) == -1){
             ProfileDB.users[user].downvotes.push(txHash);
+        }
+        
+        ProfileDB.users[user].upvoteStreak = 0;
+        ProfileDB.users[user].downvoteStreak = downvoteStreak + 1;
+        
+        console.log(ProfileDB.users[user].downvoteStreak);
     };
     
     var service = {
@@ -272,7 +298,9 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Commu
         },
         updatePostScore: function(community,txHash,score){
             touchPostScore(community,txHash);
+            console.log("updating post score to " + score);
             ProfileDB.PostScores[community].score[txHash] = score;
+            saveProfileDB();
         },
         getPostScore: function(community,txHash){
             touchPostScore(community,txHash);
