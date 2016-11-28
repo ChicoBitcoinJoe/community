@@ -1,17 +1,20 @@
 # To Do's #
 
 ## Unsorted ##
+- submit comment not setting root_parent properly
+- post scores not updating correctly in multiView and communityView?
+
 
 
 ## Critical ##
 - General
     - Metamask loading late
         - only on slow internet connections?
+    - all lists need to be sorted properly
 
 - Vote Contract
-    - all lists need to be sorted properly
     - Multi/Community tokens
-    - public/private post scores
+    - public
     - settings sidenav backend
 
 - Need Name Registry
@@ -49,4 +52,3 @@
 - A "Tweet": No root parent, no title, at least a link or comment
 - Xpost: event community does not equal ipfs data community
 - repost: event poster does not equal ipfs data community
-

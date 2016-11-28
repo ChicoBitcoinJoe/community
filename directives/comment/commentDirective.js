@@ -17,19 +17,18 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             });
         },
 		controller: function($scope){
-            var eventData = JSON.parse(localStorage.getItem($scope.txHash));
-            //console.log($scope.txHash,eventData);
-            $scope.ipfsHash = eventData.args.ipfsHash;
+            $scope.eventData = JSON.parse(localStorage.getItem($scope.txHash));
+            //console.log($scope.txHash,$scope.eventData);
+            $scope.ipfsHash = $scope.eventData.args.ipfsHash;
             $scope.activeView = $location.url().split('/')[2];
             $scope.rootTxHash = $location.url().split('/')[4];
             $scope.comments = Community.getChildren($scope.activeView, $scope.txHash);
-            $scope.hasVoted = false;
+            $scope.hasVoted = true;
             
             var async_ipfsData = IpfsService.getIpfsData($scope.ipfsHash).then(
             function(ipfsData){
                 $scope.post = ipfsData;
-                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.ipfsHash);
-                //$scope.userScore = ProfileDB.getUserScore($scope.post.poster);
+                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.eventData.transactionHash);
             }, function(err){
                 console.error(err); 
             });
@@ -76,16 +75,14 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             
             $scope.upvote = function(){
                 ProfileDB.upvote($scope.activeView, $scope.post.poster, $scope.rootTxHash);
-                //$scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.rootTxHash);
                 Community.updatePostScore($scope.activeView,$scope.rootTxHash);
-                //$scope.hasVoted = true;
+                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.rootTxHash);
             };
             
             $scope.downvote = function(){
-                ProfileDB.downvote($scope.activeView, $scope.post.poster, $scope.rootTxHash);
-                //$scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.rootTxHash);
-                Community.updatePostScore($scope.activeView,$scope.rootTxHash);
-                //$scope.hasVoted = true;
+                ProfileDB.downvote($scope.activeView, $scope.post.poster, $scope.eventData.transactionHash);
+                Community.updatePostScore($scope.activeView,$scope.eventData.transactionHash);
+                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.eventData.transactionHash);
             };
 		}
 	}

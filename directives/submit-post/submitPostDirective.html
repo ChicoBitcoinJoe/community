@@ -52,7 +52,7 @@
                         <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
                     </md-button>
                 </md-card-icon-actions>
-                <md-button ng-click="submitPost()">{{submitButtonText}}</md-button>
+                <md-button aria-label="submit post" ng-click="submitPost()">{{submitButtonText}}</md-button>
             </md-card-actions>
         </div>
         <div ng-if="newPost.media == 'video'" class="card-video" layout="column" layout-align="center">

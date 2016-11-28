@@ -1,6 +1,6 @@
 <md-card md-theme="dark-theme" style="margin: 0px {{marginRight}}px {{marginBottom}}px {{marginLeft}}px; padding: 8px 0px 0px {{paddingLeft}}px; border-left: {{borderWidth}}px solid #242424; border-top: {{borderTop}}px solid #242424; border-bottom:0px solid #242424; background-color:rgba(50,50,50,1);" layout="column">
     <div layout="row">
-        <md-button style="margin:0px 0px 0px 5px; max-height:36px;" ng-if="commentDepth>0" ng-click="$parent.minimized = !$parent.minimized; $parent.showExtras=false; $parent.show=false">
+        <md-button style="margin:0px 0px 0px 5px; max-height:36px;" ng-if="commentDepth>0" ng-click="$parent.minimized = !$parent.minimized; $parent.showExtras=false; $parent.show=false" aria-label="minimize comment">
             <md-icon ng-show="!minimized" md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg"></md-icon>
             <md-icon ng-show="minimized" md-svg-src="images/icons/ic_add_box_white_24px.svg"></md-icon>
         </md-button>
@@ -31,7 +31,7 @@
                             <md-icon md-svg-icon="images/icons/ic_arrow_downward_white_24px.svg"></md-icon>
                         </md-button>
                         <span flex></span>
-                        <md-button ng-click="showSubmitCommentPanel()">{{replyText}}</md-button>
+                        <md-button aria-label="reply to comment" ng-click="showSubmitCommentPanel()">{{replyText}}</md-button>
                     </md-card-icon-actions>
                 </md-card-actions>
             </md-card-actions>
