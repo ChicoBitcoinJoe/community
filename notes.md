@@ -2,9 +2,8 @@
 
 ## Unsorted ##
 - submit comment not setting root_parent properly
+- One vote per comment not working occasionally
 - post scores not updating correctly in multiView and communityView?
-
-
 
 ## Critical ##
 - General

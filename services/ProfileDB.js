@@ -83,13 +83,13 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Commu
     var userUpvote = function(user,txHash){
         touchUser(user);
         var upvoteStreak = ProfileDB.users[user].upvoteStreak;
-        
+        console.log(ProfileDB.users[user].upvotes);
         if(ProfileDB.users[user].upvotes.indexOf(txHash) == -1){
             ProfileDB.users[user].upvotes.push(txHash);
-        }
-        
-        ProfileDB.users[user].upvoteStreak = upvoteStreak + 1;
-        ProfileDB.users[user].downvoteStreak = 0;
+            ProfileDB.users[user].upvoteStreak = upvoteStreak + 1;
+            ProfileDB.users[user].downvoteStreak = 0;
+        } else
+            console.log('user voted already');
     };
     
     var userDownvote = function(user,txHash){
@@ -98,10 +98,10 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Commu
         
         if(ProfileDB.users[user].downvotes.indexOf(txHash) == -1){
             ProfileDB.users[user].downvotes.push(txHash);
-        }
-        
-        ProfileDB.users[user].upvoteStreak = 0;
-        ProfileDB.users[user].downvoteStreak = downvoteStreak + 1;
+            ProfileDB.users[user].upvoteStreak = 0;
+            ProfileDB.users[user].downvoteStreak = downvoteStreak + 1;
+        } else 
+            console.log('user voted already');
     };
     
     var service = {
@@ -263,8 +263,8 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Commu
             return ProfileDB.users[user].score;
         },
         upvote: function(community,user,txHash){
+            console.log('Voting',community,user,txHash);
             touchPostScore(community,txHash);
-            //console.log('voted!',community,user,txHash);
             userUpvote(user,txHash);
             updateUserScore(user);
             saveProfileDB();
@@ -278,11 +278,17 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Commu
         },
         hasVoted: function(user,txHash){
             touchUser(user);
+            console.log(user,txHash);
+            if(ProfileDB.users[user].upvotes.indexOf(txHash) !== -1){
+                console.log(txHash + " has voted.");
+                return true;
+            }
             
-            if(ProfileDB.users[user].upvotes.indexOf(txHash) !== -1)
+            if(ProfileDB.users[user].downvotes.indexOf(txHash) !== -1){
+                console.log(txHash + " has voted.");
                 return true;
-            if(ProfileDB.users[user].downvotes.indexOf(txHash) !== -1)
-                return true;
+            }
+            console.log(txHash + " has not voted.");
             
             return false;
         },

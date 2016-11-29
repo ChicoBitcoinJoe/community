@@ -29,6 +29,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             function(ipfsData){
                 $scope.post = ipfsData;
                 $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.eventData.transactionHash);
+                console.log($scope.hasVoted);
             }, function(err){
                 console.error(err); 
             });
@@ -74,9 +75,9 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             };
             
             $scope.upvote = function(){
-                ProfileDB.upvote($scope.activeView, $scope.post.poster, $scope.rootTxHash);
-                Community.updatePostScore($scope.activeView,$scope.rootTxHash);
-                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.rootTxHash);
+                ProfileDB.upvote($scope.activeView, $scope.post.poster, $scope.eventData.transactionHash);
+                Community.updatePostScore($scope.activeView,$scope.eventData.transactionHash);
+                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.eventData.transactionHash);
             };
             
             $scope.downvote = function(){

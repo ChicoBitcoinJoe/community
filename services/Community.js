@@ -119,14 +119,14 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
     };
     
     var commentIsValid = function(comment){
-        if(comment.community && comment.poster && comment.comment && comment.parent && comment.root_parent && !comment.title)
+        if(comment.community && comment.poster && comment.comment && comment.parent && comment.rootParent && !comment.title)
             return true;
         else
             return false;
     };
     
     var addPosterToPost = function(community, txHash, poster){
-        console.log(community,txHash,poster);
+        //console.log(community,txHash,poster);
         if(!CommunityDB.communities[community].posters[txHash])
             CommunityDB.communities[community].posters[txHash] = [];
             
