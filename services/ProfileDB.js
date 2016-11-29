@@ -37,7 +37,9 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Commu
                 }*/        
             },
             PostScores:{
-                /*  txHash:0,
+                /*  community:{
+                        post:{
+                            txHash:0,
                     ... */
             }
         };
@@ -301,7 +303,7 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Commu
         getPostScore: function(community,txHash){
             touchPostScore(community,txHash);
             
-            return ProfileDB.PostScores[community].score[txHash];
+            return ProfileDB.PostScores[community].score;//[txHash];
         }
 	};
 

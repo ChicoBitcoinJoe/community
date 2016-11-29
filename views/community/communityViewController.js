@@ -10,9 +10,9 @@ function($scope, Community){
     function(exists){
         if(exists){
             $scope.created = true;
-            $scope.posts = Community.getPosts(community);
         } else { 
             $scope.loaded = true;
+            $scope.posts = Community.getPosts(community);
         }
     }, function(err){
         console.error(err);

@@ -14,6 +14,7 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
         CommunityDB = JSON.parse(localCommunityDB);
     }
     
+    
     var touchCommunity = function(community){
         //var communities = Object.keys(CommunityDB.communities);
         //var exist = communities.indexOf(community);
@@ -31,7 +32,7 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
         
         var comments = CommunityDB.communities[community].comments[parent];
         var parentIndex = comments.indexOf(txHash);
-        if(parentIndex == '-1'){
+        if(parentIndex == -1){
             comments.push(txHash);
             //console.log("Adding " + txHash + " to parent " + parent + " in " + community);
         } else {
@@ -59,10 +60,10 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
     
     var addExistingToActiveView = function(community){
         touchCommunity(community);
-        
+        console.log(community);
         var posts = CommunityDB.communities[community].posts;
         for(post in posts){
-            if(CommunityDB.activeView.indexOf(posts[post]) == '-1'){
+            if(CommunityDB.activeView.indexOf(posts[post]) == -1){
                 //console.log("Pushing " + posts[post] + "to activeView");
                 CommunityDB.activeView.push(posts[post]);
             }
@@ -70,14 +71,14 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
     };
     
     var addTxHashToActiveView = function(event){
-        if(CommunityDB.activeView.indexOf(event.transactionHash) == '-1'){
+        if(CommunityDB.activeView.indexOf(event.transactionHash) == -1){
             //console.log("Pushing " + event.transactionHash + "to activeView");
             CommunityDB.activeView.push(event.transactionHash);
         }
     };
     
     var addPostToCommunity = function(community,txHash){
-        if(CommunityDB.communities[community].posts.indexOf(txHash) == '-1'){
+        if(CommunityDB.communities[community].posts.indexOf(txHash) == -1){
             CommunityDB.communities[community].posts.push(txHash);
             //console.log("Pushing " + txHash + " to post list " + community);
         } else {
@@ -86,7 +87,7 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
     };
     
     var addTxHashToCommunity = function(community,event){
-        //console.log(event);
+        console.log(community,event);
         touchCommunity(community);
         
         var ipfsHash = event.args.ipfsHash;
@@ -94,19 +95,21 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
         function(ipfsData){
             //console.log(event,ipfsData);
             if(postIsValid(ipfsData)){
-                //console.log("post");
+                console.log("post");
                 touchCommentList(community,event.transactionHash);
                 addTxHashToActiveView(event);
                 addPostToCommunity(community,event.transactionHash);
                 addPosterToPost(community,event.transactionHash,event.args.sender);
                 service.updatePostScore(community,event.transactionHash);
             } else if(commentIsValid(ipfsData)){
-                //console.log("comment");
+                console.log("comment");
                 touchCommentList(community,event.transactionHash);
                 console.log(ipfsData.parent);
                 addCommentToParent(community,event.transactionHash,ipfsData.parent);
                 addPosterToPost(community,ipfsData.root_parent,ipfsData.poster);
                 service.updatePostScore(community,ipfsData.root_parent);
+            } else {
+                console.log("Invalid event");
             }
         });
     };
@@ -147,12 +150,14 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
                 function(communityAddress){
                     ShardService.getShardEvents(communityAddress, {fromBlock:from}).then(
                     function(events){
+                        console.log("Finished fetching last 30 days of posts and comments.");
                         for(index in events){
                             //console.log(events[index]);
                             localStorage.setItem(events[index].transactionHash,JSON.stringify(events[index]));
                             addTxHashToCommunity(community,events[index]);
                         }
                         localStorage.setItem('CommunityDB',JSON.stringify(CommunityDB));
+                        console.log("Finished loading last 30 days of posts and comments.");
                     }, function(err){
                         console.error(err);
                     });

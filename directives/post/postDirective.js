@@ -11,11 +11,12 @@ function(IpfsService,$location,$window,ProfileDB,Community){
             var eventData = JSON.parse(localStorage.getItem($scope.txHash));
             //console.log($scope.txHash,eventData);
             
+            $scope.postScore = ProfileDB.getPostScore(post.community)[$scope.txHash];
+            
             var async_ipfsData = IpfsService.getIpfsData(eventData.args.ipfsHash).then(
             function(post){
             
                 setInterval(function(){
-                    $scope.postScore = ProfileDB.getPostScore(post.community,$scope.txHash);
                     $scope.$apply();
                 },500);
                 //console.log(post);
