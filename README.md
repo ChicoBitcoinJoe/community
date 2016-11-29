@@ -1,5 +1,5 @@
 ## Community
-This repo is an implementation of a *Reddit-like* site using the LinkDB Contract backend and a Material Design UX.
+This repo is an implementation of a *Reddit-like* site using the Share Platform and a Material Design UX.
 
 A presentation detailing how Community works can be found at [this slide show](https://docs.google.com/presentation/d/1oiCmJcrn15-kK3xS-UzPbx5M1LAyRlGRRJ6q4qllw0E/edit?usp=sharing)
 

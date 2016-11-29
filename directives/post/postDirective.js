@@ -1,18 +1,24 @@
-Community.directive('postCard', ['IpfsService','$location','$window','ProfileDB',
-function(IpfsService,$location,$window,ProfileDB){
+Community.directive('postCard', ['IpfsService','$location','$window','ProfileDB','Community',
+function(IpfsService,$location,$window,ProfileDB,Community){
 	return {
 		restrict: 'E',
 		scope: {
-            ipfsHash: '=',
+            txHash: '=',
 		},
 		replace: true,
 		templateUrl: 'directives/post/postDirective.html',
 		controller: function($scope){
-            console.log($scope.ipfsHash);
-            $scope.postScore = ProfileDB.getPostScore($scope.activeView,$scope.ipfsHash);
-            $scope.post = IpfsService.getIpfsData($scope.ipfsHash).then(
+            var eventData = JSON.parse(localStorage.getItem($scope.txHash));
+            //console.log($scope.txHash,eventData);
+            
+            var async_ipfsData = IpfsService.getIpfsData(eventData.args.ipfsHash).then(
             function(post){
-                console.log(post);
+            
+                setInterval(function(){
+                    $scope.postScore = ProfileDB.getPostScore(post.community,$scope.txHash);
+                    $scope.$apply();
+                },500);
+                //console.log(post);
                 $scope.post = post;
                 
                 if($scope.post.media == 'image'){
@@ -47,7 +53,7 @@ function(IpfsService,$location,$window,ProfileDB){
                     if(slice === 'Qm'){
                         var url = $location.absUrl().split('/');
                         $scope.imageSource = url[0] + '//' + url[2] + '/' + url[3] + '/' + $scope.post.link;
-                        console.log($scope.imageSource);
+                        //console.log($scope.imageSource);
                     } else {
                         $scope.imageSource = $scope.post.link;
                     }

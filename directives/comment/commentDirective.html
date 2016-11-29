@@ -1,47 +1,46 @@
 <md-card md-theme="dark-theme" style="margin: 0px {{marginRight}}px {{marginBottom}}px {{marginLeft}}px; padding: 8px 0px 0px {{paddingLeft}}px; border-left: {{borderWidth}}px solid #242424; border-top: {{borderTop}}px solid #242424; border-bottom:0px solid #242424; background-color:rgba(50,50,50,1);" layout="column">
     <div layout="row">
-        <md-button style="margin:0px 0px 0px 5px; max-height:36px;" ng-if="commentDepth>0" ng-click="$parent.minimized = !$parent.minimized; $parent.showExtras=false; $parent.show=false">
+        <md-button style="margin:0px 0px 0px 5px; max-height:36px;" ng-if="commentDepth>0" ng-click="$parent.minimized = !$parent.minimized; $parent.showExtras=false; $parent.show=false" aria-label="minimize comment">
             <md-icon ng-show="!minimized" md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg"></md-icon>
             <md-icon ng-show="minimized" md-svg-src="images/icons/ic_add_box_white_24px.svg"></md-icon>
         </md-button>
         <div layout="column" flex>
-            <md-card-content ng-hide="!post.postComment" class="comment-hover-fx" ng-click="showExtras = !showExtras" style="margin-right:8px; margin-bottom:8px; margin-left:{{marginLeft}}px; padding:8px;">
+            <md-card-content ng-hide="!post.comment" class="comment-hover-fx" ng-click="showExtras = !showExtras" style="margin-right:8px; margin-bottom:8px; margin-left:{{marginLeft}}px; padding:8px;">
                 <div layout="row" ng-show="commentDepth > 0">
                     <h5 layout="row" style="margin:0px; line-height: 16px;">
                         <span style="line-height: 16px;" class="md-subhead"><small>{{post.poster}}</small></span>
                     </h5>
+                    <br>
                     <span flex></span>
                     <h4 ng-show="hasVoted" style="margin:0px;">{{userScore}}</h4>
                 </div>
-                <div ng-hide="minimized" style="margin-top:5px;">{{post.postComment}}</div>
+                <div ng-hide="minimized" style="margin-top:5px;">{{post.comment}}</div>
             </md-card-content>
-            <md-card-actions ng-show="showExtras || commentDepth == 0" style="margin-bottom:8px !important;">
+            <md-card-actions ng-show="showExtras || commentDepth == 0" style="margin-bottom:8px !important; padding-left: {{marginLeft}} px !important;">
                 <md-card-actions layout="row" layout-align="start center">
                     <md-card-icon-actions>
-                        <md-button class="md-icon-button" aria-label="Favorite">
+                        <md-button style="margin-left: {{marginLeft}}px !important;" class="md-icon-button" aria-label="Favorite">
                             <md-icon md-svg-icon="img/icons/favorite.svg"></md-icon>
                         </md-button>
                         <md-button class="md-icon-button" aria-label="Share">
                             <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
                         </md-button>
-                        <md-button ng-hide="hasVoted" aria-label="vote user honest" ng-click="honestVote()">
+                        <md-button ng-hide="hasVoted" aria-label="upvote user" ng-click="upvote()">
                             <md-icon md-svg-icon="images/icons/ic_arrow_upward_white_24px.svg"></md-icon>
-                            Honest
                         </md-button>
-                        <md-button ng-hide="hasVoted" aria-label="vote user dishonest" ng-click="dishonestVote()">
+                        <md-button ng-hide="hasVoted" aria-label="downvote user" ng-click="downvote()">
                             <md-icon md-svg-icon="images/icons/ic_arrow_downward_white_24px.svg"></md-icon>
-                            Dishonest
                         </md-button>
                         <span flex></span>
-                        <md-button ng-click="showSubmitCommentPanel()">{{replyText}}</md-button>
+                        <md-button aria-label="reply to comment" ng-click="showSubmitCommentPanel()">{{replyText}}</md-button>
                     </md-card-icon-actions>
                 </md-card-actions>
             </md-card-actions>
         </div>
     </div>
     <span style="height:{{marginBottom}}px; background-color:rgba(33,33,33,1);"></span>
-    <submit-comment ng-show="showSubmitCommentPanel()" community="activeView" ipfs-hash="ipfsHash" comment-depth="commentDepth" root-ipfs-hash="rootIpfsHash"></submit-comment>
+    <submit-comment ng-show="showSubmitCommentPanel()" community="activeView" parent="txHash" root-parent="rootTxHash" comment-depth="commentDepth"></submit-comment>
     <div ng-hide="minimized" ng-repeat="comment in comments">
-        <comment-card ipfs-hash="comment" comment-depth="commentDepth + 1"></comment-card>
+        <comment-card tx-hash="comment" comment-depth="commentDepth + 1"></comment-card>
     </div>
 </md-card>

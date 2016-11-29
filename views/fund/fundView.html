@@ -30,15 +30,15 @@
                     <label>Ether</label>
                     <input md-select-on-focus type="number" ng-model="fundAmount">
                 </md-input-container>
-                <md-button ng-click="fundDevelopment()" class="sidenavGreen">Fund Development</md-button>
+                <md-button aria-label="Fund Development" ng-click="fundDevelopment()" class="sidenavGreen">Fund Development</md-button>
             </div>
             <div flex="60">
                 <div layout="column" layout-align="center center">
-                    <div>{{fundAmount}} Ether of funding will net you:</div>
+                    <div>For funding developers with {{fundAmount}} Ether you:</div>
                     <ul>
-                        <li><b>{{fundAmount * 100000}}</b> vote tokens for the <b>{{activeView | capitalize}}</b> Community</span><span flex></span></li>
+                        <li>Get <b>{{fundAmount * 100000}}</b> vote tokens for the <b>{{activeView | capitalize}}</b> Community</span><span flex></span></li>
                         <li>Fund <b>{{fundAmount*60 | round}}</b> minutes of Community development</li>
-                        <li>I want a third service to offer but what?</li>
+                        <li>Third Perk</li>
                     </ul>
                 </div>
             </div>

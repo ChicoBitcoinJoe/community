@@ -8,13 +8,14 @@ function($scope, Community){
     var community = [$scope.activeView];
     Community.communityExists($scope.activeView).then(
     function(exists){
-        if(exists)
+        if(exists){
             $scope.created = true;
-        else 
+            $scope.posts = Community.getPosts(community);
+        } else { 
             $scope.loaded = true;
+        }
     }, function(err){
         console.error(err);
     });
     
-    $scope.posts = Community.getPosts(community);
 }]);

@@ -5,7 +5,8 @@ function($scope,$location,Community) {
     var locationUrlArray = $location.url().split('/');
     $scope.viewType = locationUrlArray[1];
     $scope.activeView = locationUrlArray[2];
-    $scope.ipfsHash = locationUrlArray[4];
+    $scope.txHash = locationUrlArray[4];
+    //console.log($scope.txHash);
     var communities = [$scope.activeView];
     Community.getPosts(communities);
 }]);

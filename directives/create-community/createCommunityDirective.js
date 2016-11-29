@@ -1,5 +1,5 @@
-Community.directive('createCommunity', ['Community','$q','$window',
-function(Community,$q,$window) {
+Community.directive('createCommunity', ['Community','$q',
+function(Community,$q) {
 	return {
 		restrict: 'E',
 		scope: {
@@ -17,7 +17,7 @@ function(Community,$q,$window) {
                     $scope.clicked = true;
                     Community.createCommunity(community).then(
                     function(contractAddress){
-                        console.log($scope.community + " deployed to " + contractAddress);
+                        console.log($scope.community + " deployed to ", contractAddress);
                         $scope.created = true;
                     },function(error){
                         $scope.buttonState = "Error creating " + $scope.community + ". Click to try again...";

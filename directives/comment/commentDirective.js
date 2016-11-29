@@ -3,7 +3,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
 	return {
 		restrict: 'E',
 		scope: {
-			ipfsHash: '=',
+			txHash: '=',
             commentDepth: '='
 		},
 		replace: true,
@@ -17,23 +17,26 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             });
         },
 		controller: function($scope){
-            $scope.mouseoverExtras = function(){
-                $scope.hovered = true;
-            };
-            
+            $scope.eventData = JSON.parse(localStorage.getItem($scope.txHash));
+            //console.log($scope.txHash,$scope.eventData);
+            $scope.ipfsHash = $scope.eventData.args.ipfsHash;
             $scope.activeView = $location.url().split('/')[2];
-            $scope.rootIpfsHash = $location.url().split('/')[4];
-            $scope.comments = Community.getChildren($scope.activeView, $scope.ipfsHash).comments[$scope.ipfsHash];
-            $scope.hasVoted = false;
+            $scope.rootTxHash = $location.url().split('/')[4];
+            $scope.comments = Community.getChildren($scope.activeView, $scope.txHash);
+            $scope.hasVoted = true;
             
-            var promise = IpfsService.getIpfsData($scope.ipfsHash).then(
+            var async_ipfsData = IpfsService.getIpfsData($scope.ipfsHash).then(
             function(ipfsData){
                 $scope.post = ipfsData;
-                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.ipfsHash);
-                $scope.userScore = ProfileDB.getUserScore($scope.post.poster);
+                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.eventData.transactionHash);
+                console.log($scope.hasVoted);
             }, function(err){
                 console.error(err); 
             });
+            
+            $scope.mouseoverExtras = function(){
+                $scope.hovered = true;
+            };
             
             $scope.borderWidth = 0;
             $scope.borderTop = 8;
@@ -71,16 +74,16 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
                 return $scope.show;
             };
             
-            $scope.honestVote = function(){
-                ProfileDB.honestVote($scope.post.poster, $scope.ipfsHash);
-                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.ipfsHash);
-                $scope.userScore = ProfileDB.getUserScore($scope.post.poster);
+            $scope.upvote = function(){
+                ProfileDB.upvote($scope.activeView, $scope.post.poster, $scope.eventData.transactionHash);
+                Community.updatePostScore($scope.activeView,$scope.eventData.transactionHash);
+                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.eventData.transactionHash);
             };
             
-            $scope.dishonestVote = function(){
-                ProfileDB.dishonestVote($scope.post.poster, $scope.ipfsHash);
-                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.ipfsHash);
-                $scope.userScore = ProfileDB.getUserScore($scope.post.poster);
+            $scope.downvote = function(){
+                ProfileDB.downvote($scope.activeView, $scope.post.poster, $scope.eventData.transactionHash);
+                Community.updatePostScore($scope.activeView,$scope.eventData.transactionHash);
+                $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.eventData.transactionHash);
             };
 		}
 	}

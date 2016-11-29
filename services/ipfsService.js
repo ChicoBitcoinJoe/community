@@ -8,7 +8,7 @@ Community.service( 'IpfsService',['$q','$sce', function ($q,$sce) {
             
             var local = localStorage.getItem(ipfsHash);
             if(!local){
-                console.log("fetching data from ipfs for", ipfsHash);
+                //console.log("fetching data from ipfs for", ipfsHash);
                 var post = ipfs.catJson(ipfsHash, function(err, ipfsData) {
                     if(err || !ipfsData){
                         deferred.reject(err);
@@ -18,7 +18,7 @@ Community.service( 'IpfsService',['$q','$sce', function ($q,$sce) {
                     }
                 });
             } else {
-                console.log('Found ipfs data in localStorage');
+                //console.log('Found ipfs data in localStorage');
                 deferred.resolve(JSON.parse(local));
             }
             
@@ -27,7 +27,7 @@ Community.service( 'IpfsService',['$q','$sce', function ($q,$sce) {
 		getIpfsHash: function (data) {
             var deferred = $q.defer();
             
-            console.log("Calculating ipfs hash for", data);
+            //console.log("Calculating ipfs hash for", data);
 			var promise = ipfs.addJson(data, function(err, hash){
                 if(err || !hash){
                     deferred.reject(err);
