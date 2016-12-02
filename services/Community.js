@@ -3,49 +3,38 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
     console.log('Loading Community');
     
     var CommunityDB;
-    var localCommunityDB = localStorage.getItem('CommunityDB');
+    var localCommunityDB = null;//localStorage.getItem('CommunityDB');
     if(!localCommunityDB){
         CommunityDB = {};
         CommunityDB.communities = {};
-        CommunityDB.activeView = [];
         
         localStorage.setItem('CommunityDB',JSON.stringify(CommunityDB));
     } else {
         CommunityDB = JSON.parse(localCommunityDB);
     }
     
+    var activeView = [];
+    
     
     var touchCommunity = function(community){
-        //var communities = Object.keys(CommunityDB.communities);
-        //var exist = communities.indexOf(community);
         if(!CommunityDB.communities[community]){
             CommunityDB.communities[community] = {};
             CommunityDB.communities[community].posts = [];
             CommunityDB.communities[community].comments = {};
             CommunityDB.communities[community].posters = {};
             CommunityDB.communities[community].last_block = 0;
+            console.log(community + " touched!");
         }
     };
     
-    var addCommentToParent = function(community,txHash,parent){
-        touchCommentList(community,parent);
-        
-        var comments = CommunityDB.communities[community].comments[parent];
-        var parentIndex = comments.indexOf(txHash);
-        if(parentIndex == -1){
-            comments.push(txHash);
-            //console.log("Adding " + txHash + " to parent " + parent + " in " + community);
-        } else {
-            //console.log(txHash + " already added to parent " + parent + " in " + community);
-        }
-    };
     
     var touchCommentList = function(community,txHash){
-        if(!CommunityDB.communities[community].comments[txHash]){
+        console.log(community,txHash);
+        if(Object.keys(CommunityDB.communities[community].comments).indexOf(txHash) == -1){
             CommunityDB.communities[community].comments[txHash] = [];
-            //console.log("Started a comment list for " + txHash);
+            console.log("Comment list for " + txHash + " created");
         } else {
-            //console.log("Comment list for " + txHash + " already exists");
+            console.log("Comment list for " + txHash + " already exists");
         }
     };
     
@@ -58,22 +47,38 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
         }
     };
     
-    var addExistingToActiveView = function(community){
+    var addCommentToParent = function(community,txHash,parent){
+        console.log(JSON.stringify(community),txHash,parent);
         touchCommunity(community);
-        console.log(community);
+        touchCommentList(community,parent);
+        
+        var comments = CommunityDB.communities[community].comments[parent];
+        var parentIndex = comments.indexOf(txHash);
+        console.log(comments,parentIndex);
+        if(parentIndex == -1){
+            comments.push(txHash);
+            //console.log("Adding " + txHash + " to parent " + parent + " in " + community);
+            console.log(JSON.stringify(CommunityDB));
+        } else {
+            console.log(txHash + " already added to parent " + parent + " in " + community);
+        }
+    };
+    
+    var addExistingToActiveView = function(community){
+        console.log(JSON.stringify(community));
+        touchCommunity(community);
         var posts = CommunityDB.communities[community].posts;
         for(post in posts){
-            if(CommunityDB.activeView.indexOf(posts[post]) == -1){
+            if(activeView.indexOf(posts[post]) == -1){
                 //console.log("Pushing " + posts[post] + "to activeView");
-                CommunityDB.activeView.push(posts[post]);
+                activeView.push(posts[post]);
             }
         }
     };
     
     var addTxHashToActiveView = function(event){
-        if(CommunityDB.activeView.indexOf(event.transactionHash) == -1){
-            //console.log("Pushing " + event.transactionHash + "to activeView");
-            CommunityDB.activeView.push(event.transactionHash);
+        if(activeView.indexOf(event.transactionHash) == -1){
+            activeView.push(event.transactionHash);
         }
     };
     
@@ -88,20 +93,22 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
     
     var addTxHashToCommunity = function(community,event){
         console.log(community,event);
+        
+        console.log(JSON.stringify(community));
         touchCommunity(community);
         
         var ipfsHash = event.args.ipfsHash;
         IpfsService.getIpfsData(ipfsHash).then(
         function(ipfsData){
             //console.log(event,ipfsData);
-            if(postIsValid(ipfsData)){
+            if(service.postIsValid(ipfsData)){
                 console.log("post");
                 touchCommentList(community,event.transactionHash);
                 addTxHashToActiveView(event);
                 addPostToCommunity(community,event.transactionHash);
                 addPosterToPost(community,event.transactionHash,event.args.sender);
                 service.updatePostScore(community,event.transactionHash);
-            } else if(commentIsValid(ipfsData)){
+            } else if(service.commentIsValid(ipfsData)){
                 console.log("comment");
                 touchCommentList(community,event.transactionHash);
                 console.log(ipfsData.parent);
@@ -114,20 +121,6 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
         });
     };
     
-    var postIsValid = function(post){
-        if(post.media && post.title && post.community && post.poster && (post.link || post.comment))
-            return true;
-        else 
-            return false;
-    };
-    
-    var commentIsValid = function(comment){
-        if(comment.community && comment.poster && comment.comment && comment.parent && comment.rootParent && !comment.title)
-            return true;
-        else
-            return false;
-    };
-    
     var addPosterToPost = function(community, txHash, poster){
         //console.log(community,txHash,poster);
         if(!CommunityDB.communities[community].posters[txHash])
@@ -138,35 +131,127 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
     };
     
     var service = {
+        postIsValid: function(post){
+            if(post.media && post.title && post.community && post.poster && (post.link || post.comment))
+                return true;
+            else 
+                return false;
+        },
+        commentIsValid: function(comment){
+            if(comment.community && comment.poster && comment.comment && comment.parent && comment.rootParent && !comment.title)
+                return true;
+            else
+                return false;
+        },
         getPosts: function(communities){
-            CommunityDB.activeView = [];
+            console.log(CommunityDB);
+            activeView = [];
             
-            for(index in communities){
-                var community = communities[index]; 
-                addExistingToActiveView(community);
+            for(var coms in communities){
+                var community = communities[coms];
+                touchCommunity(community);
                 
-                var from = CommunityDB.communities[community].last_block;
+                //add already fetched event txs
+                
+                var fromBlock = CommunityDB.communities[community].last_block;
+                ShareService.getEvents(community,fromBlock).then(function(events){
+                    //console.log(activeView);
+                    for(var index in events){
+                        //console.log(events);
+                        localStorage.setItem(events[index].transactionHash,JSON.stringify(events[index]));
+                        addTxHashToActiveView(events[index]);
+                        
+                        //console.log(eventData);
+                        var ipfsHash;
+                        var communityName;
+                        var event = events[index];
+                        console.log(event);
+                        //This is an event from X (geth or parity?)
+                        if(Object.keys(events[index]).indexOf('args') !== -1){
+                            ipfsHash = events[index].args.ipfsHash;
+                            communityName = events[index].args.shardName;
+                        } //This is an event from Y (geth or parity?) 
+                        else if(Object.keys(events[index]).indexOf('data') !== -1){
+                            //This is going to cause bugs Guaranteed!!!
+                            //Needs a better solution asap
+                            var data = events[index].data;//.slice(2,length).replace(/^0+/, '');
+                            var tempIpfsHash = web3.toAscii(data);
+                            var index = tempIpfsHash.indexOf('Qm');
+                            var length = tempIpfsHash.length;
+                            ipfsHash = tempIpfsHash.slice(index,index+46);
+
+                            var tempCommunityName = web3.toAscii(data);
+                            var tindex = tempCommunityName.indexOf('@');
+                            var windex = tempCommunityName.indexOf('Qm');
+                            tempCommunityName = tempCommunityName.slice(tindex+1,windex-1);
+                            tempCommunityName = JSON.stringify(tempCommunityName).replace(/\\u0000/g, "");
+                            tempCommunityName = tempCommunityName.replace(/\\t/g, "");
+                            var length = tempCommunityName.length;
+                            tempCommunityName = tempCommunityName.slice(1,length-1);
+                            communityName = tempCommunityName;
+                        } else {
+                            console.error("Cannot recognize event data");
+                        }
+                        
+                        console.log(communityName);
+
+                        var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
+                        function(ipfsData){
+                            if(service.postIsValid(ipfsData)){
+                                
+                            } else if(service.commentIsValid(ipfsData)){
+                                //add comment to parents comment list
+                                console.log(CommunityDB);
+                                
+                                console.log(community);
+                                addCommentToParent(communityName,event.transactionHash,ipfsData.parent);
+                                
+                                //localStorage.setItem('CommunityDB',JSON.stringify(CommunityDB));
+                            } else {
+                                console.error("Cannot recognize ipfs data format...");
+                            }
+                        }, function(err){
+                            console.error(err); 
+                        });
+                        
+                        //Update latest block
+                    }
+                    //localStorage.setItem('ActiveView',JSON.stringify(activeView));
+                    console.log(activeView);
+                }, function(err){
+                    console.log(err);
+                });
+            
+                /*
+                addExistingToActiveView(community);
                 var async_getAddress = ShareService.getShardAddress(community).then(
                 function(communityAddress){
+                    console.log(community);
+                    console.log("Fetching last 30 days of events");
                     ShardService.getShardEvents(communityAddress, {fromBlock:from}).then(
                     function(events){
-                        console.log("Finished fetching last 30 days of posts and comments.");
+                        console.log("Finished fetching last 30 days of events");
+                        var com = community;
+                        console.log(com);
                         for(index in events){
-                            //console.log(events[index]);
+                            console.log(community);
+                            console.log(com);
+
                             localStorage.setItem(events[index].transactionHash,JSON.stringify(events[index]));
                             addTxHashToCommunity(community,events[index]);
                         }
                         localStorage.setItem('CommunityDB',JSON.stringify(CommunityDB));
-                        console.log("Finished loading last 30 days of posts and comments.");
+                        console.log("Finished loading last 30 days of events");
                     }, function(err){
                         console.error(err);
                     });
                 }, function(err){
                     console.error(err);
                 });
+                */
             }
             
-            return CommunityDB.activeView;
+            return activeView;
         },
         getChildren: function(community,txHash){
             touchCommunity(community);
@@ -177,7 +262,7 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
         submitPost: function(post){
             var deferred = $q.defer();
             
-            if(postIsValid(post)){
+            if(service.postIsValid(post)){
                 var async_getIpfsHash = IpfsService.getIpfsHash(post).then(
                 function(ipfsHash){
                     console.log(ipfsHash);
@@ -205,7 +290,7 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
         },
         submitComment: function(comment){
             var deferred = $q.defer();
-            if(commentIsValid(comment)){
+            if(service.commentIsValid(comment)){
                 var async_getIpfsHash = IpfsService.getIpfsHash(comment).then(
                 function(ipfsHash){
                     console.log(ipfsHash);
@@ -251,6 +336,7 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
             return deferred.promise;
         },
         getPosters: function(community,txHash){
+            console.log(JSON.stringify(community));
             touchCommunity(community);
             //console.log(CommunityDB.communities[community].posters[txHash]);
             if(Object.keys(CommunityDB.communities[community].posters).indexOf(txHash) == -1)
@@ -259,6 +345,7 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
             return CommunityDB.communities[community].posters[txHash];
         },
         updatePostScore: function(community,txHash){
+            console.log(JSON.stringify(community));
             touchCommunity(community);
             touchPosterList(community,txHash);
             
@@ -271,6 +358,18 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
             }
             
             ProfileDB.updatePostScore(community,txHash,score);
+        },
+        getEventData(txHash){
+            var deferred = $q.defer();
+            
+            var local = localStorage.getItem(txHash);
+            if(local)
+                deferred.resolve(JSON.parse(local));
+            else {
+                deferred.reject("Haven't seen this tx event");
+            }
+            
+            return deferred.promise;
         }
     }
     

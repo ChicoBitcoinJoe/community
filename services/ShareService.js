@@ -1,7 +1,7 @@
-Community.service('ShareService', ['$q','Web3Service', function ($q,Web3Service) {
+Community.service('ShareService', ['$q','Web3Service','ShardService', function ($q,Web3Service,ShardService) {
     console.log('Loading Share Service');
     
-    var ShareAddress = '0x4bf3f31f4797176005907161b9e8e2086703338d'; //TestNet
+    var ShareAddress = '0x406cc1c656a51b01e33b9707b20fb6cc056c31c0';//TestNet
     var ShareContract = web3.eth.contract(
         [{"constant":false,"inputs":[{"name":"shardName","type":"string"}],"name":"createShard","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"getShardName","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"shardName","type":"string"}],"name":"getShardAddress","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getTotalShards","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"shardName","type":"string"}],"name":"CreateShard_event","type":"event"}]);
     var ShareInstance = ShareContract.at(ShareAddress);
@@ -64,8 +64,26 @@ Community.service('ShareService', ['$q','Web3Service', function ($q,Web3Service)
 
             return deferred.promise;
         },
-        getShardName: function(){
+        getShardName: function(shardAddress){
             //To Do When Needed
+        },
+        getEvents: function(shardName, fromBlock){
+            var deferred = $q.defer();
+            var async_getAddress = service.getShardAddress(shardName).then(
+            function(shardAddress){
+                console.log("Fetching last 30 days of events for " + shardName);
+                ShardService.getShardEvents(shardAddress, {fromBlock:fromBlock}).then(
+                function(events){
+                    console.log("Fetched last 30 days of events for " + shardName);
+                    deferred.resolve(events);
+                }, function(err){
+                    deferred.reject(err);
+                });
+            }, function(err){
+                deferred.reject(err);
+            });
+            
+            return deferred.promise;
         }
     }
     

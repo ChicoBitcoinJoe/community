@@ -44,11 +44,11 @@ Community.directive('submitComment', ['ProfileDB','Community', function(ProfileD
                 Community.submitComment($scope.newComment).then(
                 function(txHash){
                     if(txHash){
-                        console.log('Comment waiting to be included in a block. tx hash: ' + txHash);
+                        console.log('Comment included! ' + txHash);
                     } else {
                         console.log('Not a valid comment.');
                     }
-                }, function(error){
+                }, function(err){
                     console.error(err);
                 });
             };

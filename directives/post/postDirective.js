@@ -8,92 +8,135 @@ function(IpfsService,$location,$window,ProfileDB,Community){
 		replace: true,
 		templateUrl: 'directives/post/postDirective.html',
 		controller: function($scope){
-            var eventData = JSON.parse(localStorage.getItem($scope.txHash));
-            //console.log($scope.txHash,eventData);
+            $scope.isPost = false;
             
-            $scope.postScore = ProfileDB.getPostScore(post.community)[$scope.txHash];
+            /*/
+            setInterval(function(){
+                $scope.postScore = ProfileDB.getPostScore(post.community,$scope.txHash);
+                $scope.$apply();
+            },10000);//*/
             
-            var async_ipfsData = IpfsService.getIpfsData(eventData.args.ipfsHash).then(
-            function(post){
-            
-                setInterval(function(){
-                    $scope.$apply();
-                },500);
-                //console.log(post);
-                $scope.post = post;
-                
-                if($scope.post.media == 'image'){
-                    var img = new Image();
-                    img.onload= function() {
-                        //console.log("Image loaded");
-                        if(this.width > this.height){
-                            $scope.orientation = 'horizontal';
-                            $scope.layout= 'column';
-                        } else {
-                            $scope.orientation = 'vertical';
-                            $scope.layout = 'row';
-                        }
-                    }
+            var async_eventData = Community.getEventData($scope.txHash).then(
+            function(eventData){
+                //console.log(eventData);
+                var ipfsHash;
+                var shardName;
+                //This is an event from X (geth or parity?)
+                if(Object.keys(eventData).indexOf('args') !== -1){
+                    ipfsHash = eventData.args.ipfsHash;
+                    shardName = eventData.args.shardName;
+                } //This is an event from Y (geth or parity?) 
+                else if(Object.keys(eventData).indexOf('data') !== -1){
+                    //This is going to cause bugs Guaranteed!!!
+                    //Needs a better solution asap
+                    var data = eventData.data;//.slice(2,length).replace(/^0+/, '');
+                    var tempIpfsHash = web3.toAscii(data);
+                    var index = tempIpfsHash.indexOf('Qm');
+                    var length = tempIpfsHash.length;
+                    ipfsHash = tempIpfsHash.slice(index,index+46);
                     
-                    var url;
-                    if($scope.post.link){
-                        var slice = $scope.post.link.slice(0,2);
-                        //console.log($scope.post.link);
-                        if(slice === 'Qm'){
-                            var absUrl = $location.absUrl();
-                            var index = absUrl.indexOf('ipfs');
-                            var urlSlice = absUrl.slice(0,index+5);
-                            url = urlSlice + $scope.post.link;
-                        } else {
-                            url = $scope.post.link;
-                        }
-                    }
-                    img.src = url;
-
-                    var slice = $scope.post.link.slice(0,2);
-                    if(slice === 'Qm'){
-                        var url = $location.absUrl().split('/');
-                        $scope.imageSource = url[0] + '//' + url[2] + '/' + url[3] + '/' + $scope.post.link;
-                        //console.log($scope.imageSource);
-                    } else {
-                        $scope.imageSource = $scope.post.link;
-                    }
-                } else if($scope.post.media === 'video'){
-                    var url = $scope.post.link;
-                    //console.log(url);
-                    
-                    function getParm(url, base) {
-                        var re = new RegExp("(\\?|&)" + base + "\\=([^&]*)(&|$)");
-                        var matches = url.match(re);
-                        if (matches) {
-                            return(matches[2]);
-                        } else {
-                            return("");
-                        }
-                    }
-
-                    var retVal = {};
-                    var matches;
-
-                    if (url.indexOf("youtube.com/watch") != -1) {
-                        retVal.provider = "youtube";
-                        retVal.id = getParm(url, "v");
-                    } else if (matches = url.match(/vimeo.com\/(\d+)/)) {
-                        retVal.provider = "vimeo";
-                        retVal.id = matches[1];
-                    }
-                    
-                    //console.log(retVal);
-                    if(retVal.provider == 'youtube')
-                        $scope.videoSourceUrl = 'https://www.youtube.com/v/' + retVal.id + '&rel=0';
-                    else if(retVal.provider == 'vimeo')
-                        $scope.videoSourceUrl = 'https://www.vimeo.com/' + retVal.id;
-                    
-                    //console.log($scope.videoSourceUrl);
+                    var tempShardName = web3.toAscii(data);
+                    var tindex = tempShardName.indexOf('@');
+                    var windex = tempShardName.indexOf('Qm');
+                    shardName = tempShardName.slice(tindex+1,windex-1).replace(/\s/g,'');
+                } else {
+                    console.error("Cannot recognize event data");
                 }
-            },function(err){
-                console.error(err);
-            });  
+                
+                var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
+                function(post){
+                    //console.log(post);
+                    $scope.post = post;
+                    
+                    if(shardName == $scope.activeView)
+                        console.log(shardName,$scope.activeView);
+                    
+                    $scope.postScore = ProfileDB.getPostScore(post.community,$scope.txHash);
+
+                    if($scope.post.media == 'image'){
+                        var img = new Image();
+                        img.onload= function() {
+                            //console.log("Image loaded");
+                            if(this.width > this.height){
+                                $scope.orientation = 'horizontal';
+                                $scope.layout= 'column';
+                            } else {
+                                $scope.orientation = 'vertical';
+                                $scope.layout = 'row';
+                            }
+                        }
+
+                        var url;
+                        if($scope.post.link){
+                            var slice = $scope.post.link.slice(0,2);
+                            //console.log($scope.post.link);
+                            if(slice === 'Qm'){
+                                var absUrl = $location.absUrl();
+                                var index = absUrl.indexOf('ipfs');
+                                var urlSlice = absUrl.slice(0,index+5);
+                                url = urlSlice + $scope.post.link;
+                            } else {
+                                url = $scope.post.link;
+                            }
+                        }
+                        img.src = url;
+
+                        var slice = $scope.post.link.slice(0,2);
+                        if(slice === 'Qm'){
+                            var url = $location.absUrl().split('/');
+                            $scope.imageSource = url[0] + '//' + url[2] + '/' + url[3] + '/' + $scope.post.link;
+                            //console.log($scope.imageSource);
+                        } else {
+                            $scope.imageSource = $scope.post.link;
+                        }
+                    } else if($scope.post.media === 'video'){
+                        var url = $scope.post.link;
+                        //console.log(url);
+
+                        function getParm(url, base) {
+                            var re = new RegExp("(\\?|&)" + base + "\\=([^&]*)(&|$)");
+                            var matches = url.match(re);
+                            if (matches) {
+                                return(matches[2]);
+                            } else {
+                                return("");
+                            }
+                        }
+
+                        var retVal = {};
+                        var matches;
+
+                        if (url.indexOf("youtube.com/watch") != -1) {
+                            retVal.provider = "youtube";
+                            retVal.id = getParm(url, "v");
+                        } else if (matches = url.match(/vimeo.com\/(\d+)/)) {
+                            retVal.provider = "vimeo";
+                            retVal.id = matches[1];
+                        }
+
+                        //console.log(retVal);
+                        if(retVal.provider == 'youtube')
+                            $scope.videoSourceUrl = 'https://www.youtube.com/v/' + retVal.id + '&rel=0';
+                        else if(retVal.provider == 'vimeo')
+                            $scope.videoSourceUrl = 'https://www.vimeo.com/' + retVal.id;
+
+                        //console.log($scope.videoSourceUrl);
+                    }
+                    
+                    var locationUrlArray = $location.url().split('/');
+                        $scope.commentView = false;
+                        if(locationUrlArray[3] == 'post')
+                            $scope.commentView = true;
+                    
+                    if(Community.postIsValid(post))
+                        $scope.isPost = true;
+                    
+                },function(err){
+                    console.error(err);
+                });           
+            }, function(err){
+                console.error(err);    
+            });
             
             $scope.followLink = function(){
                 if($scope.post.link){
@@ -114,11 +157,6 @@ function(IpfsService,$location,$window,ProfileDB,Community){
                     $location.url('c/' + $scope.post.community + '/post/' + $scope.ipfsHash);
                 }
             }
-            
-            var locationUrlArray = $location.url().split('/');
-            $scope.commentView = false;
-            if(locationUrlArray[3] == 'post')
-                $scope.commentView = true;
         },
 		link : function($scope, $element, $attrs) {
             //console.log($scope.postUrl);

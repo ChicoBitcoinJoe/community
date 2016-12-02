@@ -52,7 +52,7 @@ Community.service('ShardService', ['$q','Web3Service', function ($q,Web3Service)
             
             if(shardAddress){
                 var Shard = ShardContract.at(shardAddress);
-                console.log("Fetching all events for", shardAddress);
+                console.log("Fetching events for", shardAddress);
                 Shard.allEvents(args).get(
                 function(err, events){
                     if(!err){
@@ -64,7 +64,7 @@ Community.service('ShardService', ['$q','Web3Service', function ($q,Web3Service)
             } else {
                 deferred.resolve(false);
             }
-                        
+                
             return deferred.promise;
         }
     }

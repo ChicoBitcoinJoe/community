@@ -1,4 +1,4 @@
-<md-card md-theme="dark-theme" style="background-color:rgba(50,50,50,1);" layout="row" flex>
+<md-card ng-show="isPost" md-theme="dark-theme" style="background-color:rgba(50,50,50,1);" layout="row" flex>
     <div ng-if="post.media == 'image'" class="card-image-{{orientation}}" layout="{{layout}}" layout-align="top center">
         <img class="card-image" ng-src="{{imageSource}}" alt="post image: {{post.link}}">
     </div>
@@ -18,7 +18,7 @@
             </md-card-title-text>
             <div style="padding:0px 10px; max-height:50px; margin: 8px; background-color:rgba(55,55,55,1)" class="md-whiteframe-4dp" layout layout-align="center center">
                 <h3 style="margin:5px;" flex>
-                    <large layout="row" layout-align="right"><span flex></span>{{postScore}}</large>
+                    <large layout="row" layout-align="right"><span flex></span>{{postScore.score}}</large>
                     <small style="color:rgba(255,255,255,0.5); font-size:small" layout layout-align="center">score</small>
                 </h3> 
             </div>
