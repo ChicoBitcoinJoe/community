@@ -26,38 +26,9 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             var async_eventData = Community.getEventData($scope.txHash).then(
             function(event){
                 $scope.event = event;
-                //console.log(event);
-                var ipfsHash;
-                var communityName;
-                console.log(event);
-                //This is an event from X (geth or parity?)
-                if(Object.keys(event).indexOf('args') !== -1){
-                    ipfsHash = event.args.ipfsHash;
-                    communityName = event.args.shardName;
-                } //This is an event from Y (geth or parity?) 
-                else if(Object.keys(event).indexOf('data') !== -1){
-                    //This is going to cause bugs Guaranteed!!!
-                    //Needs a better solution asap
-                    var data = event.data;//.slice(2,length).replace(/^0+/, '');
-                    var tempIpfsHash = web3.toAscii(data);
-                    var index = tempIpfsHash.indexOf('Qm');
-                    var length = tempIpfsHash.length;
-                    ipfsHash = tempIpfsHash.slice(index,index+46);
-
-                    var tempCommunityName = web3.toAscii(data);
-                    var tindex = tempCommunityName.indexOf('@');
-                    var windex = tempCommunityName.indexOf('Qm');
-                    tempCommunityName = tempCommunityName.slice(tindex+1,windex-1);
-                    tempCommunityName = JSON.stringify(tempCommunityName).replace(/\\u0000/g, "");
-                    tempCommunityName = tempCommunityName.replace(/\\t/g, "");
-                    var length = tempCommunityName.length;
-                    tempCommunityName = tempCommunityName.slice(1,length-1);
-                    communityName = tempCommunityName;
-                } else {
-                    console.error("Cannot recognize event data");
-                }
-
-                console.log(communityName);
+                
+                var ipfsHash = event.args.ipfsHash;
+                var communityName = event.args.shardName;
                 
                 var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
                 function(ipfsData){

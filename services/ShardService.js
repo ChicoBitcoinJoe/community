@@ -1,7 +1,7 @@
 Community.service('ShardService', ['$q','Web3Service', function ($q,Web3Service) {
     console.log('Loading Shard Service');
   
-    var ShardAbi = [{"constant":true,"inputs":[],"name":"getShardInfo","outputs":[{"name":"","type":"string"},{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"ipfsHash","type":"string"}],"name":"share","outputs":[],"payable":false,"type":"function"},{"inputs":[{"name":"shard_name","type":"string"}],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"sender","type":"address"},{"indexed":false,"name":"ipfsHash","type":"string"}],"name":"Share_event","type":"event"}];
+    var ShardAbi = [{"constant":true,"inputs":[],"name":"getShardInfo","outputs":[{"name":"","type":"string"},{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"ipfsHash","type":"string"}],"name":"share","outputs":[],"payable":false,"type":"function"},{"inputs":[{"name":"shard_name","type":"string"}],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"shardName","type":"string"},{"indexed":true,"name":"sender","type":"address"},{"indexed":false,"name":"ipfsHash","type":"string"}],"name":"Share_event","type":"event"}];
     var ShardContract = web3.eth.contract(ShardAbi);
     
     var service = {

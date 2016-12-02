@@ -47,21 +47,33 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
         }
     };
     
-    var addCommentToParent = function(community,txHash,parent){
-        console.log(JSON.stringify(community),txHash,parent);
+    var addCommentToParent = function(community,txHash,ipfsHash){
         touchCommunity(community);
         touchCommentList(community,parent);
         
-        var comments = CommunityDB.communities[community].comments[parent];
-        var parentIndex = comments.indexOf(txHash);
-        console.log(comments,parentIndex);
-        if(parentIndex == -1){
-            comments.push(txHash);
-            //console.log("Adding " + txHash + " to parent " + parent + " in " + community);
-            console.log(JSON.stringify(CommunityDB));
-        } else {
-            console.log(txHash + " already added to parent " + parent + " in " + community);
-        }
+        var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
+        function(ipfsData){
+            var parent = ipfsData.parent;
+            if(service.postIsValid(ipfsData)){
+
+            } else if(service.commentIsValid(ipfsData)){
+                //add comment to parents comment list
+                var comments = CommunityDB.communities[community].comments[parent];
+                var parentIndex = comments.indexOf(txHash);
+                console.log(comments,parentIndex);
+                if(parentIndex == -1){
+                    comments.push(txHash);
+                    console.log("Adding " + txHash + " to " + parent + " in " + community);
+                    console.log(JSON.stringify(CommunityDB));
+                } else {
+                    console.log(txHash + " already added to " + parent + " in " + community);
+                }
+            } else {
+                console.error("Cannot recognize ipfs data format...");
+            }
+        }, function(err){
+            console.error(err); 
+        });
     };
     
     var addExistingToActiveView = function(community){
@@ -156,67 +168,20 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
                 var fromBlock = CommunityDB.communities[community].last_block;
                 ShareService.getEvents(community,fromBlock).then(function(events){
                     //console.log(activeView);
+                    console.log("events",events);
                     for(var index in events){
-                        //console.log(events);
                         localStorage.setItem(events[index].transactionHash,JSON.stringify(events[index]));
                         addTxHashToActiveView(events[index]);
                         
-                        //console.log(eventData);
-                        var ipfsHash;
-                        var communityName;
-                        var event = events[index];
-                        console.log(event);
-                        //This is an event from X (geth or parity?)
-                        if(Object.keys(events[index]).indexOf('args') !== -1){
-                            ipfsHash = events[index].args.ipfsHash;
-                            communityName = events[index].args.shardName;
-                        } //This is an event from Y (geth or parity?) 
-                        else if(Object.keys(events[index]).indexOf('data') !== -1){
-                            //This is going to cause bugs Guaranteed!!!
-                            //Needs a better solution asap
-                            var data = events[index].data;//.slice(2,length).replace(/^0+/, '');
-                            var tempIpfsHash = web3.toAscii(data);
-                            var index = tempIpfsHash.indexOf('Qm');
-                            var length = tempIpfsHash.length;
-                            ipfsHash = tempIpfsHash.slice(index,index+46);
-
-                            var tempCommunityName = web3.toAscii(data);
-                            var tindex = tempCommunityName.indexOf('@');
-                            var windex = tempCommunityName.indexOf('Qm');
-                            tempCommunityName = tempCommunityName.slice(tindex+1,windex-1);
-                            tempCommunityName = JSON.stringify(tempCommunityName).replace(/\\u0000/g, "");
-                            tempCommunityName = tempCommunityName.replace(/\\t/g, "");
-                            var length = tempCommunityName.length;
-                            tempCommunityName = tempCommunityName.slice(1,length-1);
-                            communityName = tempCommunityName;
-                        } else {
-                            console.error("Cannot recognize event data");
-                        }
-                        
-                        console.log(communityName);
-
-                        var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
-                        function(ipfsData){
-                            if(service.postIsValid(ipfsData)){
-                                
-                            } else if(service.commentIsValid(ipfsData)){
-                                //add comment to parents comment list
-                                console.log(CommunityDB);
-                                
-                                console.log(community);
-                                addCommentToParent(communityName,event.transactionHash,ipfsData.parent);
-                                
-                                //localStorage.setItem('CommunityDB',JSON.stringify(CommunityDB));
-                            } else {
-                                console.error("Cannot recognize ipfs data format...");
-                            }
-                        }, function(err){
-                            console.error(err); 
-                        });
+                        var txHash = events[index].transactionHash;
+                        var ipfsHash = events[index].args.ipfsHash;
+                        var communityName = events[index].args.shardName;
+                        addCommentToParent(communityName,txHash,ipfsHash);
                         
                         //Update latest block
                     }
-                    //localStorage.setItem('ActiveView',JSON.stringify(activeView));
+                    
+                    //localStorage.setItem('CommunityDB',JSON.stringify(CommunityDB));
                     console.log(activeView);
                 }, function(err){
                     console.log(err);
