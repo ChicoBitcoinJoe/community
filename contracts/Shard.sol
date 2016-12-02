@@ -5,7 +5,7 @@ contract Shard{
     string shardName;
     uint block_created;
     
-    event Share_event(address indexed sender, string ipfsHash);
+    event Share_event(string shardName, address indexed sender, string ipfsHash);
 
     function Shard(string shard_name){
         shardName = shard_name;
@@ -17,6 +17,6 @@ contract Shard{
     }
     
     function share(string ipfsHash){
-        Share_event(msg.sender, ipfsHash);
+        Share_event(shardName, msg.sender, ipfsHash);
     }
 }

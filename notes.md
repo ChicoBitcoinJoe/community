@@ -1,8 +1,6 @@
 # To Do's #
 
 ## Unsorted ##
-- submit comment not setting root_parent properly
-- One vote per comment not working occasionally
 - post scores not updating correctly in multiView and communityView?
 
 ## Critical ##
@@ -37,11 +35,8 @@
     - Turn into directive
     
 - You can upvote or downvote yourself
-
 - Create Community card is dreadful
-
 - submit comment button doesnt update text after clicking
-
 
 
     
@@ -51,3 +46,37 @@
 - A "Tweet": No root parent, no title, at least a link or comment
 - Xpost: event community does not equal ipfs data community
 - repost: event poster does not equal ipfs data community
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

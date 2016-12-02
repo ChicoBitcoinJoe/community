@@ -1,23 +1,16 @@
-pragma solidity ^0.4.4;
+pragma solidity ^0.4.6;
 
 contract VoteHub {
     
     address owner;
-    address multisig1;
-    address multisig2;
-    
     address fund_contract;
     
-    address new_fund_contract;
-    address new_multisig1;
-    address new_multisig2;
-    
-    struct Vote {
-        uint weight;
-        bool support;
+    struct Community {
+        uint total_tokens;
+        mapping(string => Key) keys;
     }
     
-    struct Community {
+    struct Key {
         uint upvotes;
         uint downvotes;
     }
@@ -26,29 +19,26 @@ contract VoteHub {
         uint total_tokens;
         
         mapping (string => uint) available_tokens;
-        mapping (string => uint) upvotes;
-        mapping (string => uint) downvotes;
+        mapping (string => Community) Communities;
     }
     
+    uint total_tokens = 0;
     mapping (string => Community) Communities;
     mapping (address => Voter) Voters;
     
     function VoteHub(address fundContract){
         owner = msg.sender;
-        multisig1 = msg.sender;
-        multisig2 = msg.sender;
-        new_multisig1 = msg.sender;
-        new_multisig2 = msg.sender;
         fund_contract = fundContract;
-        new_fund_contract = fundContract;
     }
     
-    function fundDevelopment(string community){
+    function fundDevelopment(string community) {
         if(msg.value == 0)
             throw;
         
+        total_tokens += msg.value;
         Voters[msg.sender].total_tokens += msg.value;
         Voters[msg.sender].available_tokens[community] += msg.value;
+        Voters[msg.sender].Communities[community].total_tokens += msg.value;
         
         if(!fund_contract.send(msg.value))
             throw;
@@ -59,18 +49,18 @@ contract VoteHub {
         if(available > 0){
             if(amount < available){
                 if(support){
-                    Communities[key].upvotes += amount;
-                    Voters[msg.sender].upvotes[key] += amount;
+                    Communities[community].keys[key].upvotes += amount;
+                    Voters[msg.sender].Communities[community].keys[key].upvotes += amount;
                 } else {
-                    Communities[key].downvotes += amount;
-                    Voters[msg.sender].downvotes[key] += amount;
+                    Communities[community].keys[key].downvotes += amount;
+                    Voters[msg.sender].Communities[community].keys[key].downvotes += amount;
                 }
                 Voters[msg.sender].available_tokens[community] -= amount;
             } else {
                 if(support)
-                    Communities[key].upvotes += available;
+                    Communities[community].keys[key].upvotes += available;
                 else
-                    Communities[key].downvotes += available;
+                    Communities[community].keys[key].downvotes += available;
                 
                 Voters[msg.sender].available_tokens[community] = 0;
             }
@@ -78,27 +68,40 @@ contract VoteHub {
     }
     
     function reclaimVotes(string community, string key){
-        var upvotes = Voters[msg.sender].upvotes[key];
-        var downvotes = Voters[msg.sender].downvotes[key];
+        var upvotes = Voters[msg.sender].Communities[community].keys[key].upvotes;
+        var downvotes = Voters[msg.sender].Communities[community].keys[key].downvotes;
         
-        Voters[msg.sender].upvotes[key] = 0;
-        Voters[msg.sender].downvotes[key] = 0;
+        Communities[community].keys[key].upvotes -= upvotes;
+        Communities[community].keys[key].downvotes -= downvotes;
         
-        Communities[key].upvotes -= upvotes;
-        Communities[key].downvotes -= downvotes;
+        Voters[msg.sender].Communities[community].keys[key].upvotes = 0;
+        Voters[msg.sender].Communities[community].keys[key].downvotes = 0;
         
         var refund = upvotes + downvotes;
         Voters[msg.sender].available_tokens[community] += refund;
     }
     
-    function getCommunityVotes(string community, string key){
+    function getKeyVotes(string community, string key) constant returns(uint,uint){
         //get key upvotes/downvotes
+        var upvotes = Communities[community].keys[key].upvotes;
+        var downvotes = Communities[community].keys[key].downvotes;
         
+        return (upvotes,downvotes);
     }
     
-    function getUserData(){
-        //get user votes
+    function getUserVotes(address user, string community, string key) constant returns (uint,uint){
+        var upvotes = Voters[user].Communities[community].keys[key].upvotes;
+        var downvotes = Voters[user].Communities[community].keys[key].downvotes;
         
+        return (upvotes,downvotes);
+    }
+    
+    function getUserData(address user, string community) constant returns(uint,uint,uint){
+        var total_tokens = Voters[user].total_tokens;
+        var available_tokens = Voters[user].available_tokens[community];
+        var community_tokens = Voters[user].Communities[community].total_tokens;
+        
+        return (available_tokens,community_tokens,total_tokens);
     }
     
     function changeOwner(address newOwner){
@@ -106,39 +109,12 @@ contract VoteHub {
             owner == newOwner;
     }
     
-    function changeMultiSig1(address newMultisig1){
+    function changeFundContract(address newFundContract){
         if(msg.sender == owner)
-            new_multisig1 = newMultisig1;
+            fund_contract == newFundContract;
     }
     
-    function changeMultiSig2(address newMultisig2){
-        if(msg.sender == owner)
-            new_multisig2 = newMultisig2;
-    }
-    
-    function changeFundContractProposal(address newFundContract){
-        if(msg.sender == owner)
-            new_fund_contract = newFundContract;
-    }
-    
-    function confirmNewContract(address contractToConfirm){
-        if(msg.sender == multisig1 || msg.sender == multisig2){
-            if(contractToConfirm == new_fund_contract)
-                fund_contract = new_fund_contract;
-        }
-    }
-    
-    function confirmNewMultisig1(){
-        if(msg.sender == multisig2)
-            multisig1 = new_multisig1;
-    }
-    
-    function confirmNewMultisig2(){
-        if(msg.sender == multisig1)
-            multisig2 = new_multisig2;
-    }
-    
-    function accountCompromised(){
-        //How to handle this?
+    function getDetails() constant returns (address,address,uint){
+        return (owner,fund_contract,total_tokens);
     }
 }

@@ -3,12 +3,12 @@ var Community = angular.module('Community',['RecursionHelper','ngRoute','ngMater
 Community.config(function ($routeProvider) {
 	$routeProvider.
     when('/m/:multi', {
-        templateUrl: 'views/multi/multiView.html',
-        controller: 'MultiViewController'
+        templateUrl: 'views/post/postView.html',
+        controller: 'PostViewController'
     }).
     when('/c/:community', {
-        templateUrl: 'views/community/communityView.html',
-        controller: 'CommunityViewController'
+        templateUrl: 'views/post/postView.html',
+        controller: 'PostViewController'
     }).
     when('/c/:community/fund', {
         templateUrl: 'views/fund/fundView.html',
@@ -19,7 +19,7 @@ Community.config(function ($routeProvider) {
         controller: 'CommentViewController'
     }).
 	otherwise({
-      redirectTo: '/m/all'
+      redirectTo: '/c/community'
     });
 });
 

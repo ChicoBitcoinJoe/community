@@ -37,8 +37,12 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Commu
                 }*/        
             },
             PostScores:{
-                /*  txHash:0,
-                    ... */
+                /*  community:{
+                        txHash:{
+                            score:0
+                        }
+                    }
+                ... */
             }
         };
 
@@ -62,7 +66,10 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Commu
         if(!ProfileDB.PostScores[community]){
             ProfileDB.PostScores[community] = {};
             ProfileDB.PostScores[community].score = {};
-            ProfileDB.PostScores[community].score[txHash] = 0;
+            ProfileDB.PostScores[community].post = {};
+            ProfileDB.PostScores[community].post[txHash] = {};
+            ProfileDB.PostScores[community].post[txHash].score = 0;
+            ProfileDB.PostScores[community].post[txHash].posters = [];
         }
     };
     
@@ -80,26 +87,31 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Commu
             ProfileDB.users[user].score = 0;
     };
     
-    var userUpvote = function(user,txHash){
+    var upvoteUser = function(user,txHash){
         touchUser(user);
+        
         var upvoteStreak = ProfileDB.users[user].upvoteStreak;
         console.log(ProfileDB.users[user].upvotes);
         if(ProfileDB.users[user].upvotes.indexOf(txHash) == -1){
             ProfileDB.users[user].upvotes.push(txHash);
             ProfileDB.users[user].upvoteStreak = upvoteStreak + 1;
             ProfileDB.users[user].downvoteStreak = 0;
+            
+            updateUserScore(user);
         } else
             console.log('user voted already');
     };
     
-    var userDownvote = function(user,txHash){
+    var downvoteUser = function(user,txHash){
         touchUser(user);
-        var downvoteStreak = ProfileDB.users[user].downvoteStreak;
         
+        var downvoteStreak = ProfileDB.users[user].downvoteStreak;
         if(ProfileDB.users[user].downvotes.indexOf(txHash) == -1){
             ProfileDB.users[user].downvotes.push(txHash);
             ProfileDB.users[user].upvoteStreak = 0;
             ProfileDB.users[user].downvoteStreak = downvoteStreak + 1;
+            
+            updateUserScore(user);
         } else 
             console.log('user voted already');
     };
@@ -263,17 +275,15 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Commu
             return ProfileDB.users[user].score;
         },
         upvote: function(community,user,txHash){
-            console.log('Voting',community,user,txHash);
+            //console.log('Voting',community,user,txHash);
             touchPostScore(community,txHash);
-            userUpvote(user,txHash);
-            updateUserScore(user);
+            upvoteUser(user,txHash);
             saveProfileDB();
         },
         downvote: function(community,user,txHash){
-            touchPostScore(community,txHash);
             //console.log('voted!',community,user,txHash);
-            userDownvote(user,txHash);
-            updateUserScore(user);
+            touchPostScore(community,txHash);
+            downvoteUser(user,txHash);
             saveProfileDB();
         },
         hasVoted: function(user,txHash){
@@ -294,14 +304,15 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Commu
         },
         updatePostScore: function(community,txHash,score){
             touchPostScore(community,txHash);
-            //console.log("updating post score to " + score);
-            ProfileDB.PostScores[community].score[txHash] = score;
+            
+            console.log("updating post score to " + score);
+            ProfileDB.PostScores[community].post[txHash].score = score;
             saveProfileDB();
         },
         getPostScore: function(community,txHash){
             touchPostScore(community,txHash);
             
-            return ProfileDB.PostScores[community].score[txHash];
+            return ProfileDB.PostScores[community].post[txHash];
         }
 	};
 
