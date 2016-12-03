@@ -15,11 +15,20 @@ Community.service('ShardService', ['$q','Web3Service', function ($q,Web3Service)
             var submitPost = Shard.share(ipfsHash, args, 
             function(err, txHash){
                 if(!err){
-                    Web3Service.getTransactionReceipt(txHash).then(
-                    function(receipt){
-                        deferred.resolve(receipt);
-                    }, function(err){
-                        deferred.reject(err);
+                    var Shard = ShardContract.at(shardAddress);
+                    console.log("Watching events for", shardAddress);
+                    var watcher = Shard.allEvents().watch(
+                    function(err, event){
+                        console.log(event);
+                        if(!err){
+                            if(event.transactionHash == txHash){
+                                localStorage.setItem(txHash,JSON.stringify(event));
+                                watcher.stopWatching();
+                                deferred.resolve(txHash);
+                            }
+                        } else {
+                            deferred.reject(err);
+                        }
                     });
                 } else{
                     deferred.reject(err);

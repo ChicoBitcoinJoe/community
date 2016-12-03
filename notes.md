@@ -19,9 +19,6 @@
 
 - Need to calculate more accurate estimated gas fee
 
-- Loading up a post directly does not work if the txHash event has not already been saved
-    - submit post needs to wait for event to be seen
-
 ## NonCritical ##
 - Community Sidenav
     - Turn into directive

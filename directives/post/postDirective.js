@@ -10,48 +10,29 @@ function(IpfsService,$location,$window,ProfileDB,Community){
 		controller: function($scope){
             $scope.isPost = false;
             
-            /*/
-            setInterval(function(){
-                $scope.postScore = ProfileDB.getPostScore(post.community,$scope.txHash);
-                $scope.$apply();
-            },10000);//*/
             
             var async_eventData = Community.getEventData($scope.txHash).then(
-            function(eventData){
-                //console.log(eventData);
-                var ipfsHash;
-                var shardName;
-                //This is an event from X (geth or parity?)
-                if(Object.keys(eventData).indexOf('args') !== -1){
-                    ipfsHash = eventData.args.ipfsHash;
-                    shardName = eventData.args.shardName;
-                } //This is an event from Y (geth or parity?) 
-                else if(Object.keys(eventData).indexOf('data') !== -1){
-                    //This is going to cause bugs Guaranteed!!!
-                    //Needs a better solution asap
-                    var data = eventData.data;//.slice(2,length).replace(/^0+/, '');
-                    var tempIpfsHash = web3.toAscii(data);
-                    var index = tempIpfsHash.indexOf('Qm');
-                    var length = tempIpfsHash.length;
-                    ipfsHash = tempIpfsHash.slice(index,index+46);
-                    
-                    var tempShardName = web3.toAscii(data);
-                    var tindex = tempShardName.indexOf('@');
-                    var windex = tempShardName.indexOf('Qm');
-                    shardName = tempShardName.slice(tindex+1,windex-1).replace(/\s/g,'');
-                } else {
-                    console.error("Cannot recognize event data");
-                }
+            function(event){
+                //console.log(event);
+                
+                var ipfsHash = event.args.ipfsHash;
+                var communityName = event.args.shardName;
                 
                 var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
                 function(post){
                     //console.log(post);
                     $scope.post = post;
+                    $scope.postScore = ProfileDB.getPostScore(event.args.shardName,$scope.txHash);
+                    /*
+                    setInterval(function(){
+                        $scope.$apply(function(){
+                            $scope.postScore = ProfileDB.getPostScore(event.args.shardName,$scope.txHash);
+                            console.log($scope.postScore);
+                        });
+                    },1000);*/
                     
-                    if(shardName == $scope.activeView)
-                        console.log(shardName,$scope.activeView);
-                    
-                    $scope.postScore = ProfileDB.getPostScore(post.community,$scope.txHash);
+                    if(communityName == $scope.activeView)
+                        console.log(communityName,$scope.activeView);
 
                     if($scope.post.media == 'image'){
                         var img = new Image();
@@ -154,7 +135,7 @@ function(IpfsService,$location,$window,ProfileDB,Community){
                     }
                 } else {
                     console.log("self post");
-                    $location.url('c/' + $scope.post.community + '/post/' + $scope.ipfsHash);
+                    $location.url('c/' + $scope.post.community + '/post/' + $scope.txHash);
                 }
             }
         },

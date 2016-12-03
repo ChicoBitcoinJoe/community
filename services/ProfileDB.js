@@ -1,4 +1,4 @@
-Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Community){
+Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
     console.log('Loading ProfileDB account ');
     var ProfileDB = null;
     
@@ -63,14 +63,22 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Commu
     };
     
     var touchPostScore = function(community,txHash){
+        //console.log(community,txHash);
         if(!ProfileDB.PostScores[community]){
             ProfileDB.PostScores[community] = {};
-            ProfileDB.PostScores[community].score = {};
             ProfileDB.PostScores[community].post = {};
+        }
+        
+        if(!ProfileDB.PostScores[community].post[txHash]){
+            //console.log("No Post Score Detected");
             ProfileDB.PostScores[community].post[txHash] = {};
             ProfileDB.PostScores[community].post[txHash].score = 0;
             ProfileDB.PostScores[community].post[txHash].posters = [];
-        }
+        } else {
+            //console.log("Score Detected", ProfileDB.PostScores[community]);
+        }   
+        
+        //console.log(ProfileDB.PostScores[community].post[txHash]);
     };
     
     var updateUserScore = function(user){
@@ -91,11 +99,13 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Commu
         touchUser(user);
         
         var upvoteStreak = ProfileDB.users[user].upvoteStreak;
-        console.log(ProfileDB.users[user].upvotes);
         if(ProfileDB.users[user].upvotes.indexOf(txHash) == -1){
             ProfileDB.users[user].upvotes.push(txHash);
             ProfileDB.users[user].upvoteStreak = upvoteStreak + 1;
             ProfileDB.users[user].downvoteStreak = 0;
+            
+            if(ProfileDB.users[user].upvoteStreak > 10)
+                ProfileDB.users[user].upvoteStreak = 10;
             
             updateUserScore(user);
         } else
@@ -110,6 +120,9 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Commu
             ProfileDB.users[user].downvotes.push(txHash);
             ProfileDB.users[user].upvoteStreak = 0;
             ProfileDB.users[user].downvoteStreak = downvoteStreak + 1;
+            
+            if(ProfileDB.users[user].downvoteStreak > 10)
+                ProfileDB.users[user].downvoteStreak = 10;
             
             updateUserScore(user);
         } else 
@@ -277,41 +290,58 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q,Commu
         upvote: function(community,user,txHash){
             //console.log('Voting',community,user,txHash);
             touchPostScore(community,txHash);
+            
             upvoteUser(user,txHash);
             saveProfileDB();
         },
         downvote: function(community,user,txHash){
             //console.log('voted!',community,user,txHash);
             touchPostScore(community,txHash);
+            
             downvoteUser(user,txHash);
             saveProfileDB();
         },
         hasVoted: function(user,txHash){
             touchUser(user);
-            console.log(user,txHash);
+            //console.log(user,txHash);
             if(ProfileDB.users[user].upvotes.indexOf(txHash) !== -1){
-                console.log(txHash + " has voted.");
+                //console.log(txHash + " has voted.");
                 return true;
             }
             
             if(ProfileDB.users[user].downvotes.indexOf(txHash) !== -1){
-                console.log(txHash + " has voted.");
+                //console.log(txHash + " has voted.");
                 return true;
             }
-            console.log(txHash + " has not voted.");
+            //console.log(txHash + " has not voted.");
             
             return false;
         },
-        updatePostScore: function(community,txHash,score){
+        updatePostScore: function(community,txHash,posters){
+            console.log(community,txHash,posters);
             touchPostScore(community,txHash);
             
-            console.log("updating post score to " + score);
+            var score = 0;
+            var relaventPosters = [];
+            for(poster in posters){
+                touchUser(posters[poster]);
+                
+                var userScore = ProfileDB.users[posters[poster]].score;
+                var tolerance = 15; //AutoModerator.getScoreTolerance();
+                if(userScore > tolerance){ //AutoModerator setting score tolerance
+                    relaventPosters.push(posters[poster]);
+                    score += userScore;
+                }
+            }
+            
+            
+            score = Math.round(score/relaventPosters.length);
+            console.log(score);
             ProfileDB.PostScores[community].post[txHash].score = score;
-            saveProfileDB();
+            ProfileDB.PostScores[community].post[txHash].posters = relaventPosters;
         },
         getPostScore: function(community,txHash){
             touchPostScore(community,txHash);
-            
             return ProfileDB.PostScores[community].post[txHash];
         }
 	};

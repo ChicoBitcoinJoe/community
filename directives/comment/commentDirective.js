@@ -21,6 +21,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             $scope.rootTxHash = $location.url().split('/')[4];
             $scope.hasVoted = true;
             
+            
             $scope.comments = Community.getChildren($scope.activeView, $scope.txHash);
             
             var async_eventData = Community.getEventData($scope.txHash).then(
@@ -45,7 +46,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
                 };
 
                 $scope.borderWidth = 0;
-                $scope.borderTop = 8;
+                $scope.borderTop = 4;
                 $scope.marginLeft = 8;
                 $scope.marginBottom = 8;
                 $scope.marginRight = 8;
@@ -82,13 +83,11 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
 
                 $scope.upvote = function(){
                     ProfileDB.upvote($scope.activeView, $scope.post.poster, $scope.event.transactionHash);
-                    Community.updatePostScore($scope.activeView,$scope.event.transactionHash);
                     $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.event.transactionHash);
                 };
 
                 $scope.downvote = function(){
                     ProfileDB.downvote($scope.activeView, $scope.post.poster, $scope.event.transactionHash);
-                    Community.updatePostScore($scope.activeView,$scope.event.transactionHash);
                     $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.event.transactionHash);
                 };
             }, function(err){
