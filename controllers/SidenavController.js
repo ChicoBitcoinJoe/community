@@ -44,5 +44,5 @@ function($scope, $mdSidenav, $location, ProfileDB) {
     }
     
     $scope.publicOpinionWeight = 50;
-    $scope.isDisabled = true;
+    $scope.isDisabled = false;
 }]);

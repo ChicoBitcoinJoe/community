@@ -74,6 +74,6 @@ Community.filter('trustAsResourceUrl', ['$sce', function($sce) {
 
 Community.filter('round', [function() {
     return function(val) {
-        return val.toFixed(1);
+        return val.toFixed(0);
     };
 }]);

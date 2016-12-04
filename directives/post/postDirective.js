@@ -23,13 +23,12 @@ function(IpfsService,$location,$window,ProfileDB,Community){
                     //console.log(post);
                     $scope.post = post;
                     $scope.postScore = ProfileDB.getPostScore(event.args.shardName,$scope.txHash);
-                    /*
+                    
                     setInterval(function(){
                         $scope.$apply(function(){
                             $scope.postScore = ProfileDB.getPostScore(event.args.shardName,$scope.txHash);
-                            console.log($scope.postScore);
                         });
-                    },1000);*/
+                    },1000);
                     
                     if(communityName == $scope.activeView)
                         console.log(communityName,$scope.activeView);
