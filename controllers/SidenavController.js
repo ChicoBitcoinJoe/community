@@ -4,13 +4,14 @@ function($scope, $mdSidenav, $location, ProfileDB) {
     
     $scope.account = ProfileDB.getCurrentAccount();
     $scope.username = 'Username';
-    
+
     var locationUrlArray = $location.url().split('/');
     $scope.viewType = locationUrlArray[1];
     $scope.activeView = locationUrlArray[2];
     $scope.multis = ProfileDB.getSavedMultis();
     $scope.communities = ProfileDB.getCommunitiesInMulti($scope.activeView);
     $scope.all = ProfileDB.getCommunitiesInMulti('all');
+
     
     $scope.$on('$routeChangeSuccess', function(newHeader) {
         var locationUrlArray = $location.url().split('/');
@@ -43,21 +44,5 @@ function($scope, $mdSidenav, $location, ProfileDB) {
     }
     
     $scope.publicOpinionWeight = 50;
-    
-    $scope.communityPercent = 75;
-    $scope.alternativePercent = 25;
-    $scope.ethereumPercent = 20;
-    $scope.metamaskPercent = 5;
-    $scope.oldPercent = 25;
-    
-    setInterval(function(){
-        $scope.alternativePercent = 100 - $scope.communityPercent;
-        if($scope.oldPercent != $scope.alternativePercent)
-            $scope.ethereumPercent = Math.round($scope.alternativePercent/2);
-        
-        $scope.metamaskPercent = $scope.alternativePercent - $scope.ethereumPercent;
-        $scope.oldPercent = $scope.alternativePercent;
-    },100);
-        
-    $scope.isDisabled = true;
+    $scope.isDisabled = false;
 }]);

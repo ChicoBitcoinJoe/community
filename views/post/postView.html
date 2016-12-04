@@ -1,8 +1,8 @@
-<md-content style="background-color:rgba(33,33,33,1);" layout="column" flex>
+<md-content style="background-color:rgba(33,33,33,1);" layout="column" layout-pading="5">
     <create-community ng-show="!created && loaded" community="activeView" created="created"></create-community>
     <submit-post ng-show="created && viewType == 'c'" community="activeView"></submit-post>
-    <div ng-repeat="post in posts" ng-show="created">
-        <post-card ipfs-hash="post"></post-card>
+    <div ng-repeat="post in posts">
+        <post-card tx-hash="post"></post-card>
     </div>
     <span style="margin-bottom:8px;"></span>
 </md-content>

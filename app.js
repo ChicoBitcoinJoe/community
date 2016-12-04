@@ -3,19 +3,23 @@ var Community = angular.module('Community',['RecursionHelper','ngRoute','ngMater
 Community.config(function ($routeProvider) {
 	$routeProvider.
     when('/m/:multi', {
-        templateUrl: 'views/multi/multiView.html',
-        controller: 'MultiViewController'
+        templateUrl: 'views/post/postView.html',
+        controller: 'PostViewController'
     }).
     when('/c/:community', {
-        templateUrl: 'views/community/communityView.html',
-        controller: 'CommunityViewController'
+        templateUrl: 'views/post/postView.html',
+        controller: 'PostViewController'
     }).
-    when('/c/:community/post/:postHash', {
+    when('/c/:community/fund', {
+        templateUrl: 'views/fund/fundView.html',
+        controller: 'fundViewController'
+    }).
+    when('/c/:community/post/:postTxHash', {
         templateUrl: 'views/comment/commentView.html',
         controller: 'CommentViewController'
     }).
 	otherwise({
-      redirectTo: '/m/all'
+      redirectTo: '/c/community'
     });
 });
 
@@ -65,5 +69,11 @@ Community.filter('capitalize', function() {
 Community.filter('trustAsResourceUrl', ['$sce', function($sce) {
     return function(val) {
         return $sce.trustAsResourceUrl(val);
+    };
+}]);
+
+Community.filter('round', [function() {
+    return function(val) {
+        return val.toFixed(0);
     };
 }]);

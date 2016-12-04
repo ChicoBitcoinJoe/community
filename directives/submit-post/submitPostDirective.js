@@ -9,15 +9,15 @@ Community.directive('submitPost', ['ProfileDB','$location','Community', function
 		controller: function($scope){
             $scope.newPost = {
                 poster: ProfileDB.getCurrentAccount(),
-                postType: 'null',
-                postTitle: '',
-                postCommunity: $scope.community,
-                postLink: '',
-                postComment: ''
+                media: 'null',
+                title: null,
+                community: $scope.community,
+                link: null,
+                comment: null
             };
             
             var pictureCheckInterval = setInterval(function() {
-                if($scope.newPost.postType === 'image'){
+                if($scope.newPost.media === 'image'){
                     $scope.img = new Image();
                     $scope.img.onload= function() {
                         //console.log("Image loaded");
@@ -31,21 +31,47 @@ Community.directive('submitPost', ['ProfileDB','$location','Community', function
 
                         $scope.$apply();
                     }
+                     
+                    var url;
+                    if($scope.newPost.link){
+                        var slice = $scope.newPost.link.slice(0,2);
+                        //console.log($scope.newPost.link);
+                        if(slice === 'Qm'){
+                            var absUrl = $location.absUrl();
+                            var index = absUrl.indexOf('ipfs');
+                            var urlSlice = absUrl.slice(0,index+5);
+                            url = urlSlice + $scope.newPost.link;
+                        } else {
+                            url = $scope.newPost.link;
+                        }
+                    }
+
+                    var slice = $scope.newPost.link.slice(0,2);
+                    if(slice === 'Qm'){
+                        var url = $location.absUrl().split('/');
+                        $scope.imageSource = url[0] + '//' + url[2] + '/' + url[3] + '/' + $scope.newPost.link;
+                    } else {
+                        $scope.imageSource = $scope.newPost.link;
+                    }
                     
-                    $scope.img.src = $scope.newPost.postLink;
+                    $scope.img.src = $scope.imageSource;
                 }
             }, 1000);
             
+            $scope.submitButtonText = "Click Here To Post";
             $scope.submitPost = function(){
                 console.log($scope.newPost);
+                $scope.submitButtonText = "Waiting for Post to be Broadcast";
                 Community.submitPost($scope.newPost).then(
                 function(ipfsHash){
                     if(ipfsHash){
+                        console.log(ipfsHash);
                         $location.url('c/'+ $scope.community + /post/ + ipfsHash);
                     } else {
                         console.log('Not a valid post. Aborting.');
                     }
-                }, function(error){
+                }, function(err){
+                    $scope.submitButtonText = "Oops! An error occured...";
                     console.error(err);
                 });
                 clearInterval(pictureCheckInterval);

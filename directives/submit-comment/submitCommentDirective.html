@@ -12,7 +12,7 @@
                         </h5>
                     </div>
                     <div style="margin-top:5px;">
-                        <textarea class="comment-textarea" rows="5" ng-model="newComment.postComment" placeholder="Please be polite when interacting with others."></textarea>
+                        <textarea class="comment-textarea" rows="5" ng-model="newComment.comment" placeholder="Please be polite when interacting with others."></textarea>
                     </div>
                 </md-card-content>
                 <md-card-actions>
@@ -25,7 +25,7 @@
                                 <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
                             </md-button>
                             <span flex></span>
-                            <md-button ng-click="submitComment()" style="margin-bottom:8px;">Submit Comment</md-button>
+                            <md-button aria-label="submit comment" ng-click="submitComment()" style="margin-bottom:8px;">Submit Comment</md-button>
                         </md-card-icon-actions>
                     </md-card-actions>
                 </md-card-actions>

@@ -1,117 +1,142 @@
-Community.directive('postCard', ['IpfsService','$location','$window','ProfileDB',
-function(IpfsService,$location,$window,ProfileDB){
+Community.directive('postCard', ['IpfsService','$location','$window','ProfileDB','Community',
+function(IpfsService,$location,$window,ProfileDB,Community){
 	return {
 		restrict: 'E',
 		scope: {
-            ipfsHash: '=',
+            txHash: '=',
 		},
 		replace: true,
 		templateUrl: 'directives/post/postDirective.html',
 		controller: function($scope){
-            //console.log($scope.event);
+            $scope.isPost = false;
             
-            $scope.post = IpfsService.getIpfsData($scope.ipfsHash).then(
-            function(ipfsData){
-                $scope.post = ipfsData;
+            
+            var async_eventData = Community.getEventData($scope.txHash).then(
+            function(event){
+                //console.log(event);
                 
-                $scope.postScore = ProfileDB.getPostScore($scope.activeView,$scope.ipfsHash);
+                var ipfsHash = event.args.ipfsHash;
+                var communityName = event.args.shardName;
                 
-                if($scope.post.postType === 'image'){
-                    var img = new Image();
-                    img.onload= function() {
-                        //console.log("Image loaded");
-                        if(this.width > this.height){
-                            $scope.orientation = 'horizontal';
-                            $scope.layout= 'column';
-                        } else {
-                            $scope.orientation = 'vertical';
-                            $scope.layout = 'row';
-                        }
-                    }
+                var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
+                function(post){
+                    //console.log(post);
+                    $scope.post = post;
+                    $scope.postScore = ProfileDB.getPostScore(event.args.shardName,$scope.txHash);
                     
-                    var url;
-                    if($scope.post.postLink){
-                        var slice = $scope.post.postLink.slice(0,2);
-                        //console.log($scope.post.postLink);
+                    setInterval(function(){
+                        $scope.$apply(function(){
+                            $scope.postScore = ProfileDB.getPostScore(event.args.shardName,$scope.txHash);
+                        });
+                    },1000);
+                    
+                    if(communityName == $scope.activeView)
+                        console.log(communityName,$scope.activeView);
+
+                    if($scope.post.media == 'image'){
+                        var img = new Image();
+                        img.onload= function() {
+                            //console.log("Image loaded");
+                            if(this.width > this.height){
+                                $scope.orientation = 'horizontal';
+                                $scope.layout= 'column';
+                            } else {
+                                $scope.orientation = 'vertical';
+                                $scope.layout = 'row';
+                            }
+                        }
+
+                        var url;
+                        if($scope.post.link){
+                            var slice = $scope.post.link.slice(0,2);
+                            //console.log($scope.post.link);
+                            if(slice === 'Qm'){
+                                var absUrl = $location.absUrl();
+                                var index = absUrl.indexOf('ipfs');
+                                var urlSlice = absUrl.slice(0,index+5);
+                                url = urlSlice + $scope.post.link;
+                            } else {
+                                url = $scope.post.link;
+                            }
+                        }
+                        img.src = url;
+
+                        var slice = $scope.post.link.slice(0,2);
                         if(slice === 'Qm'){
-                            var absUrl = $location.absUrl();
-                            var index = absUrl.indexOf('ipfs');
-                            var urlSlice = absUrl.slice(0,index+5);
-                            url = urlSlice + $scope.post.postLink;
+                            var url = $location.absUrl().split('/');
+                            $scope.imageSource = url[0] + '//' + url[2] + '/' + url[3] + '/' + $scope.post.link;
+                            //console.log($scope.imageSource);
                         } else {
-                            url = $scope.post.postLink;
+                            $scope.imageSource = $scope.post.link;
                         }
-                    }
-                    img.src = url;
+                    } else if($scope.post.media === 'video'){
+                        var url = $scope.post.link;
+                        //console.log(url);
 
-                    var slice = $scope.post.postLink.slice(0,2);
-                    if(slice === 'Qm'){
-                        var url = $location.absUrl().split('/');
-                        $scope.imageSource = url[0] + '//' + url[2] + '/' + url[3] + '/' + $scope.post.postLink;
-                    } else {
-                        $scope.imageSource = $scope.post.postLink;
-                    }
-                } else if($scope.post.postType === 'video'){
-                    var url = $scope.post.postLink;
-                    //console.log(url);
-                    
-                    function getParm(url, base) {
-                        var re = new RegExp("(\\?|&)" + base + "\\=([^&]*)(&|$)");
-                        var matches = url.match(re);
-                        if (matches) {
-                            return(matches[2]);
-                        } else {
-                            return("");
+                        function getParm(url, base) {
+                            var re = new RegExp("(\\?|&)" + base + "\\=([^&]*)(&|$)");
+                            var matches = url.match(re);
+                            if (matches) {
+                                return(matches[2]);
+                            } else {
+                                return("");
+                            }
                         }
-                    }
 
-                    var retVal = {};
-                    var matches;
+                        var retVal = {};
+                        var matches;
 
-                    if (url.indexOf("youtube.com/watch") != -1) {
-                        retVal.provider = "youtube";
-                        retVal.id = getParm(url, "v");
-                    } else if (matches = url.match(/vimeo.com\/(\d+)/)) {
-                        retVal.provider = "vimeo";
-                        retVal.id = matches[1];
+                        if (url.indexOf("youtube.com/watch") != -1) {
+                            retVal.provider = "youtube";
+                            retVal.id = getParm(url, "v");
+                        } else if (matches = url.match(/vimeo.com\/(\d+)/)) {
+                            retVal.provider = "vimeo";
+                            retVal.id = matches[1];
+                        }
+
+                        //console.log(retVal);
+                        if(retVal.provider == 'youtube')
+                            $scope.videoSourceUrl = 'https://www.youtube.com/v/' + retVal.id + '&rel=0';
+                        else if(retVal.provider == 'vimeo')
+                            $scope.videoSourceUrl = 'https://www.vimeo.com/' + retVal.id;
+
+                        //console.log($scope.videoSourceUrl);
                     }
                     
-                    //console.log(retVal);
-                    if(retVal.provider == 'youtube')
-                        $scope.videoSourceUrl = 'https://www.youtube.com/v/' + retVal.id + '&rel=0';
-                    else if(retVal.provider == 'vimeo')
-                        $scope.videoSourceUrl = 'https://www.vimeo.com/' + retVal.id;
+                    var locationUrlArray = $location.url().split('/');
+                        $scope.commentView = false;
+                        if(locationUrlArray[3] == 'post')
+                            $scope.commentView = true;
                     
-                    //console.log($scope.videoSourceUrl);
-                }
-            },function(err){
-                console.error(err);
-            });  
+                    if(Community.postIsValid(post))
+                        $scope.isPost = true;
+                    
+                },function(err){
+                    console.error(err);
+                });           
+            }, function(err){
+                console.error(err);    
+            });
             
             $scope.followLink = function(){
-                if($scope.post.postLink){
-                    var slice = $scope.post.postLink.slice(0,2);
-                    console.log($scope.post.postLink);
+                if($scope.post.link){
+                    var slice = $scope.post.link.slice(0,2);
+                    console.log($scope.post.link);
                     if(slice === 'Qm'){
                         var absUrl = $location.absUrl();
                         var index = absUrl.indexOf('ipfs');
                         var urlSlice = absUrl.slice(0,index+5);
-                        var url = urlSlice + $scope.post.postLink;
+                        var url = urlSlice + $scope.post.link;
                         $window.open(url);
                     } else {
                         var url = $location.url();
-                        $window.open($scope.post.postLink);
+                        $window.open($scope.post.link);
                     }
                 } else {
                     console.log("self post");
-                    $location.url('c/' + $scope.post.postCommunity + '/post/' + $scope.ipfsHash);
+                    $location.url('c/' + $scope.post.community + '/post/' + $scope.txHash);
                 }
             }
-            
-            var locationUrlArray = $location.url().split('/');
-            $scope.commentView = false;
-            if(locationUrlArray[3] == 'post')
-                $scope.commentView = true;
         },
 		link : function($scope, $element, $attrs) {
             //console.log($scope.postUrl);

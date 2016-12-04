@@ -3,9 +3,9 @@ Community.directive('submitComment', ['ProfileDB','Community', function(ProfileD
 		restrict: 'E',
 		scope: {
             community:'=',
-            ipfsHash:'=',
             commentDepth:'=',
-            rootIpfsHash:'='
+            parent:'=',
+            rootParent:'='
 		},
 		replace: true,
 		templateUrl: 'directives/submit-comment/submitCommentDirective.html',
@@ -16,11 +16,11 @@ Community.directive('submitComment', ['ProfileDB','Community', function(ProfileD
             
             $scope.newComment = {
                 poster: ProfileDB.getCurrentAccount(),
-                postType:'self',
-                postCommunity: $scope.community,
-                postComment: '',
-                postParent: $scope.ipfsHash,
-                postRootParent:$scope.rootIpfsHash
+                media:'self',
+                community: $scope.community,
+                comment: null,
+                parent: $scope.parent,
+                rootParent: $scope.rootParent
             };
             
             $scope.borderWidth = 0;
@@ -44,11 +44,11 @@ Community.directive('submitComment', ['ProfileDB','Community', function(ProfileD
                 Community.submitComment($scope.newComment).then(
                 function(txHash){
                     if(txHash){
-                        console.log('Comment waiting to be included in a block. tx hash: ' + txHash);
+                        console.log('Comment included! ' + txHash);
                     } else {
                         console.log('Not a valid comment.');
                     }
-                }, function(error){
+                }, function(err){
                     console.error(err);
                 });
             };

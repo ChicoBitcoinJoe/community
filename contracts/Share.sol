@@ -1,8 +1,10 @@
-pragma solidity ^0.4.4;
+pragma solidity ^0.4.6;
 
 import "Shard.sol";
 
-contract Link {
+contract Share {
+    
+    event CreateShard_event(string shardName);
     
     uint total_shards = 0;
     mapping (uint => string) shardIndex;
@@ -12,7 +14,9 @@ contract Link {
         if(shardList[shardName] == 0){
             total_shards++;
             shardIndex[total_shards] = shardName;
-            shardList[shardName] = new Shard();
+            shardList[shardName] = new Shard(shardName);
+            
+            CreateShard_event(shardName);
         }
     }
     

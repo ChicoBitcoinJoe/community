@@ -1,27 +1,24 @@
-<md-card md-theme="dark-theme" style="background-color:rgba(50,50,50,1);" layout="row" flex>
-    <div ng-if="post.postType == 'image'" class="card-image-{{orientation}}" layout="{{layout}}" layout-align="top center">
-        <img class="card-image" ng-src="{{imageSource}}" alt="post image: {{post.postLink}}">
+<md-card ng-show="isPost" md-theme="dark-theme" style="background-color:rgba(50,50,50,1);" layout="row" flex>
+    <div ng-if="post.media == 'image'" class="card-image-{{orientation}}" layout="{{layout}}" layout-align="top center">
+        <img class="card-image" ng-src="{{imageSource}}" alt="post image: {{post.link}}">
     </div>
     <div layout="column" flex>
         <md-card-title  style="padding-bottom:0px !important;">
             <md-card-title-text class="hover-fx" ng-click="followLink()">
                 <div style="max-height:143px; overflow:hidden">
-                    <h4 style="margin:0px;margin-bottom:4px;">{{post.postTitle}}<small style="color:rgba(255,255,255,0.5)">
-                    &nbsp {{post.postType}}
-                    &nbsp <span ng-show="post.postType !== 'self'">{{post.postLink}}</span></small></h4>
+                    <h4 style="margin:0px;margin-bottom:4px;">{{post.title}}<small style="color:rgba(255,255,255,0.5)">
+                    &nbsp {{post.media}}
+                    &nbsp <span ng-show="post.media !== 'self'">{{post.link}}</span></small></h4>
                 </div>
                 <div layout="row" ng-show="post.poster">
-                    <h5 style="margin:0px; line-height: 16px;">
-                        Posted by &nbsp
-                        <span style="line-height: 16px;" class="md-subhead">{{post.poster}}</span>
-                        &nbsp to &nbsp
-                        <span style="line-height: 16px;" class="md-subhead">{{post.postCommunity}}</span>
+                    <h5 style="margin:0px; line-height: 16px; color:rgba(255,255,255,0.5)">
+                        Posted by <span style="color:rgba(255,255,255,0.87)">{{post.poster}}</span> to <span  style="color:rgba(255,255,255,0.87)">{{post.community}}</span>
                     </h5>
                 </div>
             </md-card-title-text>
             <div style="padding:0px 10px; max-height:50px; margin: 8px; background-color:rgba(55,55,55,1)" class="md-whiteframe-4dp" layout layout-align="center center">
                 <h3 style="margin:5px;" flex>
-                    <large layout="row" layout-align="right"><span flex></span>{{postScore}}</large>
+                    <large layout="row" layout-align="right"><span flex></span>{{postScore.score}}</large>
                     <small style="color:rgba(255,255,255,0.5); font-size:small" layout layout-align="center">score</small>
                 </h3> 
             </div>
@@ -35,11 +32,11 @@
                     <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
                 </md-button>
                 <span flex></span>
-                <md-button ng-href="#/c/{{post.postCommunity}}/post/{{ipfsHash}}">Comment</md-button>
+                <md-button ng-href="#/c/{{post.community}}/post/{{txHash}}" aria-label="Go to Comments">Comments</md-button>
             </md-card-icon-actions>
         </md-card-actions>
     </div>
-    <div ng-if="post.postType == 'video'">
+    <div ng-if="post.media == 'video'">
         <video-frame url="videoSourceUrl"></video-frame>
     </div>
 </md-card>
