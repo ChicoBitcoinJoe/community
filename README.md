@@ -13,7 +13,12 @@ A presentation detailing how Community works can be found at [this slide show](h
     - [Geth](https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum)
     - [Metamask](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn)
     
-2. Run an Ipfs daemon. Open a command prompt and run "ipfs daemon". Verify that the ipfs daemon is running appropriately. It should look something like...
+2. [Ipfs](https://ipfs.io/docs/install/) needs to be installed. Using Chrome on windows I also had to run in a command prompt
+    - ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin "[\"*\"]"
+    - ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods "[\"PUT\", \"GET\", \"POST\"]"
+    - ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials "[\"true\"]"
+    
+3. Run an Ipfs daemon. Open a command prompt and run "ipfs daemon". Verify that the ipfs daemon is running appropriately. It should look something like...
     * Initializing daemon...
     * Swarm listening on /ip4/127.0.0.1/tcp/4001
     * Swarm listening on /ip4/169.254.150.233/tcp/4001
