@@ -1,10 +1,11 @@
-## Community
+# Community
 This repo is an implementation of a *Reddit-like* site using the Share Platform and a Material Design UX.
 
 A presentation detailing how Community works can be found at [this slide show](https://docs.google.com/presentation/d/1oiCmJcrn15-kK3xS-UzPbx5M1LAyRlGRRJ6q4qllw0E/edit?usp=sharing)
 
 
-# Prerequisites
+### Prerequisites
+
 *Read Only Mode is available by using the ipfs gateway combined with metamask. Otherwise you need...
 
 1. Some method to expose the web3 object to your client
@@ -32,8 +33,8 @@ A presentation detailing how Community works can be found at [this slide show](h
     * Gateway (readonly) server listening on /ip4/127.0.0.1/tcp/8080
     * Daemon is ready
 
-# Installing
-1. If Git is installed run "git clone https://github.com/ChicoBitcoinJoe/Community-Material-Design". Otherwise you can download it directly using github.
+### Installing
+1. If Git is installed run "git clone https://github.com/ChicoBitcoinJoe/Community". Otherwise you can download it directly using github.
 
 2. Open a command prompt in the same folder as the Community folder and run "ipfs add -r -q Community-Folder_Name | tail -n1" to get an Ipfs hash of the Community folder.
 
@@ -41,6 +42,6 @@ A presentation detailing how Community works can be found at [this slide show](h
 
 4. Every time you make a change in the Community folder you need to repeat steps 2 and 3
 
-# Tips
+### Tips
 - To copy the ipfs hash straight to the clipboard use "ipfs add -r -q Community_Folder_Name | tail -n1 | clip"
 - For more verbose ipfs output use "ipfs add -r Community_Folder_Name"
