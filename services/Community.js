@@ -64,21 +64,23 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
     };
     
     var addTxToCommunityDB = function(community,event,ipfsHash){
+        console.log(community,event,ipfsHash);
         touchCommunity(community);
         var txHash = event.transactionHash;
+        
         IpfsService.getIpfsData(ipfsHash).then(
         function(ipfsData){
-            
+            console.log(ipfsData);
             //addExistingTxsToActive();
             
             if(service.postIsValid(ipfsData)){
-                //console.log("post");
+                console.log("post");
                 touchCommentList(community,txHash);
                 addTxHashToActiveView(txHash);
                 //addPostToCommunity(community,event.transactionHash);
                 addPosterToRootParent(community,txHash,event.args.sender);
             } else if(service.commentIsValid(ipfsData)){
-                //console.log("comment");
+                console.log("comment");
                 touchCommentList(community,ipfsData.parent);
                 touchCommentList(community,txHash);
                 addCommentToParent(community,txHash,ipfsData.parent);
@@ -86,6 +88,8 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
             } else {
                 console.log("Invalid event");
             }
+        }, function(err){
+            console.error(err);
         });
     };
     
@@ -125,13 +129,15 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
                 
                 var fromBlock = CommunityDB.communities[community].last_block;
                 ShareService.getEvents(community,fromBlock).then(function(events){
-                    //console.log("events",events);
+                    console.log("Found " + events.length + " events", events);
                     for(var index in events){
-                        localStorage.setItem(events[index].transactionHash,JSON.stringify(events[index]));
-                        
                         var txHash = events[index].transactionHash;
                         var ipfsHash = events[index].args.ipfsHash;
                         var communityName = events[index].args.shardName;
+                        
+                        var local = localStorage.getItem(txHash);
+                        if(!local)
+                            localStorage.setItem(txHash,JSON.stringify(events[index]));
                         
                         addTxToCommunityDB(communityName,events[index],ipfsHash);
                         
