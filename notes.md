@@ -25,15 +25,11 @@
 
 ## NonCritical ##
 - Community Sidenav
-    - Turn into directive
     - Multi sidenav stats button
     
 - postView
     - submit post does not preview the comment section
     - video preview frame not updating when link provided
-
-- Settings Sidenav
-    - Turn into directive
     
 - You can upvote or downvote yourself
 - Create Community card is dreadful
@@ -61,16 +57,11 @@
     - Do the tools exist to help facilitate the above?
 - My current contract never moves tokens to other users but only internally to voting balances.
     - How difficult would it be to clone the internal accounts as well?
-- I'm currently using an MIT license. WHat is the significance of MiniMe being GNU?
+- I'm currently using an MIT license. What is the significance of MiniMe being GNU?
 
 
 
 
-
-# Things I need to Convey
-
-1) Alpha release
-2) Need Funding
 
 
 

@@ -66,12 +66,6 @@ Community.filter('capitalize', function() {
     }
 });
 
-Community.filter('trustAsResourceUrl', ['$sce', function($sce) {
-    return function(val) {
-        return $sce.trustAsResourceUrl(val);
-    };
-}]);
-
 Community.filter('round', [function() {
     return function(val) {
         return val.toFixed(0);

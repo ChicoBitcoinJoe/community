@@ -28,7 +28,7 @@ function($mdSidenav, $location, ProfileDB) {
                     $scope.star = "star_border";
             });
             
-            $scope.toggleSidenav = function(id) { $mdSidenav(id).toggle(); };
+            $scope.toggleSidenav = function(id) { console.log(id); $mdSidenav(id).toggle(); };
             
             $scope.showSearchbar = false;
             $scope.toggleSearchbar = function() { $scope.showSearchbar = !$scope.showSearchbar };

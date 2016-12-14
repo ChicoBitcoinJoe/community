@@ -1,4 +1,5 @@
-Community.directive('submitPost', ['ProfileDB','$location','Community', function(ProfileDB,$location, Community) {
+Community.directive('submitPost', ['ProfileDB','$location','Community', 
+function(ProfileDB,$location,Community) {
 	return {
 		restrict: 'E',
 		scope: {
@@ -57,6 +58,10 @@ Community.directive('submitPost', ['ProfileDB','$location','Community', function
                     $scope.img.src = $scope.imageSource;
                 }
             }, 1000);
+            
+            $scope.$on('$routeChangeSuccess', function(newHeader) {
+                clearInterval(pictureCheckInterval);
+            });
             
             $scope.submitButtonText = "Click Here To Post";
             $scope.submitPost = function(){

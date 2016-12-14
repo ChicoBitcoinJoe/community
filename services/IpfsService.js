@@ -1,4 +1,4 @@
-Community.service( 'IpfsService',['$q','$sce', function ($q,$sce) {
+Community.service( 'IpfsService',['$q', function ($q) {
     console.log('Loading IpfsService');
 	ipfs.setProvider();
     
@@ -13,7 +13,7 @@ Community.service( 'IpfsService',['$q','$sce', function ($q,$sce) {
                     if(err || !ipfsData){
                         deferred.reject(err);
                     } else {
-                        localStorage.setItem($sce.trustAsResourceUrl(ipfsHash),JSON.stringify(ipfsData));
+                        localStorage.setItem(ipfsHash,JSON.stringify(ipfsData));
                         deferred.resolve(ipfsData);
                     }
                 });
@@ -33,7 +33,7 @@ Community.service( 'IpfsService',['$q','$sce', function ($q,$sce) {
                     deferred.reject(err);
                 } else {
                     //console.log(hash);
-                    deferred.resolve($sce.trustAsResourceUrl(hash));
+                    deferred.resolve(hash);
                 }
             });
             return deferred.promise;
