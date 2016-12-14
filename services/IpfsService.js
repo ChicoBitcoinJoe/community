@@ -13,7 +13,7 @@ Community.service( 'IpfsService',['$q','$sce', function ($q,$sce) {
                     if(err || !ipfsData){
                         deferred.reject(err);
                     } else {
-                        localStorage.setItem(ipfsHash,JSON.stringify(ipfsData));
+                        localStorage.setItem($sce.trustAsResourceUrl(ipfsHash),JSON.stringify(ipfsData));
                         deferred.resolve(ipfsData);
                     }
                 });
@@ -33,7 +33,7 @@ Community.service( 'IpfsService',['$q','$sce', function ($q,$sce) {
                     deferred.reject(err);
                 } else {
                     //console.log(hash);
-                    deferred.resolve(hash);
+                    deferred.resolve($sce.trustAsResourceUrl(hash));
                 }
             });
             return deferred.promise;

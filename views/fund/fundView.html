@@ -10,9 +10,9 @@
         <md-card-content>
             <h4>Token Behavior</h4>
             <ul>
-                <li>Tokens cannot be bought for another user nor sent anywhere other than the voting contract (sybil resistance).</li>
-                <li>Tokens are watermarked to a single Community (brigade resistance)</li>
-                <li>Gives a measurable representation of what is important to you. For example: A user has 75% of their tokens voting on a post about cats and 25% voting on a post about dogs. We can deduce that the post about cats is three times more important to this user than the post about dogs</li>
+                <li>Cannot be bought for another user</li>
+                <li>Cannot be sent anywhere other than the voting contract</li>
+                <li>Tokens are watermarked to a single Community</li>
             </ul>
         </md-card-content>
     </md-card>
@@ -30,7 +30,7 @@
                     <label>Ether</label>
                     <input md-select-on-focus type="number" ng-model="fundAmount">
                 </md-input-container>
-                <md-button aria-label="Fund Development" ng-click="fundDevelopment()" class="sidenavGreen">Fund Development</md-button>
+                <md-button aria-label="Fund Development" ng-click="fundDevelopment()" class="sidenavGreen" ng-disabled="true">Fund Development</md-button>
             </div>
             <div flex="60">
                 <div layout="column" layout-align="center center">
@@ -38,7 +38,7 @@
                     <ul>
                         <li>Get <b>{{fundAmount * 100000}}</b> vote tokens for the <b>{{activeView | capitalize}}</b> Community</span><span flex></span></li>
                         <li>Fund <b>{{fundAmount*10*60/0.7 | round}}</b> minutes of Community development</li>
-                        <li>Limited Time Only: You will receive {{fundAMount}} CommunityDAO tokens on the Anniversary of Communities Launch! <small><a href="">more info</a></small></b></li>
+                        <li>Limited Time Only: You will receive {{fundAMount}} CommunityDAO tokens on the Anniversary of Communities Launch! <small><a href="https://github.com/ChicoBitcoinJoe/Community">more info (soon)</a></small></b></li>
                     </ul>
                 </div>
             </div>

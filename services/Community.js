@@ -64,23 +64,23 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
     };
     
     var addTxToCommunityDB = function(community,event,ipfsHash){
-        console.log(community,event,ipfsHash);
+        //console.log(community,event,ipfsHash);
         touchCommunity(community);
         var txHash = event.transactionHash;
         
         IpfsService.getIpfsData(ipfsHash).then(
         function(ipfsData){
-            console.log(ipfsData);
+            //console.log(ipfsData);
             //addExistingTxsToActive();
             
             if(service.postIsValid(ipfsData)){
-                console.log("post");
+                //console.log("post");
                 touchCommentList(community,txHash);
                 addTxHashToActiveView(txHash);
                 //addPostToCommunity(community,event.transactionHash);
                 addPosterToRootParent(community,txHash,event.args.sender);
             } else if(service.commentIsValid(ipfsData)){
-                console.log("comment");
+                //console.log("comment");
                 touchCommentList(community,ipfsData.parent);
                 touchCommentList(community,txHash);
                 addCommentToParent(community,txHash,ipfsData.parent);
@@ -88,6 +88,8 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
             } else {
                 console.log("Invalid event");
             }
+            
+            //console.log(activeView);
         }, function(err){
             console.error(err);
         });

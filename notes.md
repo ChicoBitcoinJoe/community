@@ -67,7 +67,10 @@
 
 
 
+# Things I need to Convey
 
+1) Alpha release
+2) Need Funding
 
 
 

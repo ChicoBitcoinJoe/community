@@ -88,7 +88,7 @@
         </md-content>
         <span flex></span>
         <div class="sidenavGreen" style="padding:10px;" layout layout-align="center center">
-            <a href="https://github.com/ChicoBitcoinJoe/Community-Material-Design" target="_blank" ><h5 style="margin:0px; color:rgba(255,255,255,0.87);">Community created by Joseph Reed</h5></a>
+            <a href="https://github.com/ChicoBitcoinJoe/Community-Material-Design" target="_blank" ><h5 style="margin:0px; color:rgba(255,255,255,0.87);">Community created by ChicoBitcoinJoe</h5></a>
         </div>
     </md-sidenav>
     
@@ -103,15 +103,22 @@
         </md-toolbar>
         <md-content layout-padding="5" layout="column">
             <h4 style="margin-bottom:0px; margin-right:30px;" layout="row">Public Opinion<span flex></span>%</h4>
-            <md-slider-container ng-disabled="isDisabled">
+            <md-slider-container ng-disabled="true">
                 <md-icon md-svg-src="images/icons/ic_people_white_24px.svg"></md-icon>
-                <md-slider ng-model="publicOpinionWeight" aria-label="public opinion weight" flex md-discrete ng-readonly="readonly"></md-slider>
+                <md-slider ng-model="publicOpinionWeight" aria-label="public opinion weight" flex md-discrete></md-slider>
                 <md-input-container style="width:65px;min-width:65px;">
                     <input flex type="number" ng-model="publicOpinionWeight" aria-label="green" aria-controls="green-slider">
                 </md-input-container>
             </md-slider-container>
-            <md-checkbox ng-model="isDisabled" style="margin-left:15px;"><small>Disable public opinion</small></md-checkbox>
-            <span></span>
+            <md-checkbox ng-model="isDisabled" style="margin-left:15px;" ng-disabled="true"><small>Enable public opinion</small></md-checkbox>
+            <h4 style="margin-bottom:0px; margin-right:20px;" layout="row">Look Back<span flex></span>Days</h4>
+            <md-slider-container ng-disabled="true">
+                <md-icon md-svg-src="images/icons/ic_access_time_white_24px.svg"></md-icon>
+                <md-slider ng-model="lookBackDays" aria-label="public opinion weight" flex md-discrete></md-slider>
+                <md-input-container style="width:65px;min-width:65px;">
+                    <input flex type="number" ng-model="lookBackDays" aria-label="green" aria-controls="green-slider">
+                </md-input-container>
+            </md-slider-container>
             
         </md-content>
     </md-sidenav>

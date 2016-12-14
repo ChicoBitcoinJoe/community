@@ -13,7 +13,7 @@ function(IpfsService,$location,$window,ProfileDB,Community){
             
             var async_eventData = Community.getEventData($scope.txHash).then(
             function(event){
-                //console.log(event);
+                console.log(event);
                 
                 var ipfsHash = event.args.ipfsHash;
                 var communityName = event.args.shardName;

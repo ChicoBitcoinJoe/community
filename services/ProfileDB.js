@@ -19,8 +19,9 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
         console.log('Could not find a profile. Using default profile');
         ProfileDB = {
             SavedMultis:{
-                'all':['community','bitcoin','ethereum','monero','politics'],
+                'all':['community','bitcoin','ethereum','monero','politics','flowers'],
                 'cryptocurrencies':['bitcoin','ethereum','monero'],
+                'flowers':['flowers'],
                 'ungrouped':['community','politics']
             },
             favorited:{
@@ -59,7 +60,9 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
             ProfileDB.users[user].upvoteStreak = 0;
             ProfileDB.users[user].downvoteStreak = 0;
             ProfileDB.users[user].score = 50;
-        }
+            console.log("New user! Score:",ProfileDB.users[user].score);
+        } else
+            console.log("Existing user! Score:", ProfileDB.users[user].score);
     };
     
     var touchPostScore = function(community,txHash){
@@ -82,17 +85,7 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
     };
     
     var updateUserScore = function(user){
-        var upvoteStreak = ProfileDB.users[user].upvoteStreak;
-        var downvoteStreak = ProfileDB.users[user].downvoteStreak;
-        //console.log(upvoteStreak,downvoteStreak);
-        
-        var points = [0,1,1,2,3,5,8,13,21,34,55];
-        ProfileDB.users[user].score += points[upvoteStreak];
-        ProfileDB.users[user].score -= points[downvoteStreak];
-        if(ProfileDB.users[user].score > 100)
-            ProfileDB.users[user].score = 100;
-        if(ProfileDB.users[user].score < 0)
-            ProfileDB.users[user].score = 0;
+        console.log(user);
     };
     
     var upvoteUser = function(user,txHash){

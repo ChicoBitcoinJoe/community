@@ -39,6 +39,5 @@ A presentation detailing how Community works can be found at [this slide show](h
 
 ### Tips
 
-- Read Only Mode is available by using the ipfs gateway combined with metamask
-- To copy the ipfs hash straight to the clipboard use "ipfs add -r -q Community_Folder_Name | tail -n1 | clip"
+- To copy the ipfs hash straight to the clipboard use "ipfs add -r -q Community_Folder_Name | tail -n1 | clip" (must have tail and clip installed)
 - For more verbose ipfs output use "ipfs add -r Community_Folder_Name"

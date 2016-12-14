@@ -44,5 +44,6 @@ function($scope, $mdSidenav, $location, ProfileDB) {
     }
     
     $scope.publicOpinionWeight = 50;
+    $scope.lookBackDays = 30;
     $scope.isDisabled = false;
 }]);
