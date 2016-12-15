@@ -33,22 +33,27 @@ function($mdSidenav, $location, ProfileDB) {
             $scope.addCommunity = function(communityName){
                 ProfileDB.addCommunity(communityName,$scope.activeView);
                 $scope.newCommunity = "";
-            }
+            };
 
             $scope.createMulti = function(multiName){
                 ProfileDB.createMulti(multiName);
                 $scope.multis = ProfileDB.getSavedMultis();
                 $scope.newMulti = "";
-            }
+            };
 
             $scope.removeCommunity = function(communityName){
                 ProfileDB.removeCommunity(communityName,$scope.activeView);
-            }
+            };
 
             $scope.deleteMulti = function(multiName){
                 ProfileDB.deleteMulti(multiName);
                 $scope.multis = ProfileDB.getSavedMultis();
-            }
+            };
+            
+            $scope.goTo = function(url){
+                console.log(url);
+                $location.url(url);
+            };
 		},
 		link : function($scope, $element, $attrs) {
             

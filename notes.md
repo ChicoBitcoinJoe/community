@@ -1,43 +1,55 @@
 # To Do's #
 
 ## Unsorted ##
-- Need to prune old data from localStorage
-- Comment will not show if the comment chain does not reach the root
-- switching between two communities too quickly will incorrectly load both communities
+- none
 
 ## Critical ##
-- General
+
+- Community
+    - Need to prune old data from localStorage
+    - Need to estimated gas fee
+    - fetching all events because last block seen is not being updated
     - Metamask loading late occasionally
     - all lists need to be sorted properly
 
 - Vote Contract
     - Community tokens
-    - settings sidenav backend
+
+- Settings sidenav
+    - backend
 
 - Name Registry
     - Account panel username
 
-- Need to estimated gas fee
-- Still fetching all events
-    - last block seen not being updated
-    - events not being saved
+- Comments
+    - Need to preserve formatting
+    - Comment will not show if the comment chain does not reach the root
 
 
 ## NonCritical ##
+
+- Posts View
+    - switching between two communities too quickly will incorrectly load both communities
+
 - Community Sidenav
     - Multi sidenav stats button
     
 - postView
     - submit post does not preview the comment section
     - video preview frame not updating when link provided
+
+- Comments
+    - You can upvote or downvote yourself
+    - submit comment button doesnt update after clicking
+
+- Create Community
+    - Card is dreadful
     
-- You can upvote or downvote yourself
-- Create Community card is dreadful
-- submit comment button doesnt update after clicking
 
 
     
 # Notes #
+
 - Post: Has a title, no parents, and at least a comment or link
 - Comment: Must have a root parent, a parent, a comment, no title, and media=='self'
 - A "Tweet": No root parent, no title, at least a link or comment
@@ -46,6 +58,7 @@
 
 
 # MiniMe Token Questions
+
 - Keep ERC20 compliance if using for a DAO
     - otherwise, what is safe to change?
 - How to keep Share Contract intact after split?

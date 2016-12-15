@@ -20,11 +20,8 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             $scope.activeView = $location.url().split('/')[2];
             $scope.rootTxHash = $location.url().split('/')[4];
             $scope.hasVoted = true;
-            
-            
-            $scope.comments = Community.getChildren($scope.activeView, $scope.txHash);
-            
             $scope.isComment = false;
+            $scope.comments = Community.getChildren($scope.activeView, $scope.txHash);
             
             var async_eventData = Community.getEventData($scope.txHash).then(
             function(event){

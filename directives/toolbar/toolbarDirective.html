@@ -12,8 +12,24 @@
            <md-icon md-svg-src="images/icons/ic_keyboard_arrow_down_white_24px.svg"></md-icon>
         </md-button>
         <md-menu-content class="sidenavGreen" width="2">
-            <md-menu-item><md-button ng-href="#/c/{{community}}" style="text-transform: lowercase; color: rgba(255,255,255,0.87);">frontpage</md-button></md-menu-item>
-            <md-menu-item><md-button ng-href="#/c/{{community}}/favorites" style="text-transform: lowercase; color: rgba(255,255,255,0.87);">favorites</md-button></md-menu-item>
+            <md-menu-item>
+                <md-button ng-href="#/c/{{community}}" style="text-transform: lowercase; color: rgba(255,255,255,0.87);">
+                    <md-icon md-svg-src="images/icons/ic_chrome_reader_mode_white_24px.svg"></md-icon>
+                    frontpage
+                </md-button>
+            </md-menu-item>
+            <md-menu-item>
+                <md-button ng-href="#/c/{{community}}/favorites" style="text-transform: lowercase; color: rgba(255,255,255,0.87);">
+                    <md-icon md-svg-src="images/icons/ic_favorite_white_24px.svg"></md-icon>
+                    favorites
+                </md-button>
+            </md-menu-item>
+            <md-menu-item>
+                <md-button ng-disabled="true" ng-href="#/c/{{community}}/fund" style="text-transform: lowercase; color: rgba(255,255,255,0.87);">
+                    <md-icon md-svg-src="images/icons/ic_loyalty_white_24px.svg"></md-icon>
+                    Get Vote Tokens
+                </md-button>
+            </md-menu-item>
         </md-menu-content>
     </md-menu>
     &nbsp

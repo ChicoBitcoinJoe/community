@@ -1,4 +1,4 @@
-Community.controller('fundViewController', ['$scope',
+Community.controller('FundViewController', ['$scope',
 function($scope){
     console.log('Loading fund view: ' + $scope.activeView);
     
