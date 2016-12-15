@@ -77,11 +77,7 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
             ProfileDB.PostScores[community].post[txHash] = {};
             ProfileDB.PostScores[community].post[txHash].score = 0;
             ProfileDB.PostScores[community].post[txHash].posters = [];
-        } else {
-            //console.log("Score Detected", ProfileDB.PostScores[community]);
-        }   
-        
-        //console.log(ProfileDB.PostScores[community].post[txHash]);
+        }
     };
     
     var touchFavorite = function(community){

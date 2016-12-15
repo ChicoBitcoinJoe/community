@@ -97,17 +97,13 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
                 $scope.isSaved = ProfileDB.isFavorited($scope.communityName,$scope.txHash);
                 
                 $scope.save = function(){
-                    console.log("Saving");
                     ProfileDB.saveToFavorites($scope.communityName, $scope.txHash);
                     $scope.isSaved = ProfileDB.isFavorited($scope.communityName,$scope.txHash);
-                    console.log($scope.isSaved);
                 };
                 
                 $scope.unsave = function(){
-                    console.log("Unsaving");
                     ProfileDB.removeFromFavorites($scope.communityName, $scope.txHash);
                     $scope.isSaved = ProfileDB.isFavorited($scope.communityName,$scope.txHash);
-                    console.log($scope.isSaved);
                 };
             }, function(err){
                 console.error(err);    

@@ -22,8 +22,9 @@
     - Account panel username
 
 - Comments
-    - Need to preserve formatting
+    - Need markdown
     - Comment will not show if the comment chain does not reach the root
+    - Comment reply has no preview
 
 
 ## NonCritical ##
@@ -54,7 +55,7 @@
 - Comment: Must have a root parent, a parent, a comment, no title, and media=='self'
 - A "Tweet": No root parent, no title, at least a link or comment
 - Xpost: event community does not equal ipfs data community
-- repost: event poster does not equal ipfs data community
+- repost: event poster does not equal poster in ipfs data
 
 
 # MiniMe Token Questions
@@ -71,16 +72,4 @@
 - My current contract never moves tokens to other users but only internally to voting balances.
     - How difficult would it be to clone the internal accounts as well?
 - I'm currently using an MIT license. What is the significance of MiniMe being GNU?
-
-
-
-
-
-
-
-
-
-
-
-
 

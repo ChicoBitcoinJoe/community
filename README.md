@@ -11,13 +11,14 @@ This repo is an implementation of a *Reddit-like* site using Ethereum, Ipfs and 
 - and much more planned for the future!
 
 
-### Prerequisites
+### Prerequisites and Setup
 
 1. First choose how you want to expose the web3 object.
-    - [Mist](https://github.com/ethereum/mist/releases)
-    - [Geth](https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum)
-    - [Metamask](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn)  
+    - [Metamask - chrome extension](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn) (recommended)
+    - [Mist - web3 compatible browser](https://github.com/ethereum/mist/releases) (medium)
+    - [Geth - locally hosted web3 client](https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum) (hard)
 2. [Ipfs](https://ipfs.io/docs/install/) needs to be installed. Using Chrome on Windows 7 I also had to run in a command prompt
+    - ipfs init
     - ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin "[\"*\"]"
     - ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods "[\"PUT\", \"GET\", \"POST\"]"
     - ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials "[\"true\"]"
@@ -35,10 +36,12 @@ This repo is an implementation of a *Reddit-like* site using Ethereum, Ipfs and 
     Daemon is ready
     ```
 
-### Rolling Your Own Community
+4. Browse to http://localhost:8080/ipfs/QmVXphQbHosSrCiWTVPKRo5GtxjpAg5MunRTPs5Jtp3irp/
+
+### Developing Your Own Community
 
 1. If Git is installed run "git clone https://github.com/ChicoBitcoinJoe/Community". Otherwise you can download it directly from github.
-2. Open a command prompt in the location of your Community folder and run "ipfs add -r -q Community-Folder_Name" to get an Ipfs hash of the Community folder. It will be the very last hash to be printed and it will start with 'Qm...'
+2. Open a command prompt in the location of your Community folder and run "ipfs add -r -q Community_Folder_Name" to get an Ipfs hash of the Community folder. It will be the very last hash to be printed and it will start with 'Qm...'
 3. Browse to http://localhost:8080/ipfs/COPY_IPFS_HASH_FROM_STEP_2_HERE/ (Make sure you have web3 exposed and have the ipfs daemon running!)
 4. Every time you make a change in the Community folder you need to repeat steps 2 and 3
 
