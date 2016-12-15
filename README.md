@@ -22,6 +22,7 @@ This repo is an implementation of a *Reddit-like* site using Ethereum, Ipfs and 
     - ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods "[\"PUT\", \"GET\", \"POST\"]"
     - ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials "[\"true\"]"
 3. Start your ipfs node by typing into a command window "ipfs daemon". If the ipfs daemon is running appropriately it should look something like...
+    
     ```
     Initializing daemon...
     Swarm listening on /ip4/127.0.0.1/tcp/4001
