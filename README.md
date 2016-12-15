@@ -1,13 +1,15 @@
 # Community
 
-This repo is an implementation of a *Reddit-like* site using the Share Platform and a Material Design UX. Features include:
+This repo is an implementation of a *Reddit-like* site using the Share Platform. A presentation about Community can be found at [this slide show](https://docs.google.com/presentation/d/1oiCmJcrn15-kK3xS-UzPbx5M1LAyRlGRRJ6q4qllw0E/edit?usp=sharing). Features include:
 
 - Ad Free
-- User data stays local
 - AutoModeration
-- 
+- Material Design UX
+- User data stays local
+- Sybil/Brigade Resistance
+- Decentralized/Distributed
+- and much more planned for the future!
 
-A presentation detailing how Community works can be found at [this slide show](https://docs.google.com/presentation/d/1oiCmJcrn15-kK3xS-UzPbx5M1LAyRlGRRJ6q4qllw0E/edit?usp=sharing)
 
 ### Prerequisites
 
