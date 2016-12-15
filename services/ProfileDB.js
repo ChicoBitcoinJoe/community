@@ -84,6 +84,32 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
         //console.log(ProfileDB.PostScores[community].post[txHash]);
     };
     
+    var touchFavorite = function(community){
+        if(!ProfileDB.favorited[community])
+            ProfileDB.favorited[community] = [];
+    };
+    
+    var saveFavorite = function(community,txHash){
+        //console.log(community,txHash,ProfileDB.favorited[community])
+        if(ProfileDB.favorited[community].indexOf(txHash) == -1){
+            ProfileDB.favorited[community].push(txHash);
+            //console.log("Saved!",ProfileDB.favorited[community]);
+        } else {
+            //console.log("Already Saved!");
+        }
+    };
+    
+    var removeFavorite = function(community,txHash){
+        //console.log(community,txHash,ProfileDB.favorited[community])
+        var index = ProfileDB.favorited[community].indexOf(txHash);
+        if( index !== -1){
+            ProfileDB.favorited[community].splice(index,1);
+            //console.log("Unsaved!",index, ProfileDB.favorited[community]);
+        } else {
+            //console.log("Not Saved!");
+        }
+    };
+    
     var updateUserScore = function(user){
         console.log(user);
     };
@@ -311,7 +337,7 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
             return false;
         },
         updatePostScore: function(community,txHash,posters){
-            console.log(community,txHash,posters);
+            //console.log(community,txHash,posters);
             touchPostScore(community,txHash);
             
             var score = 0;
@@ -327,15 +353,40 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
                 }
             }
             
-            
             score = Math.round(score/relaventPosters.length);
-            console.log(score);
+            //console.log(score);
             ProfileDB.PostScores[community].post[txHash].score = score;
             ProfileDB.PostScores[community].post[txHash].posters = relaventPosters;
         },
         getPostScore: function(community,txHash){
             touchPostScore(community,txHash);
+            
             return ProfileDB.PostScores[community].post[txHash];
+        },
+        saveToFavorites: function(community,txHash){
+            touchFavorite(community);
+            
+            saveFavorite(community,txHash);
+            saveProfileDB();
+        },
+        removeFromFavorites: function(community,txHash){
+            touchFavorite(community);
+            
+            removeFavorite(community,txHash);
+            saveProfileDB();
+        },
+        isFavorited: function(community,txHash){
+            touchFavorite(community);
+            
+            if(ProfileDB.favorited[community].indexOf(txHash) !== -1)
+                return true;
+            else
+                return false;
+        },
+        getFavorites: function(community){
+            touchFavorite(community);
+            
+            return ProfileDB.favorited[community];
         }
 	};
 

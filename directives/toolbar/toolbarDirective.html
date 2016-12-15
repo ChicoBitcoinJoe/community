@@ -2,25 +2,35 @@
     <md-button hide-gt-sm ng-click="toggleSidenav('left')" layout="row" aria-label="toggle left side navigation">
         <md-icon md-svg-src="images/icons/ic_menu_white_24px.svg"></md-icon>
     </md-button>
-    &nbsp
-    <h3 style="margin:0px;">{{community | capitalize}}</h3>
     <md-button ng-click="quickSave()" ng-hide="viewType=='m'" aria-label="quick save community">
         <md-icon md-svg-src="images/icons/ic_{{star}}_white_24px.svg">settings</md-icon>
     </md-button>
+    &nbsp
+    <h3 style="margin:0px;">{{community | capitalize}}</h3>
+    <md-menu>
+        <md-button ng-click="openMenu($mdOpenMenu, $event)">
+           <md-icon md-svg-src="images/icons/ic_keyboard_arrow_down_white_24px.svg"></md-icon>
+        </md-button>
+        <md-menu-content class="sidenavGreen" width="2">
+            <md-menu-item><md-button ng-href="#/c/{{community}}" style="text-transform: lowercase; color: rgba(255,255,255,0.87);">frontpage</md-button></md-menu-item>
+            <md-menu-item><md-button ng-href="#/c/{{community}}/favorites" style="text-transform: lowercase; color: rgba(255,255,255,0.87);">favorites</md-button></md-menu-item>
+        </md-menu-content>
+    </md-menu>
+    &nbsp
     <span flex></span>
     <md-button ng-show="showSearchbar" ng-click="search(searchQuery)" aria-label="start search">
-        <md-icon md-svg-src="images/icons/ic_search_white_24px.svg">settings</md-icon>
+        <md-icon md-svg-src="images/icons/ic_search_white_24px.svg"></md-icon>
     </md-button>
     <md-input-container md-theme="dark-theme" style="top:12px; margin:0px;" md-no-float class="md-block" layout="row" layout-align="left center">
         <input type="text" ng-show="showSearchbar" focus-on-show style="padding:4px;" ng-keyup="$event.keyCode == 13 && search()" ng-model="searchQuery" placeholder="Find A Community" aria-label="Find A Community" flex>
     </md-input-container>
     <md-button ng-show="showSearchbar" ng-click="toggleSearchbar()" aria-label="close searchbar">
-        <md-icon md-svg-src="images/icons/ic_close_white_24px.svg">settings</md-icon>
+        <md-icon md-svg-src="images/icons/ic_close_white_24px.svg"></md-icon>
     </md-button>
     <md-button ng-show="!showSearchbar" ng-click="toggleSearchbar()" aria-label="open searchbar">
-        <md-icon md-svg-src="images/icons/ic_search_white_24px.svg">settings</md-icon>
+        <md-icon md-svg-src="images/icons/ic_search_white_24px.svg"></md-icon>
     </md-button>
     <md-button hide-gt-md ng-click="toggleSidenav('right')" aria-label="toggle right side navigation">
-        <md-icon md-svg-src="images/icons/ic_settings_white_24px.svg">settings</md-icon>
+        <md-icon md-svg-src="images/icons/ic_settings_white_24px.svg"></md-icon>
     </md-button>
 </md-toolbar>

@@ -46,6 +46,23 @@ function($mdSidenav, $location, ProfileDB) {
                     $scope.star = "star";
                 }
             }
+            
+            $scope.goTo = function(option){
+                console.log(option);
+                if(option != $scope.menu){
+                    if(option = 'favorites')
+                        $location.path("/c/"+$scope.community+"/favorites");
+                    else
+                        $location.path("/c/"+$scope.community+"");
+                }
+            }
+            
+            $scope.menu = 'frontpage';
+            var originatorEv;
+            $scope.openMenu = function($mdOpenMenu, ev) {
+                originatorEv = ev;
+                $mdOpenMenu(ev);
+            };
 		},
 		link : function($scope, $element, $attrs) {
             

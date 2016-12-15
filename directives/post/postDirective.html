@@ -21,18 +21,19 @@
                     <large layout="row" layout-align="right"><span flex></span>{{postScore.score}}</large>
                     <small style="color:rgba(255,255,255,0.5); font-size:small" layout layout-align="center">score</small>
                 </h3> 
-            </div>
+            </div> 
         </md-card-title>
         <md-card-actions layout="row" layout-align="left center" ng-hide="commentView" style="">
             <md-card-icon-actions>
-                <md-button class="md-icon-button" aria-label="Favorite">
-                    <md-icon md-svg-icon="img/icons/favorite.svg"></md-icon>
+                <md-button aria-label="Favorite">
+                    <md-icon ng-show="!isSaved" ng-click="save()" md-svg-src="images/icons/ic_favorite_border_white_24px.svg"></md-icon>
+                    <md-icon ng-show="isSaved" ng-click="unsave()" md-svg-src="images/icons/ic_favorite_white_24px.svg"></md-icon>
                 </md-button>
-                <md-button class="md-icon-button" aria-label="Share">
-                    <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
+                <md-button aria-label="Share">
+                    <md-icon md-svg-src="images/icons/ic_share_white_24px.svg"></md-icon>
                 </md-button>
                 <span flex></span>
-                <md-button ng-href="#/c/{{post.community}}/post/{{txHash}}" aria-label="Go to Comments">Comments</md-button>
+                <md-button ng-href="#/c/{{post.community}}/post/{{txHash}}" aria-label="Go to Comments"><md-icon md-svg-src="images/icons/ic_comment_white_24px.svg"></md-icon>&nbsp Comments</md-button>
             </md-card-icon-actions>
         </md-card-actions>
     </div>

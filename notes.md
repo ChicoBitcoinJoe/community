@@ -7,8 +7,7 @@
 
 ## Critical ##
 - General
-    - Metamask loading late
-        - only on slow internet connections?
+    - Metamask loading late occasionally
     - all lists need to be sorted properly
 
 - Vote Contract
@@ -18,9 +17,10 @@
 - Name Registry
     - Account panel username
 
-- Need to calculate more accurate estimated gas fee
+- Need to estimated gas fee
 - Still fetching all events
     - last block seen not being updated
+    - events not being saved
 
 
 ## NonCritical ##

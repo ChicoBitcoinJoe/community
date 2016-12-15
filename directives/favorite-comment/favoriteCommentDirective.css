@@ -1,0 +1,10 @@
+.comment-hover-fx {
+    border-radius: 1px;
+    text-decoration:none;
+    border: none;
+    outline: none;
+}
+
+.comment-hover-fx:hover{
+    background-color: #444;
+}

@@ -12,7 +12,11 @@ Community.config(function ($routeProvider) {
     }).
     when('/c/:community/fund', {
         templateUrl: 'views/fund/fundView.html',
-        controller: 'fundViewController'
+        controller: 'FundViewController'
+    }).
+    when('/c/:community/favorites', {
+        templateUrl: 'views/favorite/favoriteView.html',
+        controller: 'FavoriteViewController'
     }).
     when('/c/:community/post/:postTxHash', {
         templateUrl: 'views/comment/commentView.html',

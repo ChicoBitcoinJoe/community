@@ -1,5 +1,5 @@
-Community.controller('fundViewController', ['$scope','VoteHub',
-function($scope, Community){
+Community.controller('fundViewController', ['$scope',
+function($scope){
     console.log('Loading fund view: ' + $scope.activeView);
     
     $scope.fundAmount = 0.05;

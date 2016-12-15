@@ -114,7 +114,7 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
                 return false;
         },
         commentIsValid: function(comment){
-            if(comment.community && comment.poster && comment.comment && comment.parent && comment.rootParent && !comment.title)
+            if(comment.community && comment.poster && comment.comment && comment.parent && comment.rootParent)
                 return true;
             else
                 return false;

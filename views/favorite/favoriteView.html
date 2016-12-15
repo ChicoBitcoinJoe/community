@@ -1,0 +1,7 @@
+<md-content style="background-color:rgba(33,33,33,1);" layout="column" layout-pading="5">
+    <div ng-repeat="favorite in favorites">
+        <post-card tx-hash="favorite"></post-card>
+        <favorite-comment-card tx-hash="favorite"></comment-card>
+    </div>
+    <span style="margin-bottom:8px;"></span>
+</md-content>

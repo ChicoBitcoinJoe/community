@@ -1,13 +1,12 @@
-Community.directive('commentCard', ['$location','RecursionHelper','Community','IpfsService','ProfileDB',
+Community.directive('favoriteCommentCard', ['$location','RecursionHelper','Community','IpfsService','ProfileDB',
 function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
 	return {
 		restrict: 'E',
 		scope: {
-			txHash: '=',
-            commentDepth: '='
+			txHash: '='
 		},
 		replace: true,
-		templateUrl: 'directives/comment/commentDirective.html',
+		templateUrl: 'directives/favorite-comment/favoriteCommentDirective.html',
         compile: function(element) {
             return RecursionHelper.compile(element, function($scope, iElement, iAttrs, controller, transcludeFn){
                 // Define your normal link function here.
@@ -17,13 +16,6 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             });
         },
 		controller: function($scope){
-            $scope.activeView = $location.url().split('/')[2];
-            $scope.rootTxHash = $location.url().split('/')[4];
-            $scope.hasVoted = true;
-            
-            
-            $scope.comments = Community.getChildren($scope.activeView, $scope.txHash);
-            
             $scope.isComment = false;
             
             var async_eventData = Community.getEventData($scope.txHash).then(
@@ -35,7 +27,6 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
                 
                 var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
                 function(ipfsData){
-                    console.log($scope.communityName,event.transactionHash);
                     $scope.comments = Community.getChildren($scope.communityName,event.transactionHash);
                     $scope.post = ipfsData;
                     $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,event.transactionHash);
@@ -60,31 +51,12 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
 
                 $scope.showExtras = true;
 
-                if($scope.commentDepth > 0){
-                    $scope.marginLeft = 0;
-                    $scope.marginBottom = 0;
-                    $scope.marginRight = 0;
-                    $scope.paddingLeft = 4;
 
-                    $scope.showExtras = false;
-                }
-
-                if($scope.commentDepth > 1){
-                    $scope.borderWidth = 4;
-                    $scope.borderTop = 4;
-                }
-
-                $scope.show = false;
-                $scope.replyText = "Reply";
-                $scope.showSubmitCommentPanel = function(){
-                    $scope.show = !$scope.show;
-                    if($scope.show){
-                        $scope.replyText = "Close";
-                    } else {
-                        $scope.replyText = "Reply";   
-                    }
-
-                    return $scope.show;
+                $scope.goToPost = function(){
+                    var rootTxHash = $scope.post.rootParent;
+                    var url = 'c/'+$scope.event.args.shardName+'/post/'+rootTxHash;
+                    console.log(url);
+                    $location.url(url);
                 };
 
                 $scope.upvote = function(){

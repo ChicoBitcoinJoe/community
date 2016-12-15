@@ -9,14 +9,18 @@ function(IpfsService,$location,$window,ProfileDB,Community){
 		templateUrl: 'directives/post/postDirective.html',
 		controller: function($scope){
             $scope.isPost = false;
-            
+            $scope.isSaved = false;
+            $scope.activeView = $location.url().split('/')[2];
             
             var async_eventData = Community.getEventData($scope.txHash).then(
             function(event){
                 console.log(event);
                 
+                $scope.event = event;
                 var ipfsHash = event.args.ipfsHash;
-                var communityName = event.args.shardName;
+                $scope.communityName = event.args.shardName;
+                
+                $scope.isSaved = ProfileDB.isFavorited($scope.communityName,$scope.txHash);
                 
                 var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
                 function(post){
@@ -30,8 +34,8 @@ function(IpfsService,$location,$window,ProfileDB,Community){
                         });
                     },1000);
                     
-                    if(communityName == $scope.activeView)
-                        console.log(communityName,$scope.activeView);
+                    if($scope.communityName == $scope.activeView)
+                        console.log($scope.communityName,$scope.activeView);
 
                     if($scope.post.media == 'image'){
                         var img = new Image();
@@ -136,7 +140,21 @@ function(IpfsService,$location,$window,ProfileDB,Community){
                     console.log("self post");
                     $location.url('c/' + $scope.post.community + '/post/' + $scope.txHash);
                 }
-            }
+            };
+            
+            $scope.save = function(){
+                console.log("Saving");
+                ProfileDB.saveToFavorites($scope.communityName, $scope.txHash);
+                $scope.isSaved = ProfileDB.isFavorited($scope.communityName,$scope.txHash);
+                console.log($scope.isSaved);
+            };
+            
+            $scope.unsave = function(){
+                console.log("Unsaving");
+                ProfileDB.removeFromFavorites($scope.communityName, $scope.txHash);
+                $scope.isSaved = ProfileDB.isFavorited($scope.communityName,$scope.txHash);
+                console.log($scope.isSaved);
+            };
         },
 		link : function($scope, $element, $attrs) {
             //console.log($scope.postUrl);
