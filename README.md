@@ -1,9 +1,9 @@
 # Community
 
-This repo is an implementation of a *Reddit-like* site using the Share Platform. A presentation about Community can be found at [this slide show](https://docs.google.com/presentation/d/1oiCmJcrn15-kK3xS-UzPbx5M1LAyRlGRRJ6q4qllw0E/edit?usp=sharing). Features include:
+This repo is an implementation of a *Reddit-like* site using Ethereum, Ipfs and the Share Platform (A collection of smart contracts on the Ethereum blockchain). A presentation about Community can be found at [this slide show](https://docs.google.com/presentation/d/1oiCmJcrn15-kK3xS-UzPbx5M1LAyRlGRRJ6q4qllw0E/edit?usp=sharing). Features include:
 
-- Ad Free
 - AutoModeration
+- Ad Free
 - Material Design UX
 - User data stays local
 - Sybil/Brigade Resistance
@@ -22,15 +22,17 @@ This repo is an implementation of a *Reddit-like* site using the Share Platform.
     - ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods "[\"PUT\", \"GET\", \"POST\"]"
     - ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials "[\"true\"]"
 3. Start your ipfs node by typing into a command window "ipfs daemon". If the ipfs daemon is running appropriately it should look something like...
-    * Initializing daemon...
-    * Swarm listening on /ip4/127.0.0.1/tcp/4001
-    * Swarm listening on /ip4/169.254.150.233/tcp/4001
-    * Swarm listening on /ip6/2607:fb90:a4ec:c6b2:900:5d14:8c0b:d38d/tcp/4001
-    * Swarm listening on /ip6/2607:fb90:a4ec:c6b2:d083:c7d2:3012:54df/tcp/4001
-    * Swarm listening on /ip6/::1/tcp/4001
-    * API server listening on /ip4/127.0.0.1/tcp/5001
-    * Gateway (readonly) server listening on /ip4/127.0.0.1/tcp/8080
-    * Daemon is ready
+    ```
+    Initializing daemon...
+    Swarm listening on /ip4/127.0.0.1/tcp/4001
+    Swarm listening on /ip4/169.254.150.233/tcp/4001
+    Swarm listening on /ip6/2607:fb90:a4ec:c6b2:900:5d14:8c0b:d38d/tcp/4001
+    Swarm listening on /ip6/2607:fb90:a4ec:c6b2:d083:c7d2:3012:54df/tcp/4001
+    Swarm listening on /ip6/::1/tcp/4001
+    API server listening on /ip4/127.0.0.1/tcp/5001
+    Gateway (readonly) server listening on /ip4/127.0.0.1/tcp/8080
+    Daemon is ready
+    ```
 
 ### Rolling Your Own Community
 
