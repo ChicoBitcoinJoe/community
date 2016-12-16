@@ -1,6 +1,6 @@
 # Community
 
-This repo is an implementation of a *Reddit-like* site using Ethereum, Ipfs and the Share Platform (A collection of smart contracts on the Ethereum blockchain). A presentation about Community can be found at [this slide show](https://docs.google.com/presentation/d/1oiCmJcrn15-kK3xS-UzPbx5M1LAyRlGRRJ6q4qllw0E/edit?usp=sharing). Features include:
+This repo is an implementation of a *Reddit-like* site using Ethereum, Ipfs and the Share Platform (A collection of smart contracts on the Ethereum blockchain). A presentation about Community can be found at [this slide show](https://docs.google.com/presentation/d/1oiCmJcrn15-kK3xS-UzPbx5M1LAyRlGRRJ6q4qllw0E/edit?usp=sharing). Features on release will include:
 
 - AutoModeration
 - Ad Free

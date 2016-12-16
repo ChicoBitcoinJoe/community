@@ -44,10 +44,6 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
                     console.error(err); 
                 });
 
-                $scope.mouseoverExtras = function(){
-                    $scope.hovered = true;
-                };
-
                 $scope.borderWidth = 0;
                 $scope.borderTop = 4;
                 $scope.marginLeft = 8;

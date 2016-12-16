@@ -8,3 +8,7 @@
 .comment-hover-fx:hover{
     background-color: #444;
 }
+
+md-card {
+    box-shadow: none !important;
+}
