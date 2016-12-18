@@ -29,9 +29,9 @@
             </div>
             <div class="sidenav-list-item" ng-class="{selected: (multi==activeView && viewType=='m')}" ng-repeat="multi in multis" layout="row">
                 <a style="height:36;" ng-href="#/m/{{multi}}" layout layout-align="left center" flex>{{multi | capitalize}}</a>
-                <md-button aria-label="Multi stats" style="color:rgba(255,255,255,0.5); margin:0px;" ng-hide="toggleSettings" style="margin:0px;" ng-disabled="true">
-                    9001&nbsp<md-icon md-svg-src="images/icons/ic_assessment_white_18px.svg"></md-icon>
-                </md-button>
+                <div aria-label="Multi stats" style="color:rgba(255,255,255,0.5); margin:0px;" ng-hide="toggleSettings" style="margin:0px;">
+                    2500 vt
+                </div>
                 
                 <md-button ng-show="toggleSettings && multi !== 'all' && multi !== 'ungrouped'" style="margin:0px;" ng-click="deleteMulti(multi)" aria-label="remove multi">
                     <md-icon md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg"></md-icon>
@@ -59,7 +59,7 @@
             <div ng-hide="viewType == 'c'" class="sidenav-list-item" ng-repeat="community in communities" layout="row">
                 <div style="height:36px;" ng-click="goTo('c/' + community)" layout="row" layout-align="left center" flex>{{community | capitalize}}
                     <span flex></span>
-                    <div style="margin:0px; color:rgba(255,255,255,0.5)">500</div>
+                    <div style="margin:0px; color:rgba(255,255,255,0.5)">500 vt</div>
                 </div>
                 
                 <md-button ng-show="toggleSettings && activeView !== 'all'" style="margin:0px;" ng-click="removeCommunity(community)" aria-label="remove community">
@@ -69,7 +69,7 @@
             <div ng-show="viewType == 'c'" ng-class="{selected: (community==activeView && viewType=='c')}" class="sidenav-list-item" ng-repeat="community in all" layout="row">
                 <div style="height:36px;" ng-click="goTo('c/' + community)" layout="row" layout-align="left center" flex>{{community | capitalize}}
                     <span flex></span>
-                    <div style="color:rgba(255,255,255,0.5)">500</div>
+                    <div style="color:rgba(255,255,255,0.5)">500 vt</div>
                 </div>
                 
                 <md-button ng-show="toggleSettings && activeView !== 'all'" style="margin:0px;" ng-click="removeCommunity(community)" aria-label="remove community">

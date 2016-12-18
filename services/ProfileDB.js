@@ -161,13 +161,13 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
         communityIsSaved: function(communityName){
             communityName = communityName.toLowerCase();
             var index = ProfileDB.SavedMultis['all'].indexOf(communityName);
-            if(index !== '-1') 
+            if(index !== -1) 
                 return true;
             
             return false;
         },
         multiIsSaved: function(multiName){
-            if(ProfileDB.SavedMultis[multiName])
+            if(Object.keys(ProfileDB.SavedMultis).indexOf(multiName) > -1) 
                 return true;
             
             return false;
@@ -177,11 +177,11 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
             if(multiName && communityName && ProfileDB.SavedMultis[multiName]){
                 if(multiName == 'all'){
                     //If communityName does not exist in 'all' it does not exist in any multi so we can just add it
-                    if(ProfileDB.SavedMultis['all'].indexOf(communityName) == '-1'){
+                    if(ProfileDB.SavedMultis['all'].indexOf(communityName) == -1){
                         ProfileDB.SavedMultis['all'].push(communityName);
                         console.log("Added " + communityName + " to 'all'");
                         
-                        if(ProfileDB.SavedMultis['ungrouped'].indexOf(communityName) == '-1'){
+                        if(ProfileDB.SavedMultis['ungrouped'].indexOf(communityName) == -1){
                             ProfileDB.SavedMultis['ungrouped'].push(communityName);
                             console.log("Added " + communityName + " to ungrouped");
                         }
@@ -191,18 +191,18 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
                 } else if(multiName == 'ungrouped'){
                     //cannot add to 'ungrouped'
                 } else {
-                    if(ProfileDB.SavedMultis[multiName].indexOf(communityName) == '-1'){
+                    if(ProfileDB.SavedMultis[multiName].indexOf(communityName) == -1){
                         ProfileDB.SavedMultis[multiName].push(communityName);
                         console.log("Added " + communityName + " to " + multiName);
                     }
                     
-                    if(ProfileDB.SavedMultis['all'].indexOf(communityName) == '-1'){
+                    if(ProfileDB.SavedMultis['all'].indexOf(communityName) == -1){
                         ProfileDB.SavedMultis['all'].push(communityName);
                         console.log("Added " + communityName + " to 'all'");
                     }
                     
                     var index = ProfileDB.SavedMultis['ungrouped'].indexOf(communityName);
-                    if(index !== '-1'){
+                    if(index !== -1){
                         ProfileDB.SavedMultis['ungrouped'].splice(index,1);
                         console.log("Removed " + communityName + " from 'ungrouped'");
                     }
@@ -234,13 +234,13 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
                 } else if (multiName === 'ungrouped') {
                     //delete from all and ungrouped
                     var index = ProfileDB.SavedMultis['ungrouped'].indexOf(communityName);
-                    if(index !== '-1'){
+                    if(index !== -1){
                         ProfileDB.SavedMultis['ungrouped'].splice(index, 1);
                         console.log("Deleted " + communityName + " from " + 'ungrouped');
                     }
 
                     index = ProfileDB.SavedMultis['all'].indexOf(communityName);
-                    if(index !== '-1'){
+                    if(index !== -1){
                         ProfileDB.SavedMultis['all'].splice(index, 1);
                         console.log("Deleted " + communityName + " from " + 'all');
                         
@@ -250,7 +250,7 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
                 } else {
                     //delete communityName in multiName
                     var index = ProfileDB.SavedMultis[multiName].indexOf(communityName);
-                    if(index !== '-1'){
+                    if(index !== -1){
                         ProfileDB.SavedMultis[multiName].splice(index, 1);
                         console.log("Deleted " + communityName + " from " + multiName);
                     
@@ -258,7 +258,7 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
                         for(var multi in ProfileDB.SavedMultis){
                             if(multi !== "all" && multi !== "ungrouped"){
                                 console.log("Searching for " + communityName + " in " + multi);
-                                if(ProfileDB.SavedMultis[multi].indexOf(communityName) !== '-1'){
+                                if(ProfileDB.SavedMultis[multi].indexOf(communityName) !== -1){
                                     exists = true;
                                     console.log(communityName + ' exists in ' + multi);
                                     break;

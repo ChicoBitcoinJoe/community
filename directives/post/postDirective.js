@@ -28,12 +28,6 @@ function(IpfsService,$location,$window,ProfileDB,Community){
                     $scope.post = post;
                     $scope.postScore = ProfileDB.getPostScore(event.args.shardName,$scope.txHash);
                     
-                    setInterval(function(){
-                        $scope.$apply(function(){
-                            $scope.postScore = ProfileDB.getPostScore(event.args.shardName,$scope.txHash);
-                        });
-                    },1000);
-                    
                     if($scope.post.media == 'image'){
                         var img = new Image();
                         img.onload= function() {

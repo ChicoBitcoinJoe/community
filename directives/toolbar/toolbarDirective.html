@@ -2,8 +2,8 @@
     <md-button hide-gt-sm ng-click="toggleSidenav('left')" layout="row" aria-label="toggle left side navigation">
         <md-icon md-svg-src="images/icons/ic_menu_white_24px.svg"></md-icon>
     </md-button>
-    <md-button ng-click="quickSave()" ng-hide="viewType=='m'" aria-label="quick save community">
-        <md-icon md-svg-src="images/icons/ic_{{star}}_white_24px.svg">settings</md-icon>
+    <md-button ng-click="quickSave()" aria-label="quick save community">
+        <md-icon md-svg-src="images/icons/ic_{{star}}_white_24px.svg"></md-icon>
     </md-button>
     &nbsp
     <h3 style="margin:0px;">{{community | capitalize}}</h3>
@@ -12,22 +12,28 @@
            <md-icon md-svg-src="images/icons/ic_keyboard_arrow_down_white_24px.svg"></md-icon>
         </md-button>
         <md-menu-content class="sidenavGreen" width="2">
-            <md-menu-item>
+            <md-menu-item ng-if="viewType == 'c'">
                 <md-button ng-href="#/c/{{community}}" style="text-transform: lowercase; color: rgba(255,255,255,0.87);">
                     <md-icon md-svg-src="images/icons/ic_chrome_reader_mode_white_24px.svg"></md-icon>
                     frontpage
                 </md-button>
             </md-menu-item>
-            <md-menu-item>
+            <md-menu-item ng-if="viewType == 'c'">
                 <md-button ng-href="#/c/{{community}}/favorites" style="text-transform: lowercase; color: rgba(255,255,255,0.87);">
                     <md-icon md-svg-src="images/icons/ic_favorite_white_24px.svg"></md-icon>
                     favorites
                 </md-button>
             </md-menu-item>
-            <md-menu-item>
+            <md-menu-item ng-if="viewType == 'c'">
                 <md-button ng-disabled="true" ng-href="#/c/{{community}}/fund" style="text-transform: lowercase; color: rgba(255,255,255,0.87);">
                     <md-icon md-svg-src="images/icons/ic_loyalty_white_24px.svg"></md-icon>
                     Get Vote Tokens
+                </md-button>
+            </md-menu-item>
+            <md-menu-item ng-if="viewType == 'm'" >
+                <md-button ng-disabled="true" ng-href="#/m/{{activeView}}/fund" style="text-transform: lowercase; color: rgba(255,255,255,0.87);">
+                    <md-icon md-svg-src="images/icons/ic_assessment_white_18px.svg"></md-icon>
+                    Statistics
                 </md-button>
             </md-menu-item>
         </md-menu-content>

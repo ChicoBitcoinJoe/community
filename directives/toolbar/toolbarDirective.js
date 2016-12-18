@@ -10,19 +10,25 @@ function($mdSidenav, $location, ProfileDB) {
 		templateUrl: 'directives/toolbar/toolbarDirective.html',
 		controller: function($scope, $mdSidenav){
             console.log('Loading toolbar');
+            var locationUrlArray = $location.url().split('/');
+            $scope.viewType = locationUrlArray[1];
+            $scope.activeView = locationUrlArray[2];
             
-            if($scope.viewType == 'c' && ProfileDB.communityIsSaved($scope.community))
+            if($scope.viewType == 'c' && ProfileDB.communityIsSaved($scope.activeView))
                 $scope.star = "star";
-            else if($scope.viewType == 'm' && ProfileDB.multiIsSaved($scope.community))
+            else if($scope.viewType == 'm' && ProfileDB.multiIsSaved($scope.activeView))
                 $scope.star = "star";
             else
                 $scope.star = "star_border";
             
             $scope.$on('headerChange', function(event, newHeader) {
-                $scope.community = newHeader;
-                if($scope.viewType == 'c' && ProfileDB.communityIsSaved($scope.community))
+                var locationUrlArray = $location.url().split('/');
+                $scope.viewType = locationUrlArray[1];
+                $scope.activeView = locationUrlArray[2];
+                
+                if($scope.viewType == 'c' && ProfileDB.communityIsSaved($scope.activeView))
                     $scope.star = "star";
-                else if($scope.viewType == 'm' && ProfileDB.multiIsSaved($scope.community))
+                else if($scope.viewType == 'm' && ProfileDB.multiIsSaved($scope.activeView))
                     $scope.star = "star";
                 else
                     $scope.star = "star_border";
@@ -42,18 +48,24 @@ function($mdSidenav, $location, ProfileDB) {
 
             $scope.quickSave = function(){
                 if($scope.viewType == 'c'){
-                    ProfileDB.addCommunity($scope.community,'all');
+                    ProfileDB.addCommunity($scope.activeView,'all');
                     $scope.star = "star";
+                } else if($scope.viewType == 'm'){
+                    $scope.$apply(function(){
+                        ProfileDB.createMulti($scope.activeView);
+                        $scope.star = "star";
+                    });
                 }
+                
             }
             
             $scope.goTo = function(option){
                 console.log(option);
                 if(option != $scope.menu){
                     if(option = 'favorites')
-                        $location.path("/c/"+$scope.community+"/favorites");
+                        $location.path("/c/"+$scope.activeView+"/favorites");
                     else
-                        $location.path("/c/"+$scope.community+"");
+                        $location.path("/c/"+$scope.activeView+"");
                 }
             }
             
