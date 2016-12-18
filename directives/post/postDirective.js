@@ -34,9 +34,6 @@ function(IpfsService,$location,$window,ProfileDB,Community){
                         });
                     },1000);
                     
-                    if($scope.communityName == $scope.activeView)
-                        console.log($scope.communityName,$scope.activeView);
-
                     if($scope.post.media == 'image'){
                         var img = new Image();
                         img.onload= function() {

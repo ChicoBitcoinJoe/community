@@ -60,9 +60,10 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
             ProfileDB.users[user].upvoteStreak = 0;
             ProfileDB.users[user].downvoteStreak = 0;
             ProfileDB.users[user].score = 50;
-            console.log("New user! Score:",ProfileDB.users[user].score);
-        } else
-            console.log("Existing user! Score:", ProfileDB.users[user].score);
+            //console.log("New user! Score:",ProfileDB.users[user].score);
+        } else {
+            //console.log("Existing user! Score:", ProfileDB.users[user].score);
+        }
     };
     
     var touchPostScore = function(community,txHash){

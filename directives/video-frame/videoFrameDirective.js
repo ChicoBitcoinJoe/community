@@ -10,11 +10,10 @@ function($sce) {
 		controller: function($scope){
             //console.log($scope.url);
             $scope.videoSource = $sce.trustAsResourceUrl($scope.url);
-            //console.log($scope.video.Source);
+            
         },
 		link : function($scope, $element, $attrs) {
-            //console.log($scope.postUrl);
-            
-		}
+        
+        }
 	}
 }]);

@@ -44,15 +44,6 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
             comments.push(txHash);
     };
     
-    var addExistingToActiveView = function(community){
-        touchCommunity(community);
-        var posts = CommunityDB.communities[community].posts;
-        for(post in posts){
-            if(activeView.indexOf(posts[post]) == -1)
-                activeView.push(posts[post]);
-        }
-    };
-    
     var addTxHashToActiveView = function(txHash){
         if(activeView.indexOf(txHash) == -1)
             activeView.push(txHash);
@@ -77,7 +68,6 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
                 //console.log("post");
                 touchCommentList(community,txHash);
                 addTxHashToActiveView(txHash);
-                //addPostToCommunity(community,event.transactionHash);
                 addPosterToRootParent(community,txHash,event.args.sender);
             } else if(service.commentIsValid(ipfsData)){
                 //console.log("comment");
@@ -120,7 +110,6 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
                 return false;
         },
         getPosts: function(communities){
-            console.log(CommunityDB);
             activeView = [];
             
             for(var coms in communities){
@@ -130,7 +119,8 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
                 //add already fetched event txs
                 
                 var fromBlock = CommunityDB.communities[community].last_block;
-                SharePlatform.getEvents(community,fromBlock).then(function(events){
+                SharePlatform.getShardEvents(community).then(
+                function(events){
                     console.log("Found " + events.length + " events", events);
                     for(var index in events){
                         var txHash = events[index].transactionHash;

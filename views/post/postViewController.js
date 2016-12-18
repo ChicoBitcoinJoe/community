@@ -5,7 +5,7 @@ function($scope,ProfileDB,Community) {
     $scope.created = false;
     $scope.loaded = false;
     
-    var communities;
+    var communities = [];
     if($scope.viewType == 'c'){
         var community = [$scope.activeView];
         

@@ -74,22 +74,20 @@ function ($q,Web3Service,EventManager) {
         getShardName: function(shardAddress){
             //To Do When Needed
         },
-        getEvents: function(shardName, fromBlock){
+        getShardEvents: function(shardName){
             var deferred = $q.defer();
             var async_getAddress = service.getShardAddress(shardName).then(
             function(shardAddress){
-                console.log("Fetching last 30 days of events for " + shardName);
-                
                 var Shard = ShardContract.at(shardAddress);
-                EventManager.getShardEvents(shardAddress,Shard,{fromBlock:fromBlock}).then(
+                EventManager.getShardEvents(shardName,Shard).then(
                 function(events){
-                    console.log("Fetched last 30 days of events for " + shardName);
+                    console.log(events)
                     deferred.resolve(events);
                 }, function(err){
-                    deferred.reject(err);
+                    deferred.resolve([]);
                 });
             }, function(err){
-                deferred.reject(err);
+                deferred.resolve([]);
             });
             
             return deferred.promise;
@@ -140,29 +138,6 @@ function ($q,Web3Service,EventManager) {
                 }
             });
 
-            return deferred.promise;
-        },
-        //////////////////////
-        // Helper Functions //
-        //////////////////////
-        getShardEvents: function(shardAddress,args){ 
-            var deferred = $q.defer();
-            
-            if(shardAddress){
-                var Shard = ShardContract.at(shardAddress);
-                console.log("Fetching events for", shardAddress);
-                Shard.allEvents(args).get(
-                function(err, events){
-                    if(!err){
-                        deferred.resolve(events);
-                    } else {
-                        deferred.reject(err);
-                    }
-                });
-            } else {
-                deferred.resolve(false);
-            }
-                
             return deferred.promise;
         }
     }

@@ -6,9 +6,8 @@
 ## Critical ##
 
 - Community
-    - Need to prune old data from localStorage
+    - Need to prune old data from localStorage// Implemented but not tested!
     - Need to estimated gas fee
-    - fetching all events because last block seen is not being updated
     - Metamask loading late occasionally
     - all lists need to be sorted properly
 
@@ -29,15 +28,12 @@
 
 ## NonCritical ##
 
-- Posts View
-    - switching between two communities too quickly will incorrectly load both communities
-
 - Community Sidenav
     - Multi sidenav stats button
     
-- postView
+- Post View
     - submit post does not preview the comment section
-    - video preview frame not updating when link provided
+    - video preview frame temprorarily disabled since it does not play well with Mist
 
 - Comments
     - You can upvote or downvote yourself
@@ -46,17 +42,6 @@
 - Create Community
     - Card is dreadful
     
-
-
-    
-# Notes #
-
-- Post: Has a title, no parents, and at least a comment or link
-- Comment: Must have a root parent, a parent, a comment, no title, and media=='self'
-- A "Tweet": No root parent, no title, at least a link or comment
-- Xpost: event community does not equal ipfs data community
-- repost: event poster does not equal poster in ipfs data
-
 
 # MiniMe Token Questions
 

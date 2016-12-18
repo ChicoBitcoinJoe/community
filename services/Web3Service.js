@@ -12,8 +12,8 @@ Community.service( 'Web3Service',['$q','$window', function ($q,$window) {
     setInterval(function(){
         //console.log(currentAccount,web3.eth.accounts[0]);
         if(currentAccount !== 'undefined'){
-            //if(currentAccount !== web3.eth.accounts[0])
-                //$window.location.reload();
+            if(currentAccount !== web3.eth.accounts[0])
+                $window.location.reload();
         }
     },100);
     
@@ -46,6 +46,20 @@ Community.service( 'Web3Service',['$q','$window', function ($q,$window) {
                     deferred.reject(err);
                 }
             });
+            
+            return deferred.promise;
+        },
+        getCurrentBlock: function(){
+            var deferred = $q.defer();
+            var async_getCurrentBlock = web3.eth.getBlockNumber(
+            function(err,currentBlock){
+                if(!err){
+                    deferred.resolve(currentBlock);
+                } else {
+                    deferred.reject(err);
+                }
+            });
+            
             return deferred.promise;
         }
 	};
