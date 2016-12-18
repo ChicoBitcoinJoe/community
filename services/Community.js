@@ -1,5 +1,5 @@
-Community.service('Community', ['$q','ShareService','ShardService','IpfsService','Web3Service','ProfileDB',
-function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
+Community.service('Community', ['$q','SharePlatform','IpfsService','Web3Service','ProfileDB',
+function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
     console.log('Loading Community');
     
     var CommunityDB;
@@ -130,7 +130,7 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
                 //add already fetched event txs
                 
                 var fromBlock = CommunityDB.communities[community].last_block;
-                ShareService.getEvents(community,fromBlock).then(function(events){
+                SharePlatform.getEvents(community,fromBlock).then(function(events){
                     console.log("Found " + events.length + " events", events);
                     for(var index in events){
                         var txHash = events[index].transactionHash;
@@ -167,10 +167,10 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
                 var async_getIpfsHash = IpfsService.getIpfsHash(post).then(
                 function(ipfsHash){
                     console.log(ipfsHash);
-                    var async_shardAddress = ShareService.getShardAddress(post.community).then(
+                    var async_shardAddress = SharePlatform.getShardAddress(post.community).then(
                     function(shardAddress){
                         var estimatedGas = 4700000;
-                        ShardService.share(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount(), gas:estimatedGas}).then(
+                        ShareService.share(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount(), gas:estimatedGas}).then(
                         function(txHash){
                             deferred.resolve(txHash);
                         }, function(err) {
@@ -194,10 +194,10 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
                 var async_getIpfsHash = IpfsService.getIpfsHash(comment).then(
                 function(ipfsHash){
                     console.log(ipfsHash);
-                    var async_shardAddress = ShareService.getShardAddress(comment.community).then(
+                    var async_shardAddress = SharePlatform.getShardAddress(comment.community).then(
                     function(shardAddress){
                         var estimatedGas = 4700000;
-                        ShardService.share(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount(), gas:estimatedGas}).then(
+                        ShareService.share(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount(), gas:estimatedGas}).then(
                         function(receipt){
                             console.log(receipt);
                             deferred.resolve(receipt.transactionHash);
@@ -217,12 +217,12 @@ function ($q,ShareService,ShardService,IpfsService,Web3Service,ProfileDB) {
             return deferred.promise;
         },
         createCommunity: function(shardName){
-            return ShareService.createShard(shardName);
+            return SharePlatform.createShard(shardName);
         },
         communityExists: function(community){
             var deferred = $q.defer();
             
-            var async = ShareService.getShardAddress(community).then(
+            var async = SharePlatform.getShardAddress(community).then(
             function(communityAddress){
                 if(communityAddress){
                     deferred.resolve(true)

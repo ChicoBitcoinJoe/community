@@ -44,7 +44,7 @@ Features on release will include:
 
 4. Browse to http://localhost:8080/ipfs/QmVXphQbHosSrCiWTVPKRo5GtxjpAg5MunRTPs5Jtp3irp/
 
-### Developing Your Own Community
+### Developing Your Own Community UX
 
 1. If Git is installed run "git clone https://github.com/ChicoBitcoinJoe/Community". Otherwise you can download it directly from github.
 2. Open a command prompt in the location of your Community folder and run "ipfs add -r -q Community_Folder_Name" to get an Ipfs hash of the Community folder. It will be the very last hash to be printed and it will start with 'Qm...'

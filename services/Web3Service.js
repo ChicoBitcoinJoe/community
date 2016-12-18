@@ -12,8 +12,8 @@ Community.service( 'Web3Service',['$q','$window', function ($q,$window) {
     setInterval(function(){
         //console.log(currentAccount,web3.eth.accounts[0]);
         if(currentAccount !== 'undefined'){
-            if(currentAccount !== web3.eth.accounts[0])
-                $window.location.reload();
+            //if(currentAccount !== web3.eth.accounts[0])
+                //$window.location.reload();
         }
     },100);
     
