@@ -5,10 +5,8 @@
 
 ## Critical ##
 
-- Community
-    - Need to prune old data from localStorage// Implemented but not tested!
+- General
     - Need to estimated gas fee
-    - Metamask loading late occasionally
     - all lists need to be sorted properly
 
 - Vote Contract
@@ -27,13 +25,10 @@
 
 
 ## NonCritical ##
-
-- Community Sidenav
-    - Multi sidenav stats button
     
 - Post View
     - submit post does not preview the comment section
-    - video preview frame temprorarily disabled since it does not play well with Mist
+    - video preview frame temprorarily disabled since it does not play nice with Mist
 
 - Comments
     - You can upvote or downvote yourself
@@ -42,6 +37,10 @@
 - Create Community
     - Card is dreadful
     
+## Backburner ##
+
+- Need to prune old data from localStorage // Implemented but not tested!
+- Metamask loading late occasionally *Metamask hard at work here*
 
 # MiniMe Token Questions
 

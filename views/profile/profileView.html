@@ -1,0 +1,26 @@
+<md-content md-theme="dark-theme" style="background-color:rgba(50,50,50,1);" layout="column" layout-padding="5" flex>
+<div>
+    <md-card>
+        <md-card-title>
+            <md-card-title-text>
+                <span class="md-headline">Profile View</span>
+                <span class="sidenavGreen md-whiteframe-4dp" style="padding:15px; margin-top:10px; margin-bottom:10px;">
+                    <h3 layout="row" layout-align="center center">Change Username</h3>
+                    <md-input-container class="md-block">
+                        <label>New Username:</label>
+                        <input ng-model="profile.newUserName" ng-change="updateNewName(profile.newUserName)" placeholder="Pick a good one!" md-select-on-focus>
+                    </md-input-container>
+                    <md-button ng-show="profile.newUserName.length>0" ng-click="changeName(profile.newUsername)">Submit</md-button>
+                </span>
+            </md-card-title-text>
+        </md-card-title>
+        <md-card-content>
+            <h4>Soon(tm)</h4>
+            <ul>
+                <li>friend feed</li>
+                <li>news feed</li>
+            </ul>
+        </md-card-content>
+    </md-card>
+</div>
+</md-content>

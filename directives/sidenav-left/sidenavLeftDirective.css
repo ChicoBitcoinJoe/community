@@ -76,3 +76,8 @@ md-sidenav {
 md-slider-container {
     height:45px;
 }
+
+.pointer-enabled {
+    cursor: pointer;
+    cursor: hand;
+}

@@ -2,13 +2,13 @@
     <md-button hide-gt-sm ng-click="toggleSidenav('left')" layout="row" aria-label="toggle left side navigation">
         <md-icon md-svg-src="images/icons/ic_menu_white_24px.svg"></md-icon>
     </md-button>
-    <md-button ng-click="quickSave()" aria-label="quick save community">
+    <md-button ng-click="quickSave()" ng-hide="hideExtras" aria-label="quick save community">
         <md-icon md-svg-src="images/icons/ic_{{star}}_white_24px.svg"></md-icon>
     </md-button>
     &nbsp
     <h3 style="margin:0px;">{{community | capitalize}}</h3>
     <md-menu>
-        <md-button ng-click="openMenu($mdOpenMenu, $event)">
+        <md-button ng-hide="hideExtras" ng-click="openMenu($mdOpenMenu, $event)">
            <md-icon md-svg-src="images/icons/ic_keyboard_arrow_down_white_24px.svg"></md-icon>
         </md-button>
         <md-menu-content class="sidenavGreen" width="2">

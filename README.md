@@ -1,10 +1,8 @@
 # Community
 
-This repo is an implementation of a *Reddit-like* site using Ethereum, Ipfs and the Share Platform (A collection of smart contracts on the Ethereum blockchain). 
+This repo is an implementation of a *Reddit-like* site using Ethereum, Ipfs and a collection of smart contracts on the Ethereum blockchain. 
 
 The Community white paper can be found [here](https://docs.google.com/document/d/1IW3YqxdpveDtERUvkXtVLSdQH8o17xq7eptDbHu08es/edit#) 
-
-A short overview of the Share Platform can be found [here](https://docs.google.com/presentation/d/1oiCmJcrn15-kK3xS-UzPbx5M1LAyRlGRRJ6q4qllw0E/edit?usp=sharing).
 
 Features on release will include:
 
@@ -42,15 +40,18 @@ Features on release will include:
     Daemon is ready
     ```
 
-4. Browse to http://localhost:8080/ipfs/QmTfa7zqStn9o61LyumvDWAMT4habB5M3rdWCvnia8Kjyk/
+4. Browse to http://localhost:8080/ipfs/QmbKfUcPfuRqpqe85Zs93j99zh9ZY7MpaVn4ndwWpXNBMc/
+
 
 ### Developing Your Own Community UX
 
-1. Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-2. Run "git clone https://github.com/ChicoBitcoinJoe/Community". Otherwise you can download it directly from github.
+1. Get a copy of Community. There are two ways to do this:
+    -Download it directly from [github](https://github.com/ChicoBitcoinJoe/Community) (find the "Clone or Download" button)
+    - Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and run "git clone https://github.com/ChicoBitcoinJoe/Community". 
 3. Open a command prompt in the location of your Community folder and run "ipfs add -r -q Community_Folder_Name" to get an Ipfs hash of the Community folder. It will be the very last hash to be printed and it will start with 'Qm...'
 4. Browse to http://localhost:8080/ipfs/COPY_IPFS_HASH_FROM_STEP_2_HERE/ (Make sure you have web3 exposed and have the ipfs daemon running!)
 5. Every time you make a change in the Community folder you need to repeat steps 3 and 4
+
 
 ### Tips
 

@@ -27,6 +27,10 @@ function($mdSidenav, $location, ProfileDB) {
                 $scope.multis = ProfileDB.getSavedMultis();
                 $scope.communities = ProfileDB.getCommunitiesInMulti($scope.activeView);
             });
+            
+            $scope.clicked = function(){
+                console.log("Go to profile page.");  
+            };
 
             $scope.toggleSettings = false;
 

@@ -6,10 +6,11 @@ md-card-title {
     padding:0px !important;
 }
 
-md-card-title-text {
-    margin:0px;
-    padding:5px;
-    cursor: pointer; cursor: hand;
+.post-title-text {
+    margin:0px !important;
+    padding:5px !important;
+    cursor: pointer !important;
+    cursor: hand !important;
 }
 
 md-card-actions {

@@ -4,7 +4,7 @@
     </div>
     <div layout="column" flex>
         <md-card-title  style="padding-bottom:0px !important;">
-            <md-card-title-text class="hover-fx" ng-click="followLink()">
+            <md-card-title-text class="hover-fx post-title-text" ng-click="followLink()">
                 <div style="max-height:143px; overflow:hidden">
                     <h4 style="margin:0px;margin-bottom:4px;">{{post.title}}<small style="color:rgba(255,255,255,0.5)">
                     &nbsp {{post.media}}
@@ -12,7 +12,7 @@
                 </div>
                 <div layout="row" ng-show="post.poster">
                     <h5 style="margin:0px; line-height: 16px; color:rgba(255,255,255,0.5)">
-                        Posted by <span style="color:rgba(255,255,255,0.87)">{{post.poster}}</span> to <span  style="color:rgba(255,255,255,0.87)">{{post.community}}</span>
+                        Posted by <span style="color:rgba(255,255,255,0.87)"><username account="post.poster"></username></span> to <span  style="color:rgba(255,255,255,0.87)">{{post.community}}</span>
                     </h5>
                 </div>
             </md-card-title-text>

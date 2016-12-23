@@ -3,16 +3,27 @@ function($mdSidenav, $location, ProfileDB) {
 	return {
 		restrict: 'E',
 		scope: {
-            community:'=',
-            viewType:'='
+            
 		},
 		replace: true,
 		templateUrl: 'directives/toolbar/toolbarDirective.html',
 		controller: function($scope, $mdSidenav){
             console.log('Loading toolbar');
+            
             var locationUrlArray = $location.url().split('/');
             $scope.viewType = locationUrlArray[1];
             $scope.activeView = locationUrlArray[2];
+            
+            $scope.community = $scope.activeView;
+            
+            $scope.hideExtras = false;
+            if($scope.viewType == 'profile'){
+                $scope.community = 'Profile';
+                $scope.hideExtras = true;
+            } else if($scope.viewType == 'homepage'){
+                $scope.community = 'Home';
+                $scope.hideExtras = true;
+            }
             
             if($scope.viewType == 'c' && ProfileDB.communityIsSaved($scope.activeView))
                 $scope.star = "star";
@@ -25,6 +36,17 @@ function($mdSidenav, $location, ProfileDB) {
                 var locationUrlArray = $location.url().split('/');
                 $scope.viewType = locationUrlArray[1];
                 $scope.activeView = locationUrlArray[2];
+                
+                $scope.community = $scope.activeView;
+            
+                $scope.hideExtras = false;
+                if($scope.viewType == 'profile'){
+                    $scope.community = 'Profile';
+                    $scope.hideExtras = true;
+                } else if($scope.viewType == 'homepage'){
+                    $scope.community = 'Home';
+                    $scope.hideExtras = true;
+                }
                 
                 if($scope.viewType == 'c' && ProfileDB.communityIsSaved($scope.activeView))
                     $scope.star = "star";
