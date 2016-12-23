@@ -13,7 +13,7 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
        return JSON.parse(localStorage.getItem(account));
     };
     
-    console.log(Web3Service.getCurrentAccount());
+    //console.log(Web3Service.getCurrentAccount());
     ProfileDB = loadProfile(Web3Service.getCurrentAccount());
     if(!ProfileDB){
         console.log('Could not find a profile. Using default profile');
@@ -49,8 +49,6 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
 
         saveProfileDB();
     }
-    
-    console.log("ProfileDB done loading");
     
     var touchUser = function(user){
         if(!ProfileDB.users[user]){

@@ -15,7 +15,6 @@ function(NameService){
                     function(username){
                         $scope.username = username;
                         $scope.partial = $scope.account.slice(2,6);
-                        console.log($scope.partial);
                     }, function(err){
                         console.log(err);
                     });

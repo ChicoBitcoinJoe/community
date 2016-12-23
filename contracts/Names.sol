@@ -1,6 +1,6 @@
 pragma solidity ^0.4.6;
 
-contract CommunityNameRegistry {
+contract Names {
     
     //What's in a name?
     struct Name {

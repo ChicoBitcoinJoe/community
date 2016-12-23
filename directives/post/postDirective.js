@@ -26,7 +26,8 @@ function(IpfsService,$location,$window,ProfileDB,Community){
                 function(post){
                     //console.log(post);
                     $scope.post = post;
-                    $scope.postScore = ProfileDB.getPostScore(event.args.shardName,$scope.txHash);
+                    $scope.privateScore = ProfileDB.getPostScore(event.args.shardName,$scope.txHash);
+                    $scope.publicScore = 50;
                     
                     if($scope.post.media == 'image'){
                         var img = new Image();

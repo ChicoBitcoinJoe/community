@@ -56,10 +56,10 @@
                     <md-button style="margin:0px;" ng-click="addCommunity(newCommunity)" aria-label="add community"><md-icon md-svg-src="images/icons/ic_add_box_white_24px.svg"></md-button>
                 </md-input-container>
             </div>
-            <div ng-hide="viewType == 'c'" class="sidenav-list-item" ng-repeat="community in communities" layout="row">
+            <div ng-show="viewType == 'm'" class="sidenav-list-item" ng-repeat="community in communities" layout="row">
                 <div style="height:36px;" ng-click="goTo('c/' + community)" layout="row" layout-align="left center" flex>{{community | capitalize}}
                     <span flex></span>
-                    <div style="margin:0px; color:rgba(255,255,255,0.5)">500 <small>vt</small></div>
+                    <div style="margin:0px; color:rgba(255,255,255,0.5)"><vote-tokens account="account" community="community"></vote-tokens> <small>vt</small></div>
                 </div>
                 
                 <md-button ng-show="toggleSettings && activeView !== 'all'" style="margin:0px;" ng-click="removeCommunity(community)" aria-label="remove community">
@@ -69,7 +69,7 @@
             <div ng-show="viewType !== 'm'" ng-class="{selected: (community==activeView && viewType=='c')}" class="sidenav-list-item" ng-repeat="community in all" layout="row">
                 <div style="height:36px;" ng-click="goTo('c/' + community)" layout="row" layout-align="left center" flex>{{community | capitalize}}
                     <span flex></span>
-                    <div style="color:rgba(255,255,255,0.5)">500 <small>vt</small></div>
+                    <div style="color:rgba(255,255,255,0.5)"><vote-tokens account="account" community="community"></vote-tokens> <small>vt</small></div>
                 </div>
                 
                 <md-button ng-show="toggleSettings && activeView !== 'all'" style="margin:0px;" ng-click="removeCommunity(community)" aria-label="remove community">

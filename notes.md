@@ -1,7 +1,9 @@
 # To Do's #
 
 ## Unsorted ##
+
 - Post Preview needs updating
+- Remove community button not working
 
 ## Critical ##
 
