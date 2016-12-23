@@ -2,32 +2,33 @@ Community.service('NameService', ['$q','Web3Service',
 function ($q,Web3Service) {
     console.log('Loading Name Service');
     
-    var NameContractAddress = '0x6CcDf3643fE0E664E7f120Aebe6582C0fd8AFdb6';//TestNet
+    var NameContractAddress = '0x0208482b5E9467841a0350CA932cF31475CA8A06';//TestNet
     var NameContract = web3.eth.contract(
-        [{"constant":false,"inputs":[{"name":"_name","type":"string"}],"name":"set","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"_address","type":"address"}],"name":"get","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"}]);
+        [{"constant":false,"inputs":[{"name":"_name","type":"string"}],"name":"set","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"account","type":"address"}],"name":"get","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"}]);
     var NameInstance = NameContract.at(NameContractAddress);
     
     var uniqueLength = 4;
+    
+    var name = {};
     
     var service = {
         getName: function(account){
             var deferred = $q.defer();
             
-            console.log('here');
-            NameInstance.get(account,
-            function(err, name){
-                if(!err){
-                    console.log(name);
-                    var unique = account.slice(2,2+uniqueLength);
-                    if(name){
-                        deferred.resolve(name+'#'+unique);
+            if(name[account]){
+                console.log("Found name in memory",name[account],account);
+                deferred.resolve(name[account]);
+            } else {
+                NameInstance.get(account,
+                function(err, name){
+                    if(!err){
+                        name[account] = name;
+                        deferred.resolve(name);
                     } else {
-                        deferred.resolve('Anonymous#'+unique);
+                        deferred.resolve('anonymous');
                     }
-                } else {
-                    deferred.reject(err);
-                }
-            });
+                });
+            }
             
             return deferred.promise;
         },

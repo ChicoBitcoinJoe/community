@@ -43,7 +43,7 @@ Features on release will include:
 4. Browse to http://localhost:8080/ipfs/QmbKfUcPfuRqpqe85Zs93j99zh9ZY7MpaVn4ndwWpXNBMc/
 
 
-### Developing Your Own Community UX
+### Developing Your Own Community Experience
 
 1. Get a copy of Community. There are two ways to do this:
     - Download it directly from [github](https://github.com/ChicoBitcoinJoe/Community) (find the "Clone or Download" button)

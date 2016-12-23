@@ -1,6 +1,8 @@
-Community.controller('ProfileViewController', ['$scope','NameService','$window',
-function($scope,NameService,$window){
+Community.controller('ProfileViewController', ['$scope','NameService','$window','Web3Service',
+function($scope,NameService,$window,Web3Service){
     console.log('Loading Profile View');
+    
+    $scope.account = Web3Service.getCurrentAccount();
     
     $scope.profile = {};
     

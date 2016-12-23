@@ -45,8 +45,6 @@ Community.directive('submitComment', ['ProfileDB','Community', function(ProfileD
                 function(txHash){
                     if(txHash){
                         console.log('Comment included! ' + txHash);
-                    } else {
-                        console.log('Not a valid comment.');
                     }
                 }, function(err){
                     console.error(err);

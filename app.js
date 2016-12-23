@@ -26,6 +26,14 @@ Community.config(function ($routeProvider) {
         templateUrl: 'views/favorite/favoriteView.html',
         controller: 'FavoriteViewController'
     }).
+    when('/c/:community/statistics', {
+        templateUrl: 'views/community-stats/communityStatsView.html',
+        controller: 'CommunityStatsViewController'
+    }).
+    when('/m/:multi/statistics', {
+        templateUrl: 'views/multi-stats/multiStatsView.html',
+        controller: 'MultiStatsViewController'
+    }).
     when('/c/:community/post/:postTxHash', {
         templateUrl: 'views/comment/commentView.html',
         controller: 'CommentViewController'

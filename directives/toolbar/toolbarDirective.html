@@ -25,15 +25,21 @@
                 </md-button>
             </md-menu-item>
             <md-menu-item ng-if="viewType == 'c'">
-                <md-button ng-disabled="true" ng-href="#/c/{{community}}/fund" style="text-transform: lowercase; color: rgba(255,255,255,0.87);">
+                <md-button ng-href="#/c/{{community}}/statistics" style="text-transform: lowercase; color: rgba(255,255,255,0.87);">
+                    <md-icon md-svg-src="images/icons/ic_assessment_white_18px.svg"></md-icon>
+                    statistics
+                </md-button>
+            </md-menu-item>
+            <md-menu-item ng-if="viewType == 'c'">
+                <md-button ng-href="#/c/{{community}}/fund" style="text-transform: lowercase; color: rgba(255,255,255,0.87);">
                     <md-icon md-svg-src="images/icons/ic_loyalty_white_24px.svg"></md-icon>
-                    Get Vote Tokens
+                    vote tokens
                 </md-button>
             </md-menu-item>
             <md-menu-item ng-if="viewType == 'm'" >
-                <md-button ng-disabled="true" ng-href="#/m/{{activeView}}/fund" style="text-transform: lowercase; color: rgba(255,255,255,0.87);">
-                    <md-icon md-svg-src="images/icons/ic_assessment_white_18px.svg"></md-icon>
-                    Statistics
+                <md-button ng-href="#/m/{{activeView}}/statistics" style="text-transform: lowercase; color: rgba(255,255,255,0.87);">
+                    <md-icon md-svg-src="images/icons/ic_pie_chart_white_24px.svg"></md-icon>
+                    statistics
                 </md-button>
             </md-menu-item>
         </md-menu-content>

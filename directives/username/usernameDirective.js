@@ -9,14 +9,22 @@ function(NameService){
 		replace: true,
 		templateUrl: 'directives/username/usernameDirective.html',
 		controller: function($scope){
-            $scope.username = "Anonymous";
+            var interval = setInterval(function(){
+                if($scope.account){
+                    NameService.getName($scope.account).then(
+                    function(username){
+                        $scope.username = username;
+                        $scope.partial = $scope.account.slice(2,6);
+                        console.log($scope.partial);
+                    }, function(err){
+                        console.log(err);
+                    });
+                    
+                    clearInterval(interval);
+                }   
+            }, 100);
             
-            NameService.getName($scope.account).then(
-            function(username){
-                $scope.username = username;
-            }, function(err){
-                console.log(err);
-            });
+            
         },
 		link : function($scope, $element, $attrs) {
             

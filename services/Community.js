@@ -160,7 +160,7 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
                     var async_shardAddress = SharePlatform.getShardAddress(post.community).then(
                     function(shardAddress){
                         var estimatedGas = 4700000;
-                        ShareService.share(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount(), gas:estimatedGas}).then(
+                        SharePlatform.share(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount(), gas:estimatedGas}).then(
                         function(txHash){
                             deferred.resolve(txHash);
                         }, function(err) {
@@ -187,7 +187,7 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
                     var async_shardAddress = SharePlatform.getShardAddress(comment.community).then(
                     function(shardAddress){
                         var estimatedGas = 4700000;
-                        ShareService.share(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount(), gas:estimatedGas}).then(
+                        SharePlatform.share(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount(), gas:estimatedGas}).then(
                         function(receipt){
                             console.log(receipt);
                             deferred.resolve(receipt.transactionHash);

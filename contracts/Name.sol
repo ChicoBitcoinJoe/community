@@ -1,14 +1,24 @@
 pragma solidity ^0.4.6;
 
-contract Name {
+contract CommunityNameRegistry {
     
-    mapping (address => string) name;
-    
-    function put(string _name){
-        name[msg.sender] = _name;
+    //What's in a name?
+    struct Name {
+        string name;
+        bool touched;
     }
     
-    function get(address _address) constant returns(string){
-        return name[_address];
+    mapping (address => Name) name;
+    
+    function set(string _name){
+        name[msg.sender].touched = true;
+        name[msg.sender].name = _name;
+    }
+    
+    function get(address account) constant returns(string){
+        if(name[account].touched)
+            return name[account].name;
+        else
+            return 'anonymous';
     }
 }
