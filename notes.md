@@ -2,17 +2,17 @@
 
 ## Unsorted ##
 
+- fund development view does nothing after submission
+- Need to estimate gas fee for transactions
+- all lists need to be sorted properly
 - Post Preview needs updating
-- Remove community button not working
-
+    
 ## Critical ##
 
-- General
-    - Need to estimated gas fee
-    - all lists need to be sorted properly
-
 - Vote Contract
-    - Community tokens
+    - Multi token total
+    - vt should be an icon and look better in general
+    - hide available tokens if 0
 
 - Settings sidenav
     - backend

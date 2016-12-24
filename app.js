@@ -85,9 +85,3 @@ Community.filter('capitalize', function() {
         };
     }
 });
-
-Community.filter('round', [function() {
-    return function(val) {
-        return val.toFixed(0);
-    };
-}]);

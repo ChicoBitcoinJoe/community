@@ -22,9 +22,8 @@ function($scope,ProfileDB,Community) {
         });
         
         communities = [$scope.activeView];
-    }
-    else
+    } else {
         communities = ProfileDB.getCommunitiesInMulti($scope.activeView);
-    
-    $scope.posts = Community.getPosts(communities);
+        $scope.posts = Community.getPosts(communities);
+    }
 }]);

@@ -16,22 +16,25 @@ function($mdSidenav, $location, ProfileDB) {
             var locationUrlArray = $location.url().split('/');
             $scope.viewType = locationUrlArray[1];
             $scope.activeView = locationUrlArray[2];
-            $scope.multis = ProfileDB.getSavedMultis();
-            $scope.communities = ProfileDB.getCommunitiesInMulti($scope.activeView);
-            $scope.all = ProfileDB.getCommunitiesInMulti('all');
-
+            
+            $scope.multis = ProfileDB.getSavedMultis().sort();
+            if($scope.viewType == 'm')
+                $scope.communities = ProfileDB.getCommunitiesInMulti($scope.activeView).sort();
+            else
+                $scope.communities = ProfileDB.getCommunitiesInMulti('all').sort();
+            
             $scope.$on('$routeChangeSuccess', function(newHeader) {
                 var locationUrlArray = $location.url().split('/');
                 $scope.viewType = locationUrlArray[1];
                 $scope.activeView = locationUrlArray[2];if($scope.viewType === 'c')
-                $scope.multis = ProfileDB.getSavedMultis();
-                $scope.communities = ProfileDB.getCommunitiesInMulti($scope.activeView);
+                    
+                $scope.multis = ProfileDB.getSavedMultis().sort();
+                if($scope.viewType == 'm')
+                    $scope.communities = ProfileDB.getCommunitiesInMulti($scope.activeView).sort();
+                else
+                    $scope.communities = ProfileDB.getCommunitiesInMulti('all').sort();
             });
             
-            $scope.clicked = function(){
-                console.log("Go to profile page.");  
-            };
-
             $scope.toggleSettings = false;
 
             $scope.addCommunity = function(communityName){

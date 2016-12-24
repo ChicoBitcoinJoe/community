@@ -78,14 +78,15 @@ function ($q,Web3Service,EventManager) {
             var deferred = $q.defer();
             var async_getAddress = service.getShardAddress(shardName).then(
             function(shardAddress){
-                var Shard = ShardContract.at(shardAddress);
-                EventManager.getShardEvents(shardName,Shard).then(
-                function(events){
-                    console.log(events)
-                    deferred.resolve(events);
-                }, function(err){
-                    deferred.resolve([]);
-                });
+                if(shardAddress){
+                    var Shard = ShardContract.at(shardAddress);
+                    EventManager.getShardEvents(shardName,Shard).then(
+                    function(events){
+                       deferred.resolve([shardName,events]);
+                    });
+                } else {
+                    deferred.reject(shardName + ' shard does not exist!');
+                }
             }, function(err){
                 deferred.resolve([]);
             });

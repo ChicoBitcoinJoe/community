@@ -29,9 +29,9 @@
             </div>
             <div class="sidenav-list-item" ng-class="{selected: (multi==activeView && viewType=='m')}" ng-repeat="multi in multis" layout="row">
                 <a style="height:36;" ng-href="#/m/{{multi}}" layout layout-align="left center" flex>{{multi | capitalize}}</a>
-                <div aria-label="Multi stats" style="color:rgba(255,255,255,0.5); margin:0px;" ng-hide="toggleSettings" style="margin:0px;">
+                <!--<div aria-label="Multi stats" style="color:rgba(255,255,255,0.5); margin:0px;" ng-hide="toggleSettings" style="margin:0px;">
                     2500 <small>vt</small>
-                </div>
+                </div>-->
                 
                 <md-button ng-show="toggleSettings && multi !== 'all' && multi !== 'ungrouped'" style="margin:0px;" ng-click="deleteMulti(multi)" aria-label="remove multi">
                     <md-icon md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg"></md-icon>
@@ -39,10 +39,10 @@
             </div>
         </md-list>
         <br>
-        <div ng-show="viewType == 'm' && activeView !== 'all'" class="sidenav-header" layout="row" layout-align="left center">
+        <div ng-show="viewType == 'm'" class="sidenav-header" layout="row" layout-align="left center">
             <h3 class="sidenav-header-text" style="padding-left:20px; background-color:#1c6965;">{{activeView | capitalize}}</h3>
         </div>
-        <div ng-show="viewType !== 'm' || activeView == 'all'" class="sidenav-header" layout="row" layout-align="left center">
+        <div ng-show="viewType !== 'm'" class="sidenav-header" layout="row" layout-align="left center">
             <h3 class="sidenav-header-text" style="padding: 10px 20px; background-color:#1c6965;">Communities</h3>
         </div>
         <md-list>
@@ -56,21 +56,9 @@
                     <md-button style="margin:0px;" ng-click="addCommunity(newCommunity)" aria-label="add community"><md-icon md-svg-src="images/icons/ic_add_box_white_24px.svg"></md-button>
                 </md-input-container>
             </div>
-            <div ng-show="viewType == 'm'" class="sidenav-list-item" ng-repeat="community in communities" layout="row">
-                <div style="height:36px;" ng-click="goTo('c/' + community)" layout="row" layout-align="left center" flex>{{community | capitalize}}
-                    <span flex></span>
-                    <div style="margin:0px; color:rgba(255,255,255,0.5)"><vote-tokens account="account" community="community"></vote-tokens> <small>vt</small></div>
-                </div>
-                
-                <md-button ng-show="toggleSettings && activeView !== 'all'" style="margin:0px;" ng-click="removeCommunity(community)" aria-label="remove community">
-                    <md-icon md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg">
-                </md-button>
-            </div>
-            <div ng-show="viewType !== 'm'" ng-class="{selected: (community==activeView && viewType=='c')}" class="sidenav-list-item" ng-repeat="community in all" layout="row">
-                <div style="height:36px;" ng-click="goTo('c/' + community)" layout="row" layout-align="left center" flex>{{community | capitalize}}
-                    <span flex></span>
-                    <div style="color:rgba(255,255,255,0.5)"><vote-tokens account="account" community="community"></vote-tokens> <small>vt</small></div>
-                </div>
+            <div class="sidenav-list-item" ng-repeat="community in communities"  ng-class="{selected: (community==activeView && viewType=='c')}"  layout="row">
+                <a style="height:36;" ng-href="#/c/{{community}}" layout layout-align="left center" flex>{{community | capitalize}}</a>
+                <div style="margin:0px; color:rgba(255,255,255,0.5)"><vote-tokens account="account" community="community"></vote-tokens></div>
                 
                 <md-button ng-show="toggleSettings && activeView !== 'all'" style="margin:0px;" ng-click="removeCommunity(community)" aria-label="remove community">
                     <md-icon md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg">

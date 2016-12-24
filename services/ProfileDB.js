@@ -227,8 +227,9 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
                 multiName = multiName.toLocaleLowerCase();
                 communityName = communityName.toLocaleLowerCase();
                 
-                if(multiName === 'all'){
-                    //Ignore    
+                if(multiName == 'all'){
+                    //Todo:
+                    //need to remove from all multis
                 } else if (multiName === 'ungrouped') {
                     //delete from all and ungrouped
                     var index = ProfileDB.SavedMultis['ungrouped'].indexOf(communityName);

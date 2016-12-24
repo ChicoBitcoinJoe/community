@@ -14,8 +14,7 @@ function(IpfsService,$location,$window,ProfileDB,Community){
             
             var async_eventData = Community.getEventData($scope.txHash).then(
             function(event){
-                console.log(event);
-                
+                //console.log(event);
                 $scope.event = event;
                 var ipfsHash = event.args.ipfsHash;
                 $scope.communityName = event.args.shardName;

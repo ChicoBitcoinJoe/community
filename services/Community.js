@@ -111,7 +111,6 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
         },
         getPosts: function(communities){
             activeView = [];
-            
             for(var coms in communities){
                 var community = communities[coms];
                 touchCommunity(community);
@@ -120,22 +119,23 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
                 
                 var fromBlock = CommunityDB.communities[community].last_block;
                 SharePlatform.getShardEvents(community).then(
-                function(events){
-                    console.log("Found " + events.length + " events", events);
+                function(args){
+                    var community = args[0];
+                    var events = args[1];
+                    
                     for(var index in events){
+                        var communityName = events[index].args.shardName;
                         var txHash = events[index].transactionHash;
                         var ipfsHash = events[index].args.ipfsHash;
-                        var communityName = events[index].args.shardName;
                         
                         var local = localStorage.getItem(txHash);
                         if(!local)
                             localStorage.setItem(txHash,JSON.stringify(events[index]));
                         
                         addTxToCommunityDB(communityName,events[index],ipfsHash);
-                        
-                        //Update latest block
                     }
                     
+                    console.log("Found " + events.length + " events in " + community);
                     localStorage.setItem('CommunityDB',JSON.stringify(CommunityDB));
                 }, function(err){
                     console.log(err);

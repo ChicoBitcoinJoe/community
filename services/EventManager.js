@@ -68,11 +68,9 @@ function ($q,Web3Service) {
             var oldEvents = [];
             
             var blocks = EventManager.events[shardName].blocks;
-            console.log(blocks);
             var blockNumber = Object.keys(blocks);
             for(index in blockNumber){
                 var blockTransactions = blocks[blockNumber[index]];
-                console.log(blockTransactions);
                 for(tx in blockTransactions){
                     oldEvents.push(blockTransactions[tx]);
                 }
@@ -105,13 +103,13 @@ function ($q,Web3Service) {
         },
         getShardEvents: function(shardName,Shard){
             var deferred = $q.defer();
+            
             EventManager.touchShard(shardName);
-            console.log(EventManager.events);
             var fromBlock = EventManager.events[shardName].lastBlock;
             Web3Service.getCurrentBlock().then(
             function(currentBlock){
-                var _30days = EventManager.defaultLookBack;
-                var defaultSpan = currentBlock - _30days;
+                
+                var defaultSpan = currentBlock - EventManager.defaultLookBack;
                 //console.log(fromBlock,currentBlock,defaultSpan);
                 if(fromBlock < defaultSpan )
                     fromBlock = defaultSpan;
@@ -127,7 +125,6 @@ function ($q,Web3Service) {
 
                             var oldEvents = EventManager.getEvents(shardName);
 
-                            console.log(oldEvents,events);
                             //Add in old events to new events
                             for(index in oldEvents){
                                 var local = localStorage.getItem(oldEvents[index]);
