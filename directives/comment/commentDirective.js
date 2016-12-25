@@ -1,5 +1,5 @@
-Community.directive('commentCard', ['$location','RecursionHelper','Community','IpfsService','ProfileDB',
-function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
+Community.directive('commentCard', ['$location','RecursionHelper','Community','IpfsService','ProfileDB','VoteHub','Web3Service',
+function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3Service) {
 	return {
 		restrict: 'E',
 		scope: {
@@ -19,7 +19,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
 		controller: function($scope){
             $scope.activeView = $location.url().split('/')[2];
             $scope.rootTxHash = $location.url().split('/')[4];
-            $scope.hasVoted = true;
+            $scope.hasPrivateVoted = true;
             $scope.isComment = false;
             $scope.comments = Community.getChildren($scope.activeView, $scope.txHash);
             
@@ -35,7 +35,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
                     console.log($scope.communityName,event.transactionHash);
                     $scope.comments = Community.getChildren($scope.communityName,event.transactionHash);
                     $scope.post = ipfsData;
-                    $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,event.transactionHash);
+                    $scope.hasPrivateVoted = ProfileDB.hasVoted($scope.post.poster,event.transactionHash);
                     console.log($scope.post.poster);
                     if(Community.commentIsValid(ipfsData))
                         $scope.isComment = true;
@@ -80,14 +80,36 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
                     return $scope.show;
                 };
 
-                $scope.upvote = function(){
+                $scope.privateUpvote = function(){
                     ProfileDB.upvote($scope.activeView, $scope.post.poster, $scope.event.transactionHash);
-                    $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.event.transactionHash);
+                    $scope.hasPrivateVoted = ProfileDB.hasVoted($scope.post.poster,$scope.event.transactionHash);
                 };
 
-                $scope.downvote = function(){
+                $scope.privateDownvote = function(){
                     ProfileDB.downvote($scope.activeView, $scope.post.poster, $scope.event.transactionHash);
-                    $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.event.transactionHash);
+                    $scope.hasPrivateVoted = ProfileDB.hasVoted($scope.post.poster,$scope.event.transactionHash);
+                };
+                
+                $scope.publicUpvote = function(){
+                    VoteHub.getUserData(Web3Service.getCurrentAccount(),$scope.activeView).then(
+                    function(data){
+                        var tokenAmount = Math.round(data[0]*1/10);
+                        VoteHub.vote($scope.activeView,$scope.txHash,tokenAmount,true).then(
+                        function(receipt){
+                            $scope.hasPublicVoted = true;
+                        });
+                    });
+                };
+
+                $scope.publicDownvote = function(){
+                    VoteHub.getUserData(Web3Service.getCurrentAccount(),$scope.activeView).then(
+                    function(data){
+                        var tokenAmount = Math.round(data[0]*1/10);
+                        VoteHub.vote($scope.activeView,$scope.txHash,tokenAmount,false).then(
+                        function(receipt){
+                            $scope.hasPublicVoted = true;
+                        });
+                    });
                 };
                 
                 $scope.isSaved = ProfileDB.isFavorited($scope.communityName,$scope.txHash);
@@ -101,6 +123,8 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
                     ProfileDB.removeFromFavorites($scope.communityName, $scope.txHash);
                     $scope.isSaved = ProfileDB.isFavorited($scope.communityName,$scope.txHash);
                 };
+                
+                $scope.voteIsPrivate = false;
             }, function(err){
                 console.error(err);    
             });

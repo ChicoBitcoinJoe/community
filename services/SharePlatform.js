@@ -82,13 +82,15 @@ function ($q,Web3Service,EventManager) {
                     var Shard = ShardContract.at(shardAddress);
                     EventManager.getShardEvents(shardName,Shard).then(
                     function(events){
-                       deferred.resolve([shardName,events]);
+                        deferred.resolve([shardName,events]);
+                    }, function(err){
+                        deferred.reject(err);
                     });
                 } else {
                     deferred.reject(shardName + ' shard does not exist!');
                 }
             }, function(err){
-                deferred.resolve([]);
+                deferred.reject(err);
             });
             
             return deferred.promise;

@@ -30,7 +30,7 @@ function($q,Web3Service) {
         vote: function(community, txHash, tokenAmount, support){
             var deferred = $q.defer();
             
-            VoteHubInstance.vote(community, txHash, amount, support, {from:Web3Service.getCurrentAccount(),gas: 4700000}, 
+            VoteHubInstance.vote(community, txHash, tokenAmount, support, {from:Web3Service.getCurrentAccount(),gas: 4700000}, 
             function(error, txHash){
                 if(!error){
                     Web3Service.getTransactionReceipt(txHash)

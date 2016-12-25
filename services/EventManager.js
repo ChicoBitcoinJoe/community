@@ -85,22 +85,6 @@ function ($q,Web3Service) {
         EventManager.events = JSON.parse(localEvents);
     
     var service = {
-        getShardEventsCustom: function(shardName,Shard,args){
-            var deferred = $q.defer();
-            
-            console.log("Fetching events for", shardName);
-            var async_getEvents = Shard.allEvents(args).get(
-            function(err, events){
-                if(!err){
-                    EventManager.storeEvents(shardName,events);
-                    deferred.resolve(events);
-                } else {
-                    deferred.reject(err);
-                }
-            });
-           
-            return deferred.promise;
-        },
         getShardEvents: function(shardName,Shard){
             var deferred = $q.defer();
             
@@ -116,7 +100,7 @@ function ($q,Web3Service) {
                 
                 var args = {fromBlock:fromBlock};
                 if(fromBlock < currentBlock){
-                    console.log("Fetching events for " + shardName + " from " + fromBlock + " to " + currentBlock);
+                    //console.log("Fetching events for " + shardName + " from " + fromBlock + " to " + currentBlock);
                     var async_getEvents = Shard.allEvents(args).get(
                     function(err, events){
                         if(!err){

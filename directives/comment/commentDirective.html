@@ -25,14 +25,32 @@
                     <md-button aria-label="Share">
                         <md-icon md-svg-src="images/icons/ic_share_white_24px.svg"></md-icon>
                     </md-button>
-                    <md-button ng-hide="hasVoted" aria-label="upvote user" ng-click="upvote()">
+                    <md-button ng-hide="voteIsPrivate || hasPrivateVoted" aria-label="upvote user" ng-click="voteIsPrivate = true" style="text-transform: lowercase;">
+                        <md-icon md-svg-icon="images/icons/ic_lock_white_24px.svg"></md-icon> Private Vote
+                    </md-button>
+                    <md-button ng-show="voteIsPrivate" ng-hide="hasPrivateVoted || !voteIsPrivate" aria-label="upvote user" ng-click="privateUpvote()">
                         <md-icon md-svg-icon="images/icons/ic_arrow_upward_white_24px.svg"></md-icon>
                     </md-button>
-                    <md-button ng-hide="hasVoted" aria-label="downvote user" ng-click="downvote()">
+                    <md-button ng-show="voteIsPrivate" ng-hide="hasPrivateVoted || !voteIsPrivate" aria-label="downvote user" ng-click="privateDownvote()">
                         <md-icon md-svg-icon="images/icons/ic_arrow_downward_white_24px.svg"></md-icon>
                     </md-button>
+                    <md-button ng-show="voteIsPrivate" ng-hide="hasPrivateVoted || !voteIsPrivate" aria-label="downvote user" ng-click="voteIsPrivate = false">
+                        <md-icon md-svg-icon="images/icons/ic_close_white_24px.svg"></md-icon>
+                    </md-button>
+                    <md-button ng-hide="voteIsPublic" aria-label="upvote user" ng-click="voteIsPublic = true" style="text-transform: lowercase;">
+                        <md-icon md-svg-icon="images/icons/ic_public_white_24px.svg"></md-icon> Public Vote
+                    </md-button>
+                    <md-button ng-show="voteIsPublic" ng-hide="hasPublicVoted || !voteIsPublic" aria-label="upvote user" ng-click="publicUpvote()">
+                        <md-icon md-svg-icon="images/icons/ic_arrow_upward_white_24px.svg"></md-icon>
+                    </md-button>
+                    <md-button ng-show="voteIsPublic" ng-hide="hasPublicVoted || !voteIsPublic" aria-label="downvote user" ng-click="publicDownvote()">
+                        <md-icon md-svg-icon="images/icons/ic_arrow_downward_white_24px.svg"></md-icon>
+                    </md-button>
+                    <md-button ng-show="voteIsPublic" ng-hide="hasPublicVoted || !voteIsPublic" aria-label="downvote user" ng-click="voteIsPublic = false">
+                        <md-icon md-svg-icon="images/icons/ic_close_white_24px.svg"></md-icon>
+                    </md-button>
                     <span flex></span>
-                    <md-button aria-label="reply to comment" ng-click="showSubmitCommentPanel()">{{replyText}}</md-button>
+                    <md-button aria-label="reply to comment" ng-click="showSubmitCommentPanel()" style="text-transform: lowercase;">{{replyText}}</md-button>
                 </md-card-icon-actions>
             </md-card-actions>
         </div>

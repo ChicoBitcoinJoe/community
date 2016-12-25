@@ -41,8 +41,10 @@
     
 ## Backburner ##
 
-- Need to prune old data from localStorage // Implemented but not tested!
-- Metamask loading late occasionally *Metamask hard at work here*
+- Prune old data from localStorage 
+    - Implemented but not tested!
+- Metamask loading late occasionally
+    - Metamask hard at work on this
 
 # MiniMe Token Questions
 
