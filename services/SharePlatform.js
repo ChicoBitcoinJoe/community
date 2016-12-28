@@ -2,21 +2,21 @@ Community.service('SharePlatform', ['$q','Web3Service','EventManager',
 function ($q,Web3Service,EventManager) {
     console.log('Loading Share Service');
     
-    var ShareAddress = '0xbd2971fa28d7fe466f73c16894ef99b88ce4bb86';//TestNet
+    var ShareAddress = '0x598C64327eB53FBe1AB2c20aC8f2d329E062166A';//TestNet
     var ShareContract = web3.eth.contract(
-        [{"constant":false,"inputs":[{"name":"shardName","type":"string"}],"name":"createShard","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"getShardName","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"shardName","type":"string"}],"name":"getShardAddress","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getTotalShards","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"shardName","type":"string"}],"name":"CreateShard_event","type":"event"}]);
+        [{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"getChannelName","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getTotalchannels","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"channelName","type":"string"}],"name":"createChannel","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"channelName","type":"string"}],"name":"getChannelAddress","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"channelName","type":"string"}],"name":"NewChannel_event","type":"event"}]);
     var ShareInstance = ShareContract.at(ShareAddress);
     
-    var ShardAbi = [{"constant":true,"inputs":[],"name":"getShardInfo","outputs":[{"name":"","type":"string"},{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"ipfsHash","type":"string"}],"name":"share","outputs":[],"payable":false,"type":"function"},{"inputs":[{"name":"shard_name","type":"string"}],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"shardName","type":"string"},{"indexed":true,"name":"sender","type":"address"},{"indexed":false,"name":"ipfsHash","type":"string"}],"name":"Share_event","type":"event"}];
-    var ShardContract = web3.eth.contract(ShardAbi);
+    var ChannelAbi = [{"constant":false,"inputs":[{"name":"hash","type":"string"}],"name":"broadcast","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getChannelInfo","outputs":[{"name":"","type":"string"},{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"inputs":[{"name":"_channel_name","type":"string"}],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"hash","type":"string"}],"name":"Broadcast_event","type":"event"}];
+    var ChannelContract = web3.eth.contract(ChannelAbi);
     
     var service = {
         /////////////////////////
         // Share.sol Functions //
         /////////////////////////
-        createShard: function(shardName){
+        createChannel: function(channelName){
             var deferred = $q.defer();
-            ShareInstance.createShard(shardName, {from:Web3Service.getCurrentAccount(),gas: 4700000}, 
+            ShareInstance.createChannel(channelName, {from:Web3Service.getCurrentAccount(),gas: 4700000}, 
             function(error, txHash){
                 if(!error){
                     Web3Service.getTransactionReceipt(txHash)
@@ -32,13 +32,13 @@ function ($q,Web3Service,EventManager) {
             
             return deferred.promise;
         },
-        getTotalShards: function(){
+        getTotalChannels: function(){
             var deferred = $q.defer();
-            ShareInstance.getTotalShards(
-            function(err,totalShards){
+            ShareInstance.getTotalChannels(
+            function(err,totalChannels){
                 if(!err){
-                    console.log(totalShards);
-                    deferred.resolve(totalShards);
+                    console.log(totalChannels);
+                    deferred.resolve(totalChannels);
                 } else {
                     console.error(err);
                     deferred.reject(err);
@@ -47,19 +47,19 @@ function ($q,Web3Service,EventManager) {
             
             return deferred.promise;
         },
-        getShardAddress: function(shardName){
+        getChannelAddress: function(channelName){
             var deferred = $q.defer();
 
-            var localAddress = localStorage.getItem(shardName+'_shard_address');
+            var localAddress = localStorage.getItem(channelName+'_channel_address');
             if(!localAddress){
-                ShareInstance.getShardAddress(shardName, function(error,shardAddress){
+                ShareInstance.getChannelAddress(channelName, function(error,channelAddress){
                     if(!error){
-                        if(shardAddress === '0x0000000000000000000000000000000000000000' || shardAddress === '0x'){
+                        if(channelAddress === '0x0000000000000000000000000000000000000000' || channelAddress === '0x'){
                             deferred.resolve(false);
                         } else {
-                            //console.log("saved shard " + shardName + " at address: " + shardAddress);
-                            localStorage.setItem(shardName+'_shard_address',shardAddress)
-                            deferred.resolve(shardAddress);    
+                            //console.log("saved channel " + channelName + " at address: " + channelAddress);
+                            localStorage.setItem(channelName+'_channel_address',channelAddress)
+                            deferred.resolve(channelAddress);    
                         }
                     } else {
                         deferred.reject(error);
@@ -71,23 +71,20 @@ function ($q,Web3Service,EventManager) {
 
             return deferred.promise;
         },
-        getShardName: function(shardAddress){
-            //To Do When Needed
-        },
-        getShardEvents: function(shardName){
+        getChannelEvents: function(channelName){
             var deferred = $q.defer();
-            var async_getAddress = service.getShardAddress(shardName).then(
-            function(shardAddress){
-                if(shardAddress){
-                    var Shard = ShardContract.at(shardAddress);
-                    EventManager.getShardEvents(shardName,Shard).then(
+            var async_getAddress = service.getChannelAddress(channelName).then(
+            function(channelAddress){
+                if(channelAddress){
+                    var Channel = ChannelContract.at(channelAddress);
+                    EventManager.getChannelEvents(channelName,Channel).then(
                     function(events){
-                        deferred.resolve([shardName,events]);
+                        deferred.resolve([channelName,events]);
                     }, function(err){
                         deferred.reject(err);
                     });
                 } else {
-                    deferred.reject(shardName + ' shard does not exist!');
+                    deferred.reject(channelName + ' channel does not exist!');
                 }
             }, function(err){
                 deferred.reject(err);
@@ -96,18 +93,18 @@ function ($q,Web3Service,EventManager) {
             return deferred.promise;
         },
         /////////////////////////
-        // Shard.sol Functions //
+        // Channel.sol Functions //
         /////////////////////////
-        share: function(shardAddress, ipfsHash, args){ 
-            //Shard.share(ipfsHash, {from: Web3Service.getCurrentAccount(), gas: 4700000}
+        broadcast: function(channelAddress, ipfsHash, args){ 
+            //Channel.broadcast(ipfsHash, {from: Web3Service.getCurrentAccount(), gas: 4700000}
             var deferred = $q.defer();
-            var Shard = ShardContract.at(shardAddress);
-            var submitPost = Shard.share(ipfsHash, args, 
+            var Channel = ChannelContract.at(channelAddress);
+            var submitPost = Channel.broadcast(ipfsHash, args, 
             function(err, txHash){
                 if(!err){
-                    var Shard = ShardContract.at(shardAddress);
-                    console.log("Watching events for", shardAddress);
-                    var watcher = Shard.allEvents().watch(
+                    var Channel = ChannelContract.at(channelAddress);
+                    console.log("Watching events for", channelAddress);
+                    var watcher = Channel.allEvents().watch(
                     function(err, event){
                         console.log(event);
                         if(!err){
@@ -127,11 +124,11 @@ function ($q,Web3Service,EventManager) {
             
             return deferred.promise;
         },
-        getShardInfo: function(shardAddress){
+        getChannelInfo: function(channelAddress){
             var deferred = $q.defer();
             
-            var Shard = ShardContract.at(shardAddress);
-            var async_getShardInfo = Shard.getShardInfo(
+            var Channel = ChannelContract.at(channelAddress);
+            var async_getChannelInfo = Channel.getChannelInfo(
             function(err, info){
                 if(!err){
                     //console.log(info);

@@ -2,12 +2,12 @@
 
 ## Unsorted ##
 
-- fund development view does nothing after submission
-- Need to estimate gas fee for transactions
-- all lists need to be sorted properly
-- Post Preview needs updating
+- none
     
 ## Critical ##
+
+- Need to estimate gas fee for transactions
+- all lists need to be sorted properly
 
 - Vote Contract
     - Multi token total
@@ -22,11 +22,14 @@
 
 - Comments
     - Need markdown
+    - first comment not showing up when coming from postview
     - Comment will not show if the comment chain does not reach the root
     - Comment reply has no preview
 
-
 ## NonCritical ##
+
+- Post Preview needs updating
+- fund development view does nothing after submission
     
 - Post View
     - submit post does not preview the comment section

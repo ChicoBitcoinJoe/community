@@ -19,12 +19,11 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             $scope.isComment = false;
             
             var async_eventData = Community.getEventData($scope.txHash).then(
-            function(event){
-                $scope.event = event;
+            function(args){
+                $scope.communityName = args.communityName;
+                $scope.event = args.event;
                 
-                var ipfsHash = event.args.ipfsHash;
-                $scope.communityName = event.args.shardName;
-                
+                var ipfsHash = $scope.event.args.hash;
                 var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
                 function(ipfsData){
                     $scope.comments = Community.getChildren($scope.communityName,event.transactionHash);

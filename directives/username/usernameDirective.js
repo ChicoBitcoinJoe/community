@@ -15,15 +15,13 @@ function(NameService){
                     function(username){
                         $scope.username = username;
                         $scope.partial = $scope.account.slice(2,6);
+                        clearInterval(interval);
                     }, function(err){
                         console.log(err);
                     });
                     
-                    clearInterval(interval);
                 }   
             }, 100);
-            
-            
         },
 		link : function($scope, $element, $attrs) {
             

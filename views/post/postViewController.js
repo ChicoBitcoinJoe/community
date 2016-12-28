@@ -7,22 +7,19 @@ function($scope,ProfileDB,Community) {
     
     var communities = [];
     if($scope.viewType == 'c'){
-        var community = [$scope.activeView];
         Community.communityExists($scope.activeView).then(
         function(exists){
             if(exists){
                 $scope.created = true;
-                $scope.posts = Community.getPosts(community);
             } else { 
                 $scope.loaded = true;
             }
-        }, function(err){
-            console.error(err);
         });
         
         communities = [$scope.activeView];
     } else {
         communities = ProfileDB.getCommunitiesInMulti($scope.activeView);
-        $scope.posts = Community.getPosts(communities);
     }
+    
+    $scope.posts = Community.getPosts(communities);
 }]);
