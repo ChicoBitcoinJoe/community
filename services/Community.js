@@ -239,7 +239,7 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
                 function(info){
                     var args = {};
                     args.event = event;
-                    args.community = info[0];
+                    args.communityName = info[0];
                     deferred.resolve(args);
                 });
             } else {

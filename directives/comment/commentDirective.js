@@ -31,10 +31,10 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                 var ipfsHash = $scope.event.args.hash;
                 var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
                 function(ipfsData){
-                    console.log($scope.communityName,event.transactionHash);
-                    $scope.comments = Community.getChildren($scope.communityName,event.transactionHash);
+                    console.log($scope.communityName,$scope.event.transactionHash);
+                    $scope.comments = Community.getChildren($scope.communityName,$scope.event.transactionHash);
                     $scope.post = ipfsData;
-                    $scope.hasPrivateVoted = ProfileDB.hasVoted($scope.post.poster,event.transactionHash);
+                    $scope.hasPrivateVoted = ProfileDB.hasVoted($scope.post.poster,$scope.event.transactionHash);
                     console.log($scope.post.poster);
                     if(Community.commentIsValid(ipfsData))
                         $scope.isComment = true;
@@ -114,6 +114,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                 $scope.isSaved = ProfileDB.isFavorited($scope.communityName,$scope.txHash);
                 
                 $scope.save = function(){
+                    console.log($scope.communityName, $scope.txHash);
                     ProfileDB.saveToFavorites($scope.communityName, $scope.txHash);
                     $scope.isSaved = ProfileDB.isFavorited($scope.communityName,$scope.txHash);
                 };

@@ -19,8 +19,8 @@
 <div>
     <md-card>
         <md-card-title>
-            <md-card-title-text>
-                <span class="md-headline"><small>Current {{activeView | capitalize}} Tokens: 0</small></span>
+            <md-card-title-text layout="row">
+                <span flex style="margin: 16px 8px;">Current {{activeView | capitalize}} Tokens: </span><vote-tokens style="margin: 16px 8px;" account="account" community="community"></vote-tokens>
             </md-card-title-text>
         </md-card-title>
         <md-card-content layout="row">

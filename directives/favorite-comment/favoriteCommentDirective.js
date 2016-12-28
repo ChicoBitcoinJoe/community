@@ -23,12 +23,14 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
                 $scope.communityName = args.communityName;
                 $scope.event = args.event;
                 
+                $scope.isSaved = ProfileDB.isFavorited($scope.communityName,$scope.txHash);
+                
                 var ipfsHash = $scope.event.args.hash;
                 var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
                 function(ipfsData){
-                    $scope.comments = Community.getChildren($scope.communityName,event.transactionHash);
+                    $scope.comments = Community.getChildren($scope.communityName,$scope.event.transactionHash);
                     $scope.post = ipfsData;
-                    $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,event.transactionHash);
+                    $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.event.transactionHash);
                     console.log($scope.post.poster);
                     if(Community.commentIsValid(ipfsData))
                         $scope.isComment = true;
@@ -68,7 +70,6 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
                     $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.event.transactionHash);
                 };
                 
-                $scope.isSaved = ProfileDB.isFavorited($scope.communityName,$scope.txHash);
                 
                 $scope.save = function(){
                     console.log("Saving");
