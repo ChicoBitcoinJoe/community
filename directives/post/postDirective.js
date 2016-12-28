@@ -1,5 +1,5 @@
-Community.directive('postCard', ['IpfsService','$location','$window','ProfileDB','Community',
-function(IpfsService,$location,$window,ProfileDB,Community){
+Community.directive('postCard', ['IpfsService','$location','$window','ProfileDB','Community','VoteHub',
+function(IpfsService,$location,$window,ProfileDB,Community,VoteHub){
 	return {
 		restrict: 'E',
 		scope: {
@@ -26,7 +26,19 @@ function(IpfsService,$location,$window,ProfileDB,Community){
                     //console.log(post);
                     $scope.post = post;
                     $scope.privateScore = ProfileDB.getPostScore($scope.communityName,$scope.txHash);
-                    $scope.publicScore = 50;
+                    VoteHub.getKeyVotes($scope.communityName,$scope.txHash).then(
+                    function(voteData){
+                        var upvotes = web3.fromWei(voteData[0], 'szabo').toString()/10;
+                        var downvotes = web3.fromWei(voteData[1], 'szabo').toString()/10;
+                        console.log(upvotes,downvotes);
+                        if(upvotes+downvotes !== 0)
+                            $scope.publicScore = Math.round(100*upvotes/(upvotes+downvotes));
+                        else
+                            $scope.publicScore = '*';
+                    }, function(err){
+                        console.error(err);
+                    });
+                    
                     
                     if($scope.post.media == 'image'){
                         var img = new Image();

@@ -103,7 +103,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                 $scope.publicDownvote = function(){
                     VoteHub.getUserData(Web3Service.getCurrentAccount(),$scope.activeView).then(
                     function(data){
-                        var tokenAmount = Math.round(data[0]*1/10);
+                        var tokenAmount = Math.round(data[0]/10);
                         VoteHub.vote($scope.activeView,$scope.txHash,tokenAmount,false).then(
                         function(receipt){
                             $scope.hasPublicVoted = true;
