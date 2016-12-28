@@ -13,19 +13,17 @@ function(IpfsService,$location,$window,ProfileDB,Community){
             $scope.activeView = $location.url().split('/')[2];
             
             var async_eventData = Community.getEventData($scope.txHash).then(
-            function(event){
-                //console.log(event);
-                $scope.event = event;
-                var ipfsHash = event.args.ipfsHash;
-                $scope.communityName = event.args.shardName;
+            function(args){
+                console.log(args);
+                $scope.communityName = args.communityName;
+                $scope.event = args.event;
                 
-                $scope.isSaved = ProfileDB.isFavorited($scope.communityName,$scope.txHash);
-                
+                var ipfsHash = $scope.event.args.hash;
                 var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
                 function(post){
                     //console.log(post);
                     $scope.post = post;
-                    $scope.privateScore = ProfileDB.getPostScore(event.args.shardName,$scope.txHash);
+                    $scope.privateScore = ProfileDB.getPostScore($scope.communityName,$scope.txHash);
                     $scope.publicScore = 50;
                     
                     if($scope.post.media == 'image'){
@@ -103,8 +101,8 @@ function(IpfsService,$location,$window,ProfileDB,Community){
                         if(locationUrlArray[3] == 'post')
                             $scope.commentView = true;
                     
-                    if(Community.postIsValid(post))
-                        $scope.isPost = true;
+                    console.log($scope.post);
+                    $scope.isPost = Community.postIsValid($scope.post);
                     
                 },function(err){
                     console.error(err);
@@ -132,6 +130,8 @@ function(IpfsService,$location,$window,ProfileDB,Community){
                     $location.url('c/' + $scope.post.community + '/post/' + $scope.txHash);
                 }
             };
+            
+            $scope.isSaved = ProfileDB.isFavorited($scope.communityName,$scope.txHash);
             
             $scope.save = function(){
                 console.log("Saving");

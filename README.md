@@ -40,7 +40,7 @@ Features on release will include:
     Daemon is ready
     ```
 
-4. Browse to http://localhost:8080/ipfs/QmbnnQhZ7cLc5CUK9NQDLTH8E4wBKtitbWNQvLoJP1QJut/
+4. Browse to http://localhost:8080/ipfs/QmTU2ei5Lr3ZguCtep7m6xnUxt6SJEesips95jJdFtoUbp/
 
 
 ### Developing Your Own Community Experience

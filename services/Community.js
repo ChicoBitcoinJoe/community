@@ -13,7 +13,7 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
         CommunityDB = JSON.parse(localCommunityDB);
     }
     
-    var activeView = [];
+    var active = {view:[]};
     
     var touchCommunity = function(community){
         if(!CommunityDB.communities[community]){
@@ -21,8 +21,6 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
             CommunityDB.communities[community].posts = [];
             CommunityDB.communities[community].comments = {};
             CommunityDB.communities[community].posters = {};
-            CommunityDB.communities[community].last_block = 0;
-            //console.log(community + " touched!");
         }
     };
     
@@ -45,8 +43,8 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
     };
     
     var addTxHashToActiveView = function(txHash){
-        if(activeView.indexOf(txHash) == -1)
-            activeView.push(txHash);
+        if(active.view.indexOf(txHash) == -1)
+            active.view.push(txHash);
     };
     
     var addPostToCommunityDB = function(community,txHash){
@@ -61,9 +59,6 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
         
         IpfsService.getIpfsData(ipfsHash).then(
         function(ipfsData){
-            //console.log(ipfsData);
-            //addExistingTxsToActive();
-            
             if(service.postIsValid(ipfsData)){
                 //console.log("post");
                 touchCommentList(community,txHash);
@@ -79,7 +74,7 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
                 console.log("Invalid event");
             }
             
-            //console.log(activeView);
+            //console.log(active.view);
         }, function(err){
             console.error(err);
         });
@@ -110,31 +105,30 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
                 return false;
         },
         getPosts: function(communities){
-            activeView = [];
+            active.view = [];
             //console.log(communities);
             for(var index in communities){
                 var community = communities[index];
                 touchCommunity(community);
-                //console.log(community);
-                var fromBlock = CommunityDB.communities[community].last_block;
-                SharePlatform.getShardEvents(community).then(
+                
+                SharePlatform.getChannelEvents(community).then(
                 function(args){
                     var community = args[0];
                     var events = args[1];
                     //console.log(community,events);
                     for(var index in events){
-                        var communityName = events[index].args.shardName;
                         var txHash = events[index].transactionHash;
-                        var ipfsHash = events[index].args.ipfsHash;
+                        var ipfsHash = events[index].args.hash;
                         
                         var local = localStorage.getItem(txHash);
                         if(!local)
                             localStorage.setItem(txHash,JSON.stringify(events[index]));
                         
-                        addTxToCommunityDB(communityName,events[index],ipfsHash);
+                        console.log(community,events[index],ipfsHash);
+                        addTxToCommunityDB(community,events[index],ipfsHash);
                     }
                     
-                    console.log("Found " + Object.keys(events).length + " events in " + community);
+                    console.log("Found " + Object.keys(events).length + " events in " + community, active.view);
                     localStorage.setItem('CommunityDB',JSON.stringify(CommunityDB));
                 }, function(err){
                     //This community does not exist
@@ -142,7 +136,7 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
                 });
             }
             
-            return activeView;
+            return active.view;
         },
         getChildren: function(community,txHash){
             touchCommunity(community);
@@ -157,10 +151,10 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
                 var async_getIpfsHash = IpfsService.getIpfsHash(post).then(
                 function(ipfsHash){
                     console.log(ipfsHash);
-                    var async_shardAddress = SharePlatform.getShardAddress(post.community).then(
+                    var async_shardAddress = SharePlatform.getChannelAddress(post.community).then(
                     function(shardAddress){
                         var estimatedGas = 4700000;
-                        SharePlatform.share(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount(), gas:estimatedGas}).then(
+                        SharePlatform.broadcast(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount(), gas:estimatedGas}).then(
                         function(txHash){
                             deferred.resolve(txHash);
                         }, function(err) {
@@ -184,10 +178,10 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
                 var async_getIpfsHash = IpfsService.getIpfsHash(comment).then(
                 function(ipfsHash){
                     console.log(ipfsHash);
-                    var async_shardAddress = SharePlatform.getShardAddress(comment.community).then(
+                    var async_shardAddress = SharePlatform.getChannelAddress(comment.community).then(
                     function(shardAddress){
                         var estimatedGas = 4700000;
-                        SharePlatform.share(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount(), gas:estimatedGas}).then(
+                        SharePlatform.broadcast(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount(), gas:estimatedGas}).then(
                         function(receipt){
                             console.log(receipt);
                             deferred.resolve(receipt.transactionHash);
@@ -207,12 +201,12 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
             return deferred.promise;
         },
         createCommunity: function(shardName){
-            return SharePlatform.createShard(shardName);
+            return SharePlatform.createChannel(shardName);
         },
         communityExists: function(community){
             var deferred = $q.defer();
             
-            var async = SharePlatform.getShardAddress(community).then(
+            var async = SharePlatform.getChannelAddress(community).then(
             function(communityAddress){
                 if(communityAddress){
                     deferred.resolve(true)
@@ -238,10 +232,19 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
             var deferred = $q.defer();
             
             var local = localStorage.getItem(txHash);
-            if(local)
-                deferred.resolve(JSON.parse(local));
-            else {
+            if(local){
+                var event = JSON.parse(local);
+                var communityAddress = event.address;
+                SharePlatform.getChannelInfo(communityAddress).then(
+                function(info){
+                    var args = {};
+                    args.event = event;
+                    args.community = info[0];
+                    deferred.resolve(args);
+                });
+            } else {
                 deferred.reject("Haven't seen this tx event");
+                //Todo: fetch from blockchain
             }
             
             return deferred.promise;

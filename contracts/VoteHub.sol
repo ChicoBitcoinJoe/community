@@ -1,8 +1,9 @@
 pragma solidity ^0.4.6;
 
-contract VoteHub {
+import "Owned.sol";
+
+contract VoteHub is Owned {
     
-    address owner;
     address fund_contract;
     
     struct Community {
@@ -31,7 +32,8 @@ contract VoteHub {
         fund_contract = fundContract;
     }
     
-    function fundDevelopment(string community) {
+    event Fund(uint value);
+    function fundDevelopment(string community) payable {
         if(msg.value == 0)
             throw;
         
@@ -42,31 +44,29 @@ contract VoteHub {
         
         if(!fund_contract.send(msg.value))
             throw;
+        
+        Fund(msg.value);
     }
     
+    event Vote(string community, string key, uint amount, bool support);
     function vote(string community, string key, uint amount, bool support){
         uint available = Voters[msg.sender].available_tokens[community];
-        if(available > 0){
-            if(amount < available){
-                if(support){
-                    Communities[community].keys[key].upvotes += amount;
-                    Voters[msg.sender].Communities[community].keys[key].upvotes += amount;
-                } else {
-                    Communities[community].keys[key].downvotes += amount;
-                    Voters[msg.sender].Communities[community].keys[key].downvotes += amount;
-                }
-                Voters[msg.sender].available_tokens[community] -= amount;
+        if(available > 0 && amount <= available){
+            if(support){
+                Communities[community].keys[key].upvotes += amount;
+                Voters[msg.sender].Communities[community].keys[key].upvotes += amount;
             } else {
-                if(support)
-                    Communities[community].keys[key].upvotes += available;
-                else
-                    Communities[community].keys[key].downvotes += available;
-                
-                Voters[msg.sender].available_tokens[community] = 0;
+                Communities[community].keys[key].downvotes += amount;
+                Voters[msg.sender].Communities[community].keys[key].downvotes += amount;
             }
+            
+            Voters[msg.sender].available_tokens[community] -= amount;
+            
+            Vote(community,key,amount,support);
         }
     }
     
+    event ReclaimTokens(string community, string key);
     function reclaimVotes(string community, string key){
         var upvotes = Voters[msg.sender].Communities[community].keys[key].upvotes;
         var downvotes = Voters[msg.sender].Communities[community].keys[key].downvotes;
@@ -79,6 +79,8 @@ contract VoteHub {
         
         var refund = upvotes + downvotes;
         Voters[msg.sender].available_tokens[community] += refund;
+        
+        ReclaimTokens(community,key);
     }
     
     function getKeyVotes(string community, string key) constant returns(uint,uint){
@@ -104,17 +106,15 @@ contract VoteHub {
         return (available_tokens,community_tokens,total_tokens);
     }
     
-    function changeOwner(address newOwner){
-        if(msg.sender == owner)
-            owner == newOwner;
-    }
-    
-    function changeFundContract(address newFundContract){
-        if(msg.sender == owner)
-            fund_contract == newFundContract;
-    }
-    
-    function getDetails() constant returns (address,address,uint){
+    function getVoteHubDetails() constant returns (address,address,uint){
         return (owner,fund_contract,total_tokens);
+    }
+    
+    function changeOwner(address newOwner) isOwner {
+        owner == newOwner;
+    }
+    
+    function changeFundContract(address newFundContract) isOwner {
+        fund_contract == newFundContract;
     }
 }

@@ -19,17 +19,16 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
 		controller: function($scope){
             $scope.activeView = $location.url().split('/')[2];
             $scope.rootTxHash = $location.url().split('/')[4];
-            $scope.hasPrivateVoted = true;
+            $scope.hasPrivateVoted = false;
             $scope.isComment = false;
             $scope.comments = Community.getChildren($scope.activeView, $scope.txHash);
             
             var async_eventData = Community.getEventData($scope.txHash).then(
-            function(event){
-                $scope.event = event;
+            function(args){
+                $scope.communityName = args.communityName;
+                $scope.event = args.event;
                 
-                var ipfsHash = event.args.ipfsHash;
-                $scope.communityName = event.args.shardName;
-                
+                var ipfsHash = $scope.event.args.hash;
                 var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
                 function(ipfsData){
                     console.log($scope.communityName,event.transactionHash);

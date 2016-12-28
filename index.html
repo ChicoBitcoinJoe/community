@@ -27,13 +27,18 @@
 </head>
 <body ng-app="Community" layout="row" ng-cloak>
     
-    <md-sidenav md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')" layout="column"><sidenav-left></sidenav-left></md-sidenav>
+    <md-sidenav md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')" layout="column">
+        <sidenav-left></sidenav-left>
+    </md-sidenav>
+    
     <div layout="column" flex>
         <toolbar></toolbar>
         <div ng-view layout="column" flex></div>
     </div>
-    <md-sidenav md-component-id="right" class="md-sidenav-right" md-is-locked-open="$mdMedia('gt-md')" layout="column"><sidenav-right></sidenav-right></md-sidenav>
     
+    <md-sidenav md-component-id="right" class="md-sidenav-right" md-is-locked-open="$mdMedia('gt-md')" layout="column">
+        <sidenav-right></sidenav-right>
+    </md-sidenav>
 
     <!-- Angular + Material Libraries -->
     <script src="angular-includes/angular-1.5.5.min.js"></script>
