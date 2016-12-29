@@ -124,7 +124,7 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
                         if(!local)
                             localStorage.setItem(txHash,JSON.stringify(events[index]));
                         
-                        console.log(community,events[index],ipfsHash);
+                        //console.log(community,events[index],ipfsHash);
                         addTxToCommunityDB(community,events[index],ipfsHash);
                     }
                     

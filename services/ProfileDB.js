@@ -50,17 +50,19 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
         saveProfileDB();
     }
     
-    var touchUser = function(user){
-        if(!ProfileDB.users[user]){
-            ProfileDB.users[user] = {};
-            ProfileDB.users[user].upvotes = [];
-            ProfileDB.users[user].downvotes = [];
-            ProfileDB.users[user].upvoteStreak = 0;
-            ProfileDB.users[user].downvoteStreak = 0;
-            ProfileDB.users[user].score = 50;
-            //console.log("New user! Score:",ProfileDB.users[user].score);
+    var touchUser = function(account){
+        if(!ProfileDB.users[account]){
+            ProfileDB.users[account] = {};
+            ProfileDB.users[account].upvotes = [];
+            ProfileDB.users[account].downvotes = [];
+            ProfileDB.users[account].upvoteStreak = 0;
+            ProfileDB.users[account].downvoteStreak = 0;
+            ProfileDB.users[account].bestUpvoteStreak = 0;
+            ProfileDB.users[account].worstDownvoteStreak = 0;
+            ProfileDB.users[account].score = 50;
+            //console.log("New user! Score:",ProfileDB.users[account].score);
         } else {
-            //console.log("Existing user! Score:", ProfileDB.users[user].score);
+            //console.log("Existing user! Score:", ProfileDB.users[account].score);
         }
     };
     
@@ -105,40 +107,63 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
         }
     };
     
-    var updateUserScore = function(user){
-        console.log(user);
+    var updateUserScore = function(account){
+        //console.log(account);
+        var upvoteStreak = ProfileDB.users[account].upvoteStreak;
+        var downvoteStreak = ProfileDB.users[account].downvoteStreak;
+        
+        if(upvoteStreak){
+            ProfileDB.users[account].score = Math.round(ProfileDB.users[account].score*1.1);
+            
+            if(upvoteStreak > ProfileDB.users[account].bestUpvoteStreak)
+                ProfileDB.users[account].bestUpvoteStreak++;
+        }
+        
+        if(downvoteStreak){
+            ProfileDB.users[account].score = Math.round(ProfileDB.users[account].score*0.9);
+            
+            if(downvoteStreak > ProfileDB.users[account].worstDownvoteStreak)
+                ProfileDB.users[account].worstDownvoteStreak++;
+        }
+    
+        if(ProfileDB.users[account].score > 100)
+            ProfileDB.users[account].score = 100;
+        if(ProfileDB.users[account].score < 0)
+            ProfileDB.users[account].score = 0;
+        
+        console.log(account + "'s new score is " + ProfileDB.users[account].score);
     };
     
-    var upvoteUser = function(user,txHash){
-        touchUser(user);
+    var upvoteUser = function(account,txHash){
+        touchUser(account);
         
-        var upvoteStreak = ProfileDB.users[user].upvoteStreak;
-        if(ProfileDB.users[user].upvotes.indexOf(txHash) == -1){
-            ProfileDB.users[user].upvotes.push(txHash);
-            ProfileDB.users[user].upvoteStreak = upvoteStreak + 1;
-            ProfileDB.users[user].downvoteStreak = 0;
+        var upvoteStreak = ProfileDB.users[account].upvoteStreak;
+        if(ProfileDB.users[account].upvotes.indexOf(txHash) == -1){
+            ProfileDB.users[account].upvotes.push(txHash);
+            ProfileDB.users[account].upvoteStreak = upvoteStreak + 1;
+            ProfileDB.users[account].downvoteStreak = 0;
             
-            if(ProfileDB.users[user].upvoteStreak > 10)
-                ProfileDB.users[user].upvoteStreak = 10;
+            if(ProfileDB.users[account].upvoteStreak > 10)
+                ProfileDB.users[account].upvoteStreak = 10;
             
-            updateUserScore(user);
+            updateUserScore(account);
         } else
             console.log('user voted already');
     };
     
-    var downvoteUser = function(user,txHash){
-        touchUser(user);
+    var downvoteUser = function(account,txHash){
+        touchUser(account);
         
-        var downvoteStreak = ProfileDB.users[user].downvoteStreak;
-        if(ProfileDB.users[user].downvotes.indexOf(txHash) == -1){
-            ProfileDB.users[user].downvotes.push(txHash);
-            ProfileDB.users[user].upvoteStreak = 0;
-            ProfileDB.users[user].downvoteStreak = downvoteStreak + 1;
+        var downvoteStreak = ProfileDB.users[account].downvoteStreak;
+        if(ProfileDB.users[account].downvotes.indexOf(txHash) == -1){
+            ProfileDB.users[account].downvotes.push(txHash);
+            ProfileDB.users[account].upvoteStreak = 0;
+            ProfileDB.users[account].downvoteStreak = downvoteStreak + 1;
             
-            if(ProfileDB.users[user].downvoteStreak > 10)
-                ProfileDB.users[user].downvoteStreak = 10;
+            if(ProfileDB.users[account].downvoteStreak > 10)
+                ProfileDB.users[account].downvoteStreak = 10;
             
-            updateUserScore(user);
+            updateUserScore(account);
         } else 
             console.log('user voted already');
     };
@@ -297,34 +322,34 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
                 saveProfileDB();
             }
         },
-        getUserScore: function(user){
-            touchUser(user);
+        getUser: function(account){
+            touchUser(account);
             
-            return ProfileDB.users[user].score;
+            return ProfileDB.users[account];
         },
-        upvote: function(community,user,txHash){
-            //console.log('Voting',community,user,txHash);
+        upvote: function(community,account,txHash){
+            //console.log('Voting',community,account,txHash);
             touchPostScore(community,txHash);
             
-            upvoteUser(user,txHash);
+            upvoteUser(account,txHash);
             saveProfileDB();
         },
-        downvote: function(community,user,txHash){
-            //console.log('voted!',community,user,txHash);
+        downvote: function(community,account,txHash){
+            //console.log('voted!',community,account,txHash);
             touchPostScore(community,txHash);
             
-            downvoteUser(user,txHash);
+            downvoteUser(account,txHash);
             saveProfileDB();
         },
-        hasVoted: function(user,txHash){
-            touchUser(user);
-            //console.log(user,txHash);
-            if(ProfileDB.users[user].upvotes.indexOf(txHash) !== -1){
+        hasVoted: function(account,txHash){
+            touchUser(account);
+            //console.log(account,txHash);
+            if(ProfileDB.users[account].upvotes.indexOf(txHash) !== -1){
                 //console.log(txHash + " has voted.");
                 return true;
             }
             
-            if(ProfileDB.users[user].downvotes.indexOf(txHash) !== -1){
+            if(ProfileDB.users[account].downvotes.indexOf(txHash) !== -1){
                 //console.log(txHash + " has voted.");
                 return true;
             }

@@ -117,7 +117,7 @@ function ($q,Web3Service) {
                                 var local = localStorage.getItem(oldEvents[index]);
                                 events[oldEvents[index]] = JSON.parse(local);
                             }
-                            console.log(events);
+                            //console.log(events);
                             
                             deferred.resolve(events);
                         } else {

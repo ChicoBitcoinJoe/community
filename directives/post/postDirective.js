@@ -14,7 +14,7 @@ function(IpfsService,$location,$window,ProfileDB,Community,VoteHub){
             
             var async_eventData = Community.getEventData($scope.txHash).then(
             function(args){
-                console.log(args);
+                //console.log(args);
                 $scope.communityName = args.communityName;
                 $scope.event = args.event;
                 
@@ -30,7 +30,7 @@ function(IpfsService,$location,$window,ProfileDB,Community,VoteHub){
                     function(voteData){
                         var upvotes = web3.fromWei(voteData[0], 'szabo').toString()/10;
                         var downvotes = web3.fromWei(voteData[1], 'szabo').toString()/10;
-                        console.log(upvotes,downvotes);
+                        //console.log(upvotes,downvotes);
                         if(upvotes+downvotes !== 0)
                             $scope.publicScore = Math.round(100*upvotes/(upvotes+downvotes));
                         else
@@ -115,7 +115,6 @@ function(IpfsService,$location,$window,ProfileDB,Community,VoteHub){
                         if(locationUrlArray[3] == 'post')
                             $scope.commentView = true;
                     
-                    console.log($scope.post);
                     $scope.isPost = Community.postIsValid($scope.post);
                     
                 },function(err){

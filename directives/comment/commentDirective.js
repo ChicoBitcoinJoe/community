@@ -28,14 +28,18 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                 $scope.communityName = args.communityName;
                 $scope.event = args.event;
                 
+                Web3Service.getTransactionReceipt($scope.txHash).then(
+                function(receipt){
+                    $scope.user = ProfileDB.getUser(receipt.from);
+                });
                 var ipfsHash = $scope.event.args.hash;
                 var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
                 function(ipfsData){
-                    console.log($scope.communityName,$scope.event.transactionHash);
+                    //console.log($scope.communityName,$scope.event.transactionHash);
                     $scope.comments = Community.getChildren($scope.communityName,$scope.event.transactionHash);
                     $scope.post = ipfsData;
                     $scope.hasPrivateVoted = ProfileDB.hasVoted($scope.post.poster,$scope.event.transactionHash);
-                    console.log($scope.post.poster);
+                    //console.log($scope.post.poster);
                     if(Community.commentIsValid(ipfsData))
                         $scope.isComment = true;
                     
@@ -125,6 +129,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                 };
                 
                 $scope.voteIsPrivate = false;
+                
             }, function(err){
                 console.error(err);    
             });
