@@ -13,19 +13,20 @@ function(IpfsService,$location,$window,ProfileDB,Community,VoteHub){
             $scope.activeView = $location.url().split('/')[2];
             
             var async_eventData = Community.getEventData($scope.txHash).then(
-            function(args){
+            function(event){
                 //console.log(args);
-                $scope.communityName = args.communityName;
-                $scope.event = args.event;
+                $scope.event = event;
+                $scope.communityName = event.args.channel;
                 
                 $scope.isSaved = ProfileDB.isFavorited($scope.communityName,$scope.txHash);
+                $scope.privateScore = Community.getPostScore($scope.communityName,$scope.txHash);
                 
                 var ipfsHash = $scope.event.args.hash;
                 var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
                 function(post){
                     //console.log(post);
                     $scope.post = post;
-                    $scope.privateScore = ProfileDB.getPostScore($scope.communityName,$scope.txHash);
+                    
                     VoteHub.getKeyVotes($scope.communityName,$scope.txHash).then(
                     function(voteData){
                         var upvotes = web3.fromWei(voteData[0], 'szabo').toString()/10;

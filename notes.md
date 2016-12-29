@@ -2,7 +2,7 @@
 
 ## Unsorted ##
 
-- none
+- Post Score
     
 ## Critical ##
 
@@ -30,6 +30,7 @@
 
 - Post Preview needs updating
 - fund development view does nothing after submission
+- multi favorites
     
 - Post View
     - submit post does not preview the comment section

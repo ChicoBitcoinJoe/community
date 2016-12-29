@@ -73,7 +73,7 @@ Community.filter('capitalize', function() {
                 for(i = 0; i < inputPieces.length; i++){
                     inputPieces[i] = capitalizeString(inputPieces[i]);
                 }
-                return inputPieces.toString().replace(/,/g, ' ');
+                return inputPieces.toString().replace(/,/g,' ');
             } else {
                 input = input.toLowerCase();
                 return capitalizeString(input);

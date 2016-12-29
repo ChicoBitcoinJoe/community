@@ -357,33 +357,6 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
             
             return false;
         },
-        updatePostScore: function(community,txHash,posters){
-            //console.log(community,txHash,posters);
-            touchPostScore(community,txHash);
-            
-            var score = 0;
-            var relaventPosters = [];
-            for(poster in posters){
-                touchUser(posters[poster]);
-                
-                var userScore = ProfileDB.users[posters[poster]].score;
-                var tolerance = 15; //AutoModerator.getScoreTolerance();
-                if(userScore > tolerance){ //AutoModerator setting score tolerance
-                    relaventPosters.push(posters[poster]);
-                    score += userScore;
-                }
-            }
-            
-            score = Math.round(score/relaventPosters.length);
-            //console.log(score);
-            ProfileDB.PostScores[community].post[txHash].score = score;
-            ProfileDB.PostScores[community].post[txHash].posters = relaventPosters;
-        },
-        getPostScore: function(community,txHash){
-            touchPostScore(community,txHash);
-            
-            return ProfileDB.PostScores[community].post[txHash];
-        },
         saveToFavorites: function(community,txHash){
             touchFavorite(community);
             

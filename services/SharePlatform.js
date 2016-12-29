@@ -2,12 +2,12 @@ Community.service('SharePlatform', ['$q','Web3Service','EventManager',
 function ($q,Web3Service,EventManager) {
     console.log('Loading Share Service');
     
-    var ShareAddress = '0x598C64327eB53FBe1AB2c20aC8f2d329E062166A';//TestNet
+    var ShareAddress = '0x990EDbe88148C111f66E3f1e6117D8AC0a9c1B7f';//TestNet
     var ShareContract = web3.eth.contract(
         [{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"getChannelName","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getTotalchannels","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"channelName","type":"string"}],"name":"createChannel","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"channelName","type":"string"}],"name":"getChannelAddress","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"channelName","type":"string"}],"name":"NewChannel_event","type":"event"}]);
     var ShareInstance = ShareContract.at(ShareAddress);
     
-    var ChannelAbi = [{"constant":false,"inputs":[{"name":"hash","type":"string"}],"name":"broadcast","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getChannelInfo","outputs":[{"name":"","type":"string"},{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"inputs":[{"name":"_channel_name","type":"string"}],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"hash","type":"string"}],"name":"Broadcast_event","type":"event"}];
+    var ChannelAbi = [{"constant":false,"inputs":[{"name":"hash","type":"string"}],"name":"broadcast","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getChannelInfo","outputs":[{"name":"","type":"string"},{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"inputs":[{"name":"_channel_name","type":"string"}],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"sender","type":"address"},{"indexed":false,"name":"channel","type":"string"},{"indexed":false,"name":"hash","type":"string"}],"name":"Broadcast_event","type":"event"}];
     var ChannelContract = web3.eth.contract(ChannelAbi);
     
     var service = {

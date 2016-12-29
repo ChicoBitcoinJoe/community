@@ -30,7 +30,7 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
     };
     
     var touchPosterList = function(community,txHash){
-        if(!CommunityDB.communities[community].posters[txHash])
+        if(Object.keys(CommunityDB.communities[community].posters).indexOf(txHash) == -1)
             CommunityDB.communities[community].posters[txHash] = [];
     };
     
@@ -57,6 +57,9 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
         touchCommunity(community);
         var txHash = event.transactionHash;
         
+        
+        //Need to do some filtering here
+        //Banned/Squelched users need not apply
         IpfsService.getIpfsData(ipfsHash).then(
         function(ipfsData){
             if(service.postIsValid(ipfsData)){
@@ -69,6 +72,7 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
                 touchCommentList(community,ipfsData.parent);
                 touchCommentList(community,txHash);
                 addCommentToParent(community,txHash,ipfsData.parent);
+                
                 addPosterToRootParent(community,ipfsData.rootParent,event.args.sender);
             } else {
                 console.log("Invalid event");
@@ -84,10 +88,8 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
         touchCommunity(community);
         touchPosterList(community,rootParentTxHash);
         
-        var posters = CommunityDB.communities[community].posters[rootParentTxHash];
-        if(posters.indexOf(poster) == -1){
-            posters.push(poster);  
-            ProfileDB.updatePostScore(community,rootParentTxHash,posters);
+        if(CommunityDB.communities[community].posters[rootParentTxHash].indexOf(poster) == -1){
+            CommunityDB.communities[community].posters[rootParentTxHash].push(poster);
         }
     };
     
@@ -120,15 +122,12 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
                         var txHash = events[index].transactionHash;
                         var ipfsHash = events[index].args.hash;
                         
-                        var local = localStorage.getItem(txHash);
-                        if(!local)
-                            localStorage.setItem(txHash,JSON.stringify(events[index]));
+                        localStorage.setItem(txHash,JSON.stringify(events[index]));
                         
                         //console.log(community,events[index],ipfsHash);
                         addTxToCommunityDB(community,events[index],ipfsHash);
                     }
                     
-                    console.log("Found " + Object.keys(events).length + " events in " + community, active.view);
                     localStorage.setItem('CommunityDB',JSON.stringify(CommunityDB));
                 }, function(err){
                     //This community does not exist
@@ -137,6 +136,30 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
             }
             
             return active.view;
+        },
+        getPostScore: function(community,txHash){
+            //console.log(community,txHash,posters);
+            touchPosterList(community,txHash);
+            
+            var posters = CommunityDB.communities[community].posters[txHash];
+            console.log(posters);
+            var score = 0;
+            var relaventPosters = [];
+            for(index in posters){
+                var poster = posters[index];
+                
+                var userScore = ProfileDB.getUser(poster).score;
+                console.log(userScore);
+                var tolerance = 25; //Need to add to settings
+                if(userScore > tolerance){
+                    relaventPosters.push(poster);
+                    score += userScore;
+                }
+            }
+            
+            score = Math.round(score/relaventPosters.length);
+            
+            return score;
         },
         getChildren: function(community,txHash){
             touchCommunity(community);
@@ -219,29 +242,13 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
             
             return deferred.promise;
         },
-        getPosters: function(community,txHash){
-            console.log(JSON.stringify(community));
-            touchCommunity(community);
-            //console.log(CommunityDB.communities[community].posters[txHash]);
-            if(Object.keys(CommunityDB.communities[community].posters).indexOf(txHash) == -1)
-                CommunityDB.communities[community].posters[txHash] = [];
-                
-            return CommunityDB.communities[community].posters[txHash];
-        },
         getEventData(txHash){
             var deferred = $q.defer();
             
             var local = localStorage.getItem(txHash);
             if(local){
                 var event = JSON.parse(local);
-                var communityAddress = event.address;
-                SharePlatform.getChannelInfo(communityAddress).then(
-                function(info){
-                    var args = {};
-                    args.event = event;
-                    args.communityName = info[0];
-                    deferred.resolve(args);
-                });
+                deferred.resolve(event);
             } else {
                 deferred.reject("Haven't seen this tx event");
                 //Todo: fetch from blockchain

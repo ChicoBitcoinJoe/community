@@ -24,14 +24,12 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
             $scope.comments = Community.getChildren($scope.activeView, $scope.txHash);
             
             var async_eventData = Community.getEventData($scope.txHash).then(
-            function(args){
-                $scope.communityName = args.communityName;
-                $scope.event = args.event;
+            function(event){
+                $scope.event = event;
+                $scope.communityName = event.args.channel;
                 
-                Web3Service.getTransactionReceipt($scope.txHash).then(
-                function(receipt){
-                    $scope.user = ProfileDB.getUser(receipt.from);
-                });
+                $scope.user = ProfileDB.getUser($scope.event.args.sender);
+                
                 var ipfsHash = $scope.event.args.hash;
                 var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
                 function(ipfsData){
