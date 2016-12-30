@@ -17,7 +17,7 @@
                     </h5>
                 </md-card-title-text>
             </md-card-title>
-            <div style="padding:0px 10px; max-height:50px; min-width:75px; margin: 0px; background-color:rgba(55,55,55,1)" class="md-whiteframe-4dp" layout layout-align="center center">
+            <div class="post-score-panel md-whiteframe-4dp" layout layout-align="center center">
                 <h3 flex>
                     <large layout="row" layout-align="right"><span flex></span>{{publicScore}} | {{privateScore}}</large>
                     <small style="color:rgba(255,255,255,0.5); font-size:small" layout layout-align="center">pub | priv</small>
@@ -39,7 +39,7 @@
             </md-card-icon-actions>
         </md-card-actions>
     </div>
-    <div ng-if="post.media == 'video'">
+    <div ng-if="post.media == 'video'" style="margin-left: 8px;">
         <video-frame url="videoSourceUrl"></video-frame>
     </div>
 </md-card>

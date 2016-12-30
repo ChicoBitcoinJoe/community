@@ -2,7 +2,7 @@
 
 ## Unsorted ##
 
-- none
+- Favorite View does not have markdown
     
 ## Critical ##
 
@@ -12,7 +12,6 @@
 - Vote Contract
     - Multi token total
     - vt should be an icon and look better in general
-    - hide available tokens if 0
 
 - Settings sidenav
     - backend

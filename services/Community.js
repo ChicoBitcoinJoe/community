@@ -30,6 +30,8 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
     };
     
     var touchPosterList = function(community,txHash){
+        touchCommunity(community);
+        
         if(Object.keys(CommunityDB.communities[community].posters).indexOf(txHash) == -1)
             CommunityDB.communities[community].posters[txHash] = [];
     };

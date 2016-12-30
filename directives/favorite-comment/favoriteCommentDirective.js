@@ -3,7 +3,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
 	return {
 		restrict: 'E',
 		scope: {
-			txHash: '='
+			commentData: '='
 		},
 		replace: true,
 		templateUrl: 'directives/favorite-comment/favoriteCommentDirective.html',
@@ -16,8 +16,14 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             });
         },
 		controller: function($scope){
-            $scope.isComment = false;
+            console.log($scope.commentData);
+            if(!$scope.commentData){
+                var locationUrlArray = $location.url().split('/');
+                $scope.txHash = locationUrlArray[4];
+            } else 
+                $scope.txHash = $scope.commentData.txHash;
             
+            $scope.isComment = false;
             var async_eventData = Community.getEventData($scope.txHash).then(
             function(event){
                 $scope.event = event;
@@ -28,13 +34,14 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
                 var ipfsHash = $scope.event.args.hash;
                 var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
                 function(ipfsData){
-                    $scope.comments = Community.getChildren($scope.communityName,$scope.event.transactionHash);
-                    $scope.post = ipfsData;
-                    $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.event.transactionHash);
-                    console.log($scope.post.poster);
-                    if(Community.commentIsValid(ipfsData))
+                    if(Community.commentIsValid(ipfsData)){
                         $scope.isComment = true;
-                    
+                        $scope.comments = Community.getChildren($scope.communityName,$scope.event.transactionHash);
+                        $scope.post = ipfsData;
+                        $scope.comment = marked($scope.post.comment);
+                        $scope.hasVoted = ProfileDB.hasVoted($scope.post.poster,$scope.event.transactionHash);
+                        //console.log($scope.post.poster);
+                    }
                 }, function(err){
                     console.error(err); 
                 });

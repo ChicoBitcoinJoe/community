@@ -42,7 +42,7 @@ function(IpfsService,$location,$window,ProfileDB,Community,VoteHub){
                         if(upvotes+downvotes !== 0){
                             $scope.publicScore = Math.round(100*upvotes/(upvotes+downvotes));
                             $scope.postData.combinedScore = ($scope.publicScore+$scope.privateScore)/2;
-                            console.log($scope.postData);
+                            //console.log($scope.postData);
                         } else {
                             $scope.publicScore = '*';
                             $scope.postData.combinedScore = $scope.privateScore;
@@ -51,7 +51,6 @@ function(IpfsService,$location,$window,ProfileDB,Community,VoteHub){
                     }, function(err){
                         console.error(err);
                     });
-                    
                     
                     if($scope.post.media == 'image'){
                         var img = new Image();

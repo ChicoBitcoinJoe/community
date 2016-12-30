@@ -1,33 +1,33 @@
-<md-card ng-show="isComment" md-theme="dark-theme" style="margin: 0px {{marginRight}}px {{marginBottom}}px {{marginLeft}}px; padding: 8px 0px 0px {{paddingLeft}}px; border-left: {{borderWidth}}px solid #242424; border-top: {{borderTop}}px solid #242424; border-bottom:0px solid #242424; background-color:rgba(50,50,50,1);" layout="column">
-    <div layout="row">
-        <md-button style="margin:0px 0px 0px 5px; max-height:36px;" ng-if="commentDepth>0" ng-click="$parent.minimized = !$parent.minimized; $parent.showExtras=false; $parent.show=false" aria-label="minimize comment">
-            <md-icon ng-show="!minimized" md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg"></md-icon>
-            <md-icon ng-show="minimized" md-svg-src="images/icons/ic_add_box_white_24px.svg"></md-icon>
-        </md-button>
-        <div layout="column" flex>
-            <md-card-content style="margin-right:8px; margin-bottom:8px; margin-left:{{marginLeft}}px; padding:8px;">
-                <div layout="row">
-                    <h5 layout="row" style="margin:0px; line-height: 16px;">
-                        <span style="line-height: 16px;" class="md-subhead"><small>{{post.poster}}</small></span>
-                    </h5>
-                </div>
-                <div style="margin-top:5px;">{{post.comment}}</div>
-            </md-card-content>
-            <md-card-actions style="margin-bottom:8px !important; margin-left:4px !important; padding-left: {{marginLeft}} px !important;">
-                <md-card-actions layout="row" layout-align="start center">
-                    <md-card-icon-actions>
-                        <md-button aria-label="Favorite">
-                            <md-icon ng-show="!isSaved" ng-click="save()" md-svg-src="images/icons/ic_favorite_border_white_24px.svg"></md-icon>
-                            <md-icon ng-show="isSaved" ng-click="unsave()" md-svg-src="images/icons/ic_favorite_white_24px.svg"></md-icon>
-                        </md-button>
-                        <md-button aria-label="Share">
-                            <md-icon md-svg-src="images/icons/ic_share_white_24px.svg"></md-icon>
-                        </md-button>
-                        <span flex></span>
-                        <md-button aria-label="reply to comment" ng-click="goToPost()">View Post</md-button>
-                    </md-card-icon-actions>
-                </md-card-actions>
+<md-card ng-show="isComment" md-theme="dark-theme" style="margin: 0px {{marginRight}}px {{marginBottom}}px {{marginLeft}}px; padding: 8px 0px 0px {{paddingLeft}}px; border-left: {{borderWidth}}px solid #242424; border-top: {{borderTop}}px solid #242424; border-bottom:0px solid #242424; background-color:rgba(50,50,50,1);" layout="row">
+    <md-button style="margin:0px 0px 0px 5px; max-height:36px;" ng-if="commentDepth>0" ng-click="$parent.minimized = !$parent.minimized; $parent.showExtras=false; $parent.show=false" aria-label="minimize comment">
+        <md-icon ng-show="!minimized" md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg"></md-icon>
+        <md-icon ng-show="minimized" md-svg-src="images/icons/ic_add_box_white_24px.svg"></md-icon>
+    </md-button>
+    <div layout="column" flex>
+        <md-card-content style="margin-right:8px; margin-bottom:8px; margin-left:{{marginLeft}}px; padding:8px;">
+            <h5 layout="row" style="margin:0px; line-height: 16px;">
+                <span style="line-height: 16px;" class="md-subhead">
+                    <small>
+                        <username account="post.poster" unique="true"></username>
+                    </small>
+                </span>
+            </h5>
+            <div ng-hide="minimized" style="margin-top:5px;" ng-bind-html="comment" class="comment"></div>
+        </md-card-content>
+        <md-card-actions style="margin-bottom:8px !important; margin-left:4px !important; padding-left: {{marginLeft}} px !important;">
+            <md-card-actions layout="row" layout-align="start center">
+                <md-card-icon-actions>
+                    <md-button aria-label="Favorite">
+                        <md-icon ng-show="!isSaved" ng-click="save()" md-svg-src="images/icons/ic_favorite_border_white_24px.svg"></md-icon>
+                        <md-icon ng-show="isSaved" ng-click="unsave()" md-svg-src="images/icons/ic_favorite_white_24px.svg"></md-icon>
+                    </md-button>
+                    <md-button aria-label="Share">
+                        <md-icon md-svg-src="images/icons/ic_share_white_24px.svg"></md-icon>
+                    </md-button>
+                    <span flex></span>
+                    <md-button aria-label="reply to comment" ng-click="goToPost()">View Post</md-button>
+                </md-card-icon-actions>
             </md-card-actions>
-        </div>
+        </md-card-actions>
     </div>
 </md-card>

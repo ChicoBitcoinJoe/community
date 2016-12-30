@@ -2,6 +2,14 @@
     min-width:600px;
 }
 
+.post-score-panel {
+    padding:0px 10px;
+    max-height:50px;
+    min-width:75px;
+    margin: 0px;
+    background-color:rgba(55,55,55,1);
+}
+
 md-card {
     padding: 8px;
 }
