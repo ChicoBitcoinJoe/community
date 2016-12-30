@@ -2,12 +2,12 @@
 
 ## Unsorted ##
 
-- Post Score
+- none
     
 ## Critical ##
 
 - Need to estimate gas fee for transactions
-- all lists need to be sorted properly
+- Comment list needs to be sorted
 
 - Vote Contract
     - Multi token total
@@ -17,14 +17,9 @@
 - Settings sidenav
     - backend
 
-- Name Registry
-    - Account panel username
-
 - Comments
-    - Need markdown
     - first comment not showing up when coming from postview
     - Comment will not show if the comment chain does not reach the root
-    - Comment reply has no preview
 
 ## NonCritical ##
 
@@ -50,18 +45,5 @@
 - Metamask loading late occasionally
     - Metamask hard at work on this
 
-# MiniMe Token Questions
 
-- Keep ERC20 compliance if using for a DAO
-    - otherwise, what is safe to change?
-- How to keep Share Contract intact after split?
-- How does the transfersEnabled process work?
-    - Can a clone unfreeze tokens?
-- Can using a higher compiler version (for added security benefits) break the contract?
-- What happens if the contract breaks down the line?
-    - Can user balances be moved to a new secure contract easily?
-    - Do the tools exist to help facilitate the above?
-- My current contract never moves tokens to other users but only internally to voting balances.
-    - How difficult would it be to clone the internal accounts as well?
-- I'm currently using an MIT license. What is the significance of MiniMe being GNU?
 

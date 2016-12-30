@@ -44,7 +44,7 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
     
     var addTxHashToActiveView = function(txHash){
         if(active.view.indexOf(txHash) == -1)
-            active.view.push(txHash);
+            active.view.push({txHash:txHash,combinedScore:50});
     };
     
     var addPostToCommunityDB = function(community,txHash){
@@ -142,14 +142,12 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
             touchPosterList(community,txHash);
             
             var posters = CommunityDB.communities[community].posters[txHash];
-            console.log(posters);
             var score = 0;
             var relaventPosters = [];
             for(index in posters){
                 var poster = posters[index];
                 
                 var userScore = ProfileDB.getUser(poster).score;
-                console.log(userScore);
                 var tolerance = 25; //Need to add to settings
                 if(userScore > tolerance){
                     relaventPosters.push(poster);

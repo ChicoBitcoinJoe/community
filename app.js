@@ -91,3 +91,9 @@ Community.filter('round', [function() {
         return val.toFixed(0);
     };
 }]);
+
+Community.filter('reverse', function() {
+    return function(items) {
+        return items.slice().reverse();
+    };
+});

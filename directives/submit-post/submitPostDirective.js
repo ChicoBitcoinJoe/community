@@ -68,10 +68,10 @@ function(ProfileDB,$location,Community) {
                 console.log($scope.newPost);
                 $scope.submitButtonText = "Waiting for Post to be Broadcast";
                 Community.submitPost($scope.newPost).then(
-                function(ipfsHash){
-                    if(ipfsHash){
-                        console.log(ipfsHash);
-                        $location.url('c/'+ $scope.community + /post/ + ipfsHash);
+                function(txHash){
+                    if(txHash){
+                        console.log(txHash);
+                        $location.url('c/'+ $scope.community + /post/ + txHash);
                     } else {
                         console.log('Not a valid post. Aborting.');
                     }

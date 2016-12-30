@@ -3,11 +3,18 @@ function(IpfsService,$location,$window,ProfileDB,Community,VoteHub){
 	return {
 		restrict: 'E',
 		scope: {
-            txHash: '=',
+            postData: '=',
 		},
 		replace: true,
 		templateUrl: 'directives/post/postDirective.html',
 		controller: function($scope){
+            console.log($scope.postData);
+            if(!$scope.postData){
+                var locationUrlArray = $location.url().split('/');
+                $scope.txHash = locationUrlArray[4];
+            } else 
+                $scope.txHash = $scope.postData.txHash;
+            
             $scope.isPost = false;
             $scope.isSaved = false;
             $scope.activeView = $location.url().split('/')[2];
@@ -32,10 +39,15 @@ function(IpfsService,$location,$window,ProfileDB,Community,VoteHub){
                         var upvotes = web3.fromWei(voteData[0], 'szabo').toString()/10;
                         var downvotes = web3.fromWei(voteData[1], 'szabo').toString()/10;
                         //console.log(upvotes,downvotes);
-                        if(upvotes+downvotes !== 0)
+                        if(upvotes+downvotes !== 0){
                             $scope.publicScore = Math.round(100*upvotes/(upvotes+downvotes));
-                        else
+                            $scope.postData.combinedScore = ($scope.publicScore+$scope.privateScore)/2;
+                            console.log($scope.postData);
+                        } else {
                             $scope.publicScore = '*';
+                            $scope.postData.combinedScore = $scope.privateScore;
+                            console.log($scope.postData);
+                        }
                     }, function(err){
                         console.error(err);
                     });
