@@ -1,29 +1,31 @@
-<md-card ng-show="isPost" md-theme="dark-theme" style="background-color:rgba(50,50,50,1);" layout="row" flex>
+<md-card class="post" ng-show="isPost" md-theme="dark-theme" style="background-color:rgba(50,50,50,1);" layout="row" flex>
     <div ng-if="post.media == 'image'" class="card-image-{{orientation}}" layout="{{layout}}" layout-align="top center">
         <img class="card-image" ng-src="{{imageSource}}" alt="post image: {{post.link}}">
     </div>
     <div layout="column" flex>
-        <md-card-title  style="padding-bottom:0px !important;">
-            <md-card-title-text class="hover-fx post-title-text" ng-click="followLink()">
-                <div style="max-height:143px; overflow:hidden">
-                    <h4 style="margin:0px;margin-bottom:4px;">{{post.title}}<small style="color:rgba(255,255,255,0.5)">
-                    &nbsp {{post.media}}
-                    &nbsp <span ng-show="post.media !== 'self'">{{post.link}}</span></small></h4>
-                </div>
-                <div layout="row" ng-show="post.poster">
-                    <h5 style="margin:0px; line-height: 16px; color:rgba(255,255,255,0.5)">
-                        Posted by <span style="color:rgba(255,255,255,0.87)"><username account="post.poster" unique="true"></username></span> to <span  style="color:rgba(255,255,255,0.87)">{{post.community}}</span>
+        <div layout="row">
+            <md-card-title style="padding-bottom:0px !important;" layout="row" flex>
+                <md-card-title-text class="hover-fx post-title-text" ng-click="followLink()" flex>    
+                    <h4 style="margin:0px;margin-bottom:4px;">
+                        {{post.title}}&nbsp
+                        <small style="color:rgba(255,255,255,0.5); ">
+                            {{post.media}}&nbsp <div style="color:rgba(255,255,255,0.5); white-space: nowrap; overflow: hidden; text-overflow:ellipsis" ng-show="post.media !== 'self'">{{post.link}}</div>
+                        </small>
+                    </h4>
+                    <h5 layout="row" ng-show="post.poster" style="margin:0px; line-height: 16px; color:rgba(255,255,255,0.87)">
+                        <span style="color:rgba(255,255,255,0.5)">Posted by&nbsp</span><username account="post.poster" unique="true"></username>&nbspto {{post.community}}</span>
                     </h5>
-                </div>
-            </md-card-title-text>
-            <div style="padding:0px 10px; max-height:50px; margin: 8px; background-color:rgba(55,55,55,1)" class="md-whiteframe-4dp" layout layout-align="center center">
-                <h3 style="margin:5px;" flex>
+                </md-card-title-text>
+            </md-card-title>
+            <div style="padding:0px 10px; max-height:50px; min-width:75px; margin: 0px; background-color:rgba(55,55,55,1)" class="md-whiteframe-4dp" layout layout-align="center center">
+                <h3 flex>
                     <large layout="row" layout-align="right"><span flex></span>{{publicScore}} | {{privateScore}}</large>
                     <small style="color:rgba(255,255,255,0.5); font-size:small" layout layout-align="center">pub | priv</small>
                 </h3> 
-            </div> 
-        </md-card-title>
-        <md-card-actions layout="row" layout-align="left center" ng-hide="commentView" style="">
+            </div>
+        </div>
+        <span flex></span>
+        <md-card-actions layout="row" layout-align="left center" ng-hide="commentView" style="margin-top:5px !important;">
             <md-card-icon-actions>
                 <md-button aria-label="Favorite">
                     <md-icon ng-show="!isSaved" ng-click="save()" md-svg-src="images/icons/ic_favorite_border_white_24px.svg"></md-icon>

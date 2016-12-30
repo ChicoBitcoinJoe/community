@@ -1,4 +1,4 @@
-var Community = angular.module('Community',['RecursionHelper','ngRoute','ngMaterial','ngMessages','material.svgAssetsCache']);
+var Community = angular.module('Community',['RecursionHelper','ngRoute','ngMaterial','ngMessages','material.svgAssetsCache','ngSanitize']);
 
 Community.config(function ($routeProvider) {
 	$routeProvider.

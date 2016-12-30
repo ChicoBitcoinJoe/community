@@ -34,8 +34,8 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                 var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
                 function(ipfsData){
                     //console.log($scope.communityName,$scope.event.transactionHash);
-                    $scope.comments = Community.getChildren($scope.communityName,$scope.event.transactionHash);
                     $scope.post = ipfsData;
+                    $scope.comment = marked($scope.post.comment);
                     $scope.hasPrivateVoted = ProfileDB.hasVoted($scope.post.poster,$scope.event.transactionHash);
                     //console.log($scope.post.poster);
                     if(Community.commentIsValid(ipfsData))

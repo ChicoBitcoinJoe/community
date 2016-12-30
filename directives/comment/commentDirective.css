@@ -12,3 +12,7 @@
 md-card {
     box-shadow: none !important;
 }
+
+.comment p {
+    margin: 0px;
+}

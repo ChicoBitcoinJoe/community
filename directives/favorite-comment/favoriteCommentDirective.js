@@ -19,9 +19,9 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             $scope.isComment = false;
             
             var async_eventData = Community.getEventData($scope.txHash).then(
-            function(args){
-                $scope.communityName = args.communityName;
-                $scope.event = args.event;
+            function(event){
+                $scope.event = event;
+                $scope.communityName = event.args.channel;
                 
                 $scope.isSaved = ProfileDB.isFavorited($scope.communityName,$scope.txHash);
                 

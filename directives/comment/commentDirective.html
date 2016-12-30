@@ -19,7 +19,7 @@
                         <span style="line-height: 16px;" class="md-subhead"><small>anonymous</small></span>
                     </h5>
                 </div>
-                <div ng-hide="minimized" style="margin-top:5px;">{{post.comment}}</div>
+                <div ng-hide="minimized" style="margin-top:5px;" ng-bind-html="comment" class="comment"></div>
             </md-card-content>
             <md-card-actions ng-show="showExtras || commentDepth == 0" style="margin-bottom:8px !important; padding-left: {{marginLeft}}px !important;" layout="row" layout-align="start center">
                 <md-card-icon-actions>

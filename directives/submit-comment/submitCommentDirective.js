@@ -23,6 +23,13 @@ Community.directive('submitComment', ['ProfileDB','Community', function(ProfileD
                 rootParent: $scope.rootParent
             };
             
+            $scope.comment = {};
+            $scope.comment.text = '';
+            
+            $scope.$watch('newComment.comment', function() {
+                $scope.comment.text = marked($scope.newComment.comment);
+            });
+            
             $scope.borderWidth = 0;
             $scope.borderTop = 8;
             $scope.marginLeft = 0;
