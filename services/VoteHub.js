@@ -63,8 +63,19 @@ function($q,Web3Service) {
             
             return deferred.promise;
         },
-        getUserVotes: function(account, community, txHash){
+        getUserVotes: function(account, community, key){
+            var deferred = $q.defer();
             
+            VoteHubInstance.getUserVotes(account, community, key, 
+            function(error, voteData){
+                if(!error){
+                    deferred.resolve(voteData);
+                } else{
+                    deferred.reject(error);
+                }
+            });
+            
+            return deferred.promise;
         },
         getUserData: function(account, community){
             var deferred = $q.defer();

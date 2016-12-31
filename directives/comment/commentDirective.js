@@ -39,6 +39,23 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                 $scope.user = ProfileDB.getUser($scope.event.args.sender);
                 $scope.privateScore = $scope.user.score;
                 
+                $scope.userUpvoted = true;
+                $scope.userDownvoted = true;
+                VoteHub.getUserVotes(Web3Service.getCurrentAccount(), $scope.communityName, $scope.event.args.sender).then(
+                function(voteData){
+                    var upvotes = web3.fromWei(voteData[0],'szabo').toString()/10;
+                    var downvotes = web3.fromWei(voteData[1],'szabo').toString()/10;
+                    
+                    if(upvotes == 0)
+                        $scope.userUpvoted = false;
+                    
+                    if (downvotes == 0)
+                        $scope.userDownvoted = false;
+    
+                }, function(err){
+                    console.error(err);
+                })
+                
                 VoteHub.getKeyVotes($scope.communityName,$scope.event.args.sender).then(
                 function(voteData){
                     var upvotes = web3.fromWei(voteData[0],'szabo').toString()/10;

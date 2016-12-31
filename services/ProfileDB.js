@@ -143,9 +143,6 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
             ProfileDB.users[account].upvoteStreak = upvoteStreak + 1;
             ProfileDB.users[account].downvoteStreak = 0;
             
-            if(ProfileDB.users[account].upvoteStreak > 10)
-                ProfileDB.users[account].upvoteStreak = 10;
-            
             updateUserScore(account);
         } else
             console.log('user voted already');
@@ -159,9 +156,6 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
             ProfileDB.users[account].downvotes.push(txHash);
             ProfileDB.users[account].upvoteStreak = 0;
             ProfileDB.users[account].downvoteStreak = downvoteStreak + 1;
-            
-            if(ProfileDB.users[account].downvoteStreak > 10)
-                ProfileDB.users[account].downvoteStreak = 10;
             
             updateUserScore(account);
         } else 

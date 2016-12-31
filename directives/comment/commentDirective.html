@@ -30,28 +30,28 @@
                     <md-button aria-label="Share">
                         <md-icon md-svg-src="images/icons/ic_share_white_24px.svg"></md-icon>
                     </md-button>
-                    <md-button ng-hide="voteIsPrivate || hasPrivateVoted" aria-label="upvote user" ng-click="voteIsPrivate = true" style="text-transform: lowercase;">
+                    <md-button ng-hide="voteIsPrivate || hasPrivateVoted" aria-label="open private vote panel" ng-click="voteIsPrivate = true" style="text-transform: lowercase;">
                         <md-icon md-svg-icon="images/icons/ic_lock_white_24px.svg"></md-icon> Private Vote
                     </md-button>
-                    <md-button ng-show="voteIsPrivate" ng-hide="hasPrivateVoted || !voteIsPrivate" aria-label="upvote user" ng-click="privateUpvote()">
+                    <md-button ng-show="voteIsPrivate" ng-hide="hasPrivateVoted || !voteIsPrivate" aria-label=" private upvote user" ng-click="privateUpvote()">
                         <md-icon md-svg-icon="images/icons/ic_arrow_upward_white_24px.svg"></md-icon>
                     </md-button>
-                    <md-button ng-show="voteIsPrivate" ng-hide="hasPrivateVoted || !voteIsPrivate" aria-label="downvote user" ng-click="privateDownvote()">
+                    <md-button ng-show="voteIsPrivate" ng-hide="hasPrivateVoted || !voteIsPrivate" aria-label="private downvote user" ng-click="privateDownvote()">
                         <md-icon md-svg-icon="images/icons/ic_arrow_downward_white_24px.svg"></md-icon>
                     </md-button>
-                    <md-button ng-show="voteIsPrivate" ng-hide="hasPrivateVoted || !voteIsPrivate" aria-label="downvote user" ng-click="voteIsPrivate = false">
+                    <md-button ng-show="voteIsPrivate" ng-hide="hasPrivateVoted || !voteIsPrivate" aria-label="close private vote panel" ng-click="voteIsPrivate = false">
                         <md-icon md-svg-icon="images/icons/ic_close_white_24px.svg"></md-icon>
                     </md-button>
-                    <md-button ng-hide="voteIsPublic" aria-label="upvote user" ng-click="voteIsPublic = true" style="text-transform: lowercase;">
+                    <md-button ng-hide="voteIsPublic" aria-label="open public vote panel" ng-click="voteIsPublic = true" style="text-transform: lowercase;">
                         <md-icon md-svg-icon="images/icons/ic_public_white_24px.svg"></md-icon> Public Vote
                     </md-button>
-                    <md-button ng-show="voteIsPublic" ng-hide="hasPublicVoted || !voteIsPublic" aria-label="upvote user" ng-click="publicUpvote()">
+                    <md-button ng-show="voteIsPublic" ng-hide="hasPublicVoted || !voteIsPublic" aria-label="public upvote user" ng-click="publicUpvote()" ng-disabled="userUpvoted">
                         <md-icon md-svg-icon="images/icons/ic_arrow_upward_white_24px.svg"></md-icon>
                     </md-button>
-                    <md-button ng-show="voteIsPublic" ng-hide="hasPublicVoted || !voteIsPublic" aria-label="downvote user" ng-click="publicDownvote()">
+                    <md-button ng-show="voteIsPublic" ng-hide="hasPublicVoted || !voteIsPublic" aria-label="public downvote user" ng-click="publicDownvote()" ng-disabled="userDownvoted">
                         <md-icon md-svg-icon="images/icons/ic_arrow_downward_white_24px.svg"></md-icon>
                     </md-button>
-                    <md-button ng-show="voteIsPublic" ng-hide="hasPublicVoted || !voteIsPublic" aria-label="downvote user" ng-click="voteIsPublic = false">
+                    <md-button ng-show="voteIsPublic" ng-hide="hasPublicVoted || !voteIsPublic" aria-label="close public vote panel" ng-click="voteIsPublic = false">
                         <md-icon md-svg-icon="images/icons/ic_close_white_24px.svg"></md-icon>
                     </md-button>
                     <span flex></span>

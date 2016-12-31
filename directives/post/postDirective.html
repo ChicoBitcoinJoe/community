@@ -12,8 +12,10 @@
                             {{post.media}}&nbsp <div style="color:rgba(255,255,255,0.5); white-space: nowrap; overflow: hidden; text-overflow:ellipsis" ng-show="post.media !== 'self'">{{post.link}}</div>
                         </small>
                     </h4>
-                    <h5 layout="row" ng-show="post.poster" style="margin:0px; line-height: 16px; color:rgba(255,255,255,0.87)">
-                        <span style="color:rgba(255,255,255,0.5)">Posted by&nbsp</span><username account="post.poster" unique="true"></username>&nbspto {{post.community}}</span>
+                    <h5 layout="row" ng-show="post.poster" style="margin:0px; line-height: 16px; color:rgba(255,255,255,0.5);">
+                        <div>Posted</div>&nbsp<div>by</div>&nbsp
+                        <username style="color:rgba(255,255,255,0.87)" account="post.poster" unique="true"></username>
+                        &nbspto&nbsp<span style="color:rgba(255,255,255,0.87)">{{post.community}}</span>
                     </h5>
                 </md-card-title-text>
             </md-card-title>
