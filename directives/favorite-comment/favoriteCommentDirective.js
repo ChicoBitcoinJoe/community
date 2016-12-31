@@ -16,7 +16,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB) {
             });
         },
 		controller: function($scope){
-            console.log($scope.commentData);
+            //console.log($scope.commentData);
             if(!$scope.commentData){
                 var locationUrlArray = $location.url().split('/');
                 $scope.txHash = locationUrlArray[4];

@@ -16,7 +16,7 @@ function ($q,Web3Service,EventManager) {
         /////////////////////////
         createChannel: function(channelName){
             var deferred = $q.defer();
-            ShareInstance.createChannel(channelName, {from:Web3Service.getCurrentAccount(),gas: 4700000}, 
+            ShareInstance.createChannel(channelName, {from:Web3Service.getCurrentAccount()}, 
             function(error, txHash){
                 if(!error){
                     Web3Service.getTransactionReceipt(txHash)

@@ -3,7 +3,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
 	return {
 		restrict: 'E',
 		scope: {
-			txHash: '=',
+			commentData: '=',
             commentDepth: '='
 		},
 		replace: true,
@@ -17,11 +17,19 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
             });
         },
 		controller: function($scope){
+            //console.log($scope.commentData);
+            $scope.txHash = $scope.commentData.txHash;
+            
             $scope.activeView = $location.url().split('/')[2];
             $scope.rootTxHash = $location.url().split('/')[4];
             $scope.hasPrivateVoted = false;
             $scope.isComment = false;
+            
+            $scope.children = [];
             $scope.comments = Community.getChildren($scope.activeView, $scope.txHash);
+            for(child in $scope.comments){
+                $scope.children.push({txHash:$scope.comments[child],combinedScore:50});
+            }
             
             var async_eventData = Community.getEventData($scope.txHash).then(
             function(event){
@@ -29,6 +37,24 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                 $scope.communityName = event.args.channel;
                 
                 $scope.user = ProfileDB.getUser($scope.event.args.sender);
+                $scope.privateScore = $scope.user.score;
+                
+                VoteHub.getKeyVotes($scope.communityName,$scope.event.args.sender).then(
+                function(voteData){
+                    var upvotes = web3.fromWei(voteData[0],'szabo').toString()/10;
+                    var downvotes = web3.fromWei(voteData[1],'szabo').toString()/10;
+                    //console.log(upvotes,downvotes);
+                    if(upvotes+downvotes !== 0){
+                        $scope.publicScore = Math.round(100*upvotes/(upvotes+downvotes));
+                        //console.log($scope.publicScore,$scope.user.score);
+                        $scope.commentData.combinedScore = ($scope.publicScore+$scope.user.score)/2;
+                    } else {
+                        $scope.publicScore = '*';
+                        $scope.commentData.combinedScore = $scope.privateScore;
+                    }
+                }, function(err){
+                    console.error(err);
+                });
                 
                 var ipfsHash = $scope.event.args.hash;
                 var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
@@ -40,7 +66,6 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                     //console.log($scope.post.poster);
                     if(Community.commentIsValid(ipfsData))
                         $scope.isComment = true;
-                    
                 }, function(err){
                     console.error(err); 
                 });
@@ -95,7 +120,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                     VoteHub.getUserData(Web3Service.getCurrentAccount(),$scope.activeView).then(
                     function(data){
                         var tokenAmount = Math.round(data[0]*1/10);
-                        VoteHub.vote($scope.activeView,$scope.txHash,tokenAmount,true).then(
+                        VoteHub.vote($scope.activeView,$scope.event.args.sender,tokenAmount,true).then(
                         function(receipt){
                             $scope.hasPublicVoted = true;
                         });
@@ -106,7 +131,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                     VoteHub.getUserData(Web3Service.getCurrentAccount(),$scope.activeView).then(
                     function(data){
                         var tokenAmount = Math.round(data[0]/10);
-                        VoteHub.vote($scope.activeView,$scope.txHash,tokenAmount,false).then(
+                        VoteHub.vote($scope.activeView,$scope.event.args.sender,false).then(
                         function(receipt){
                             $scope.hasPublicVoted = true;
                         });
@@ -127,10 +152,9 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                 };
                 
                 $scope.voteIsPrivate = false;
-                
             }, function(err){
                 console.error(err);    
             });
-		}
+        }
 	}
 }]);

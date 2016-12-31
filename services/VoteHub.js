@@ -11,7 +11,7 @@ function($q,Web3Service) {
         fundDevelopment: function(community, etherAmount){
             var deferred = $q.defer();
             
-            VoteHubInstance.fundDevelopment(community, {from:Web3Service.getCurrentAccount(),value:web3.toWei(etherAmount,'ether'),gas: 4700000}, 
+            VoteHubInstance.fundDevelopment(community, {from:Web3Service.getCurrentAccount(),value:web3.toWei(etherAmount,'ether')}, 
             function(error, txHash){
                 if(!error){
                     Web3Service.getTransactionReceipt(txHash)
@@ -30,7 +30,7 @@ function($q,Web3Service) {
         vote: function(community, txHash, tokenAmount, support){
             var deferred = $q.defer();
             
-            VoteHubInstance.vote(community, txHash, tokenAmount, support, {from:Web3Service.getCurrentAccount(),gas: 4700000}, 
+            VoteHubInstance.vote(community, txHash, tokenAmount, support, {from:Web3Service.getCurrentAccount()}, 
             function(error, txHash){
                 if(!error){
                     Web3Service.getTransactionReceipt(txHash)

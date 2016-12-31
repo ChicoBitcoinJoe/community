@@ -40,14 +40,15 @@ Features on release will include:
     Daemon is ready
     ```
 
-4. Browse to http://localhost:8080/ipfs/QmdFMNXu8KJJ2jNGvVQL2tsLJ5JEfT3hprJLYdjzd6kp2h/. If you bookmark this site it will automatically take you to the latest version of Community as they are released.
+4. Browse to http://localhost:8080/ipfs/QmUh3BPCTwin9Mg7KPNATaP9hLbWAfts4QYQkS1FDMC7cN/
+    - If you bookmark this site it will automatically take you to the latest version of Community as they are released.
 
 
 ### Developing Your Own Community Experience
 
 1. Get a copy of Community. There are two ways to do this:
     - Download it directly from [github](https://github.com/ChicoBitcoinJoe/Community) (find the "Clone or Download" button)
-    - Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and run "git clone https://github.com/ChicoBitcoinJoe/Community".  
+    - Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and run "git clone https://github.com/ChicoBitcoinJoe/Community"  
 3. Using a command prompt in the location of your Community folder run "ipfs add -r -q Community_Folder_Name" to get an Ipfs hash of the Community folder. It will be the very last hash to be printed and it will start with 'Qm...'
 4. Browse to http://localhost:8080/ipfs/COPY_IPFS_HASH_FROM_STEP_2_HERE/ (Make sure you have web3 exposed and have the ipfs daemon running!)
 5. Every time you make a change in the Community folder you need to repeat steps 3 and 4

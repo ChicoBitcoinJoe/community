@@ -3,7 +3,7 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
     console.log('Loading Community');
     
     var CommunityDB;
-    var localCommunityDB = null;//localStorage.getItem('CommunityDB');
+    var localCommunityDB = localStorage.getItem('CommunityDB');
     if(!localCommunityDB){
         CommunityDB = {};
         CommunityDB.communities = {};
@@ -164,8 +164,8 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
         getChildren: function(community,txHash){
             touchCommunity(community);
             touchCommentList(community,txHash);
-            
-            return CommunityDB.communities[community].comments[txHash];
+            var children = CommunityDB.communities[community].comments[txHash];
+            return children;
         },
         submitPost: function(post){
             var deferred = $q.defer();
@@ -176,8 +176,9 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
                     console.log(ipfsHash);
                     var async_shardAddress = SharePlatform.getChannelAddress(post.community).then(
                     function(shardAddress){
+                        web3.eth.gasPrice
                         var estimatedGas = 4700000;
-                        SharePlatform.broadcast(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount(), gas:estimatedGas}).then(
+                        SharePlatform.broadcast(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount()}).then(
                         function(txHash){
                             deferred.resolve(txHash);
                         }, function(err) {
@@ -204,7 +205,7 @@ function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
                     var async_shardAddress = SharePlatform.getChannelAddress(comment.community).then(
                     function(shardAddress){
                         var estimatedGas = 4700000;
-                        SharePlatform.broadcast(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount(), gas:estimatedGas}).then(
+                        SharePlatform.broadcast(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount()}).then(
                         function(receipt){
                             console.log(receipt);
                             deferred.resolve(receipt.transactionHash);

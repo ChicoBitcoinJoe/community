@@ -14,7 +14,7 @@ function(VoteHub){
                 if($scope.account){
                     VoteHub.getUserData($scope.account,$scope.community).then(
                     function(userData){
-                        $scope.available = web3.fromWei(userData[0], 'szabo').toString()/10;
+                        $scope.available = Math.round(web3.fromWei(userData[0], 'szabo').toString()/10);
                         $scope.total = web3.fromWei(userData[1], 'szabo').toString()/10;
                     }, function(err){
                         console.error(err);

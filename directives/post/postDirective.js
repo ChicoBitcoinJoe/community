@@ -8,12 +8,8 @@ function(IpfsService,$location,$window,ProfileDB,Community,VoteHub){
 		replace: true,
 		templateUrl: 'directives/post/postDirective.html',
 		controller: function($scope){
-            console.log($scope.postData);
-            if(!$scope.postData){
-                var locationUrlArray = $location.url().split('/');
-                $scope.txHash = locationUrlArray[4];
-            } else 
-                $scope.txHash = $scope.postData.txHash;
+            //console.log($scope.postData);
+            $scope.txHash = $scope.postData.txHash;
             
             $scope.isPost = false;
             $scope.isSaved = false;
@@ -42,11 +38,11 @@ function(IpfsService,$location,$window,ProfileDB,Community,VoteHub){
                         if(upvotes+downvotes !== 0){
                             $scope.publicScore = Math.round(100*upvotes/(upvotes+downvotes));
                             $scope.postData.combinedScore = ($scope.publicScore+$scope.privateScore)/2;
+                            
                             //console.log($scope.postData);
                         } else {
-                            $scope.publicScore = '*';
+                            $scope.publicScore = ' * ';
                             $scope.postData.combinedScore = $scope.privateScore;
-                            console.log($scope.postData);
                         }
                     }, function(err){
                         console.error(err);

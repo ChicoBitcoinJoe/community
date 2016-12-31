@@ -12,7 +12,7 @@
                     </h5>
                     <br>
                     <span flex></span>
-                    <h4 style="margin:0px;">{{user.score}} - {{user.bestUpvoteStreak}}/{{user.worstDownvoteStreak}}</h4>
+                    <h4 style="margin:0px;">{{publicScore}}|{{user.score}}|{{commentData.combinedScore}} - {{user.bestUpvoteStreak}}|{{user.worstDownvoteStreak}}</h4>
                 </div>
                 <div ng-hide="hasPrivateVoted || commentDepth == 0" layout="row" ng-show="commentDepth > 0">
                     <h5 layout="row" style="margin:0px; line-height: 16px;">
@@ -62,7 +62,7 @@
     </div>
     <span style="height:{{marginBottom}}px; background-color:rgba(33,33,33,1);"></span>
     <submit-comment ng-show="showSubmitCommentPanel()" community="activeView" parent="txHash" root-parent="rootTxHash" comment-depth="commentDepth"></submit-comment>
-    <div ng-hide="minimized" ng-repeat="comment in comments">
-        <comment-card tx-hash="comment" comment-depth="commentDepth + 1"></comment-card>
+    <div ng-hide="minimized" data-ng-repeat="childData in children">
+        <comment-card comment-data="childData" comment-depth="commentDepth + 1"></comment-card>
     </div>
 </md-card>

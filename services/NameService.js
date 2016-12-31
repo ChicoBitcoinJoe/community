@@ -35,7 +35,7 @@ function ($q,Web3Service) {
         setName: function(newName){
             var deferred = $q.defer();
             
-            NameInstance.setName(newName, {from:Web3Service.getCurrentAccount(),gas: 4700000}, 
+            NameInstance.setName(newName, {from:Web3Service.getCurrentAccount()},
             function(error, txHash){
                 if(!error){
                     Web3Service.getTransactionReceipt(txHash)
