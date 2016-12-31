@@ -37,7 +37,7 @@ Features on release will include:
     Daemon is ready
     ```
 
-4. Browse to http://localhost:8080/ipfs/QmUh3BPCTwin9Mg7KPNATaP9hLbWAfts4QYQkS1FDMC7cN/
+4. Browse to [http://localhost:8080/ipfs/QmUh3BPCTwin9Mg7KPNATaP9hLbWAfts4QYQkS1FDMC7cN/](http://localhost:8080/ipfs/QmUh3BPCTwin9Mg7KPNATaP9hLbWAfts4QYQkS1FDMC7cN/)
     - If you bookmark this site it will automatically take you to the latest version of Community as they are released.
 
 
