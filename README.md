@@ -1,11 +1,8 @@
 # Community
 
-This repo is an implementation of a *Reddit-like* site using Ethereum, Ipfs and a collection of smart contracts on the Ethereum blockchain. 
-
-The Community white paper can be found [here](https://docs.google.com/document/d/1IW3YqxdpveDtERUvkXtVLSdQH8o17xq7eptDbHu08es/edit#) 
+This repo is an implementation of a *Reddit-like* site using Ethereum, Ipfs and a collection of smart contracts on the Ethereum blockchain. If you are interested in the design and technical details about Community you can read the [white paper](https://docs.google.com/document/d/1IW3YqxdpveDtERUvkXtVLSdQH8o17xq7eptDbHu08es/edit#).
 
 Features on release will include:
-
 - AutoModeration
 - Ad Free
 - Material Design UX
