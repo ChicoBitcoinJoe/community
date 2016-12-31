@@ -35,6 +35,8 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
                     downvotes:[],
                     upvoteStreak:0;
                     downvoteStreak:0;
+                    squelched:false;
+                    banned:false;
                 }*/        
             },
             PostScores:{
@@ -53,28 +55,25 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
     var touchUser = function(account){
         if(!ProfileDB.users[account]){
             ProfileDB.users[account] = {};
+            ProfileDB.users[account].score = 50;
             ProfileDB.users[account].upvotes = [];
             ProfileDB.users[account].downvotes = [];
             ProfileDB.users[account].upvoteStreak = 0;
             ProfileDB.users[account].downvoteStreak = 0;
             ProfileDB.users[account].bestUpvoteStreak = 0;
             ProfileDB.users[account].worstDownvoteStreak = 0;
-            ProfileDB.users[account].score = 50;
-            //console.log("New user! Score:",ProfileDB.users[account].score);
-        } else {
-            //console.log("Existing user! Score:", ProfileDB.users[account].score);
+            ProfileDB.users[account].banned = false;
+            ProfileDB.users[account].squelched = false;
         }
     };
     
     var touchPostScore = function(community,txHash){
-        //console.log(community,txHash);
         if(!ProfileDB.PostScores[community]){
             ProfileDB.PostScores[community] = {};
             ProfileDB.PostScores[community].post = {};
         }
         
         if(!ProfileDB.PostScores[community].post[txHash]){
-            //console.log("No Post Score Detected");
             ProfileDB.PostScores[community].post[txHash] = {};
             ProfileDB.PostScores[community].post[txHash].score = 0;
             ProfileDB.PostScores[community].post[txHash].posters = [];
@@ -87,13 +86,8 @@ Community.service('ProfileDB',['Web3Service','$q', function(Web3Service,$q){
     };
     
     var saveFavorite = function(community,txHash){
-        //console.log(community,txHash,ProfileDB.favorited[community])
-        if(ProfileDB.favorited[community].indexOf(txHash) == -1){
+        if(ProfileDB.favorited[community].indexOf(txHash) == -1)
             ProfileDB.favorited[community].push(txHash);
-            //console.log("Saved!",ProfileDB.favorited[community]);
-        } else {
-            //console.log("Already Saved!");
-        }
     };
     
     var removeFavorite = function(community,txHash){

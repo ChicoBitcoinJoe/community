@@ -2,8 +2,12 @@
 
 ## Unsorted ##
 
-- hide post
-- public voting on a specific user should indicate if it has been done before
+- hide post button
+- squelch button
+- blacklist button
+- auto hide post if score is low
+    - auto reveal if high score user replies
+- auto reveal users with high score 
 
 ## Critical ##
 
@@ -12,10 +16,12 @@
 
 ## NonCritical ##
 
-- public post score should be penalized when only 1 vote has been cast 
 - Post Preview needs updating
 - fund development view does nothing after submission
 - multi favorites
+
+- public post score should be penalized when only 1 vote has been cast 
+    - possibly part of a "confidence" metric
 
 - Settings sidenav
     - backend
