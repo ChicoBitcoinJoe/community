@@ -8,7 +8,7 @@ contract Updater is Owned{
     // Allow for updating the Updater //
     ////////////////////////////////////
     address newUpdaterAddress;
-    string msgHash;
+    string msgHash = '';
     
     function updateUpdater(address _newUpdaterAddress, string _msgHash) isOwner{
         newUpdaterAddress = _newUpdaterAddress;
@@ -37,7 +37,7 @@ contract Updater is Owned{
     }
     
     function newUpdate(string _updateAddress, bool _critical) isOwner{
-        updates[totalUpdates++] = Update(_updateAddress,block.timestamp,_critical);
+        updates[++totalUpdates] = Update(_updateAddress,block.timestamp,_critical);
     }
     
     function getUpdateByID(uint id) constant returns(string,uint,bool){

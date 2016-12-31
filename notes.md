@@ -3,6 +3,7 @@
 ## Unsorted ##
 
 - hide post
+- public voting on a specific user should indicate if it has been done before
 
 ## Critical ##
 

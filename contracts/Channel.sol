@@ -5,7 +5,7 @@ contract Channel{
     string channelName;
     uint block_created;
     
-    event Broadcast_event(string hash);
+    event Broadcast_event(address sender, string channel, string hash);
 
     function Channel(string _channel_name){
         channelName = _channel_name;
@@ -16,7 +16,7 @@ contract Channel{
         return (channelName,block_created);
     }
     
-    function broadcast(string ipfsHash){
-        Broadcast_event(ipfsHash);
+    function broadcast(string hash){
+        Broadcast_event(msg.sender,channelName,hash);
     }
 }
