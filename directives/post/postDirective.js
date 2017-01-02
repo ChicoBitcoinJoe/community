@@ -1,5 +1,5 @@
-Community.directive('postCard', ['IpfsService','$location','$window','ProfileDB','Community','VoteHub',
-function(IpfsService,$location,$window,ProfileDB,Community,VoteHub){
+Community.directive('postCard', ['IpfsService','$location','$window','ProfileDB','Community','VoteHub','Web3Service',
+function(IpfsService,$location,$window,ProfileDB,Community,VoteHub,Web3Service){
 	return {
 		restrict: 'E',
 		scope: {
@@ -12,8 +12,8 @@ function(IpfsService,$location,$window,ProfileDB,Community,VoteHub){
             $scope.txHash = $scope.postData.txHash;
             
             $scope.isPost = false;
+            $scope.hidden = true;
             $scope.isSaved = false;
-            $scope.activeView = $location.url().split('/')[2];
             
             var async_eventData = Community.getEventData($scope.txHash).then(
             function(event){
@@ -23,6 +23,24 @@ function(IpfsService,$location,$window,ProfileDB,Community,VoteHub){
                 
                 $scope.isSaved = ProfileDB.isFavorited($scope.communityName,$scope.txHash);
                 $scope.privateScore = Community.getPostScore($scope.communityName,$scope.txHash);
+                
+                $scope.userUpvoted = false;
+                $scope.userDownvoted = false;
+                VoteHub.getUserVotes(Web3Service.getCurrentAccount(), $scope.communityName, $scope.event.args.sender).then(
+                function(voteData){
+                    var upvotes = web3.fromWei(voteData[0],'szabo').toString()/10;
+                    var downvotes = web3.fromWei(voteData[1],'szabo').toString()/10;
+
+                    if(upvotes > 0)
+                        $scope.userUpvoted = true;
+
+                    if (downvotes > 0)
+                        $scope.userDownvoted = true;
+
+                    console.log(upvotes,downvotes);
+                }, function(err){
+                    console.error(err);
+                });
                 
                 var ipfsHash = $scope.event.args.hash;
                 var async_ipfsData = IpfsService.getIpfsData(ipfsHash).then(
@@ -44,6 +62,9 @@ function(IpfsService,$location,$window,ProfileDB,Community,VoteHub){
                             $scope.publicScore = ' * ';
                             $scope.postData.combinedScore = $scope.privateScore;
                         }
+                        
+                        if($scope.postData.combinedScore >= 20) //This should be a user setting
+                            $scope.hidden = false;     
                     }, function(err){
                         console.error(err);
                     });
@@ -122,9 +143,6 @@ function(IpfsService,$location,$window,ProfileDB,Community,VoteHub){
                         $scope.commentView = false;
                         if(locationUrlArray[3] == 'post')
                             $scope.commentView = true;
-                    
-                    $scope.isPost = Community.postIsValid($scope.post);
-                    
                 },function(err){
                     console.error(err);
                 });           
@@ -152,7 +170,6 @@ function(IpfsService,$location,$window,ProfileDB,Community,VoteHub){
                 }
             };
             
-            
             $scope.save = function(){
                 console.log("Saving");
                 console.log($scope.communityName, $scope.txHash);
@@ -166,6 +183,38 @@ function(IpfsService,$location,$window,ProfileDB,Community,VoteHub){
                 ProfileDB.removeFromFavorites($scope.communityName, $scope.txHash);
                 $scope.isSaved = ProfileDB.isFavorited($scope.communityName,$scope.txHash);
                 console.log($scope.isSaved);
+            };
+            
+            $scope.upvotePost = function(){
+                VoteHub.getUserData(Web3Service.getCurrentAccount(),$scope.communityName).then(
+                function(data){
+                    var tokenAmount = Math.round(data[0]*1/10);
+                    VoteHub.vote($scope.communityName,$scope.txHash,tokenAmount,true).then(
+                    function(receipt){
+                        $scope.hasPublicVoted = true;
+                    });
+                });
+            };
+
+            $scope.downvotePost = function(){
+                VoteHub.getUserData(Web3Service.getCurrentAccount(),$scope.communityName).then(
+                function(data){
+                    var tokenAmount = Math.round(data[0]*1/10);
+                    VoteHub.vote($scope.communityName,$scope.txHash,tokenAmount,false).then(
+                    function(receipt){
+                        $scope.hasPublicVoted = true;
+                    });
+                });
+            };
+            
+            var originatorEv;
+            $scope.openMenu = function($mdOpenMenu, ev) {
+                originatorEv = ev;
+                $mdOpenMenu(ev);
+            };
+            
+            $scope.hide = function(){
+                $scope.hidden = true;
             };
         },
 		link : function($scope, $element, $attrs) {

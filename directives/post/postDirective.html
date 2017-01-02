@@ -1,4 +1,13 @@
-<md-card class="post" ng-show="isPost" md-theme="dark-theme" style="background-color:rgba(50,50,50,1);" layout="row" flex>
+<md-card class="post" ng-show="!hidden" md-theme="dark-theme" style="background-color:rgba(50,50,50,1);" layout="row" flex>
+    <div style="margin-right:4px;" layout="column">
+        <div ng-class="{'hover-fx': !userUpvoted}" ng-click="upvotePost()" layout layout-align="center center" flex>
+            <md-icon md-svg-icon="images/icons/ic_arrow_upward_white_24px.svg"></md-icon>
+        </div>
+        <div style="margin:4px;"><md-icon class="md-18" style="fill:#AAAAAA !important;" md-svg-icon="images/icons/ic_public_white_18px.svg"></md-icon></div>
+        <div ng-class="{'hover-fx': !userDownvoted}" ng-click="downvotePost()" layout layout-align="center center" flex>
+            <md-icon md-svg-icon="images/icons/ic_arrow_downward_white_24px.svg"></md-icon>
+        </div>
+    </div>
     <div ng-if="post.media == 'image'" class="card-image-{{orientation}}" layout="{{layout}}" layout-align="top center">
         <img class="card-image" ng-src="{{imageSource}}" alt="post image: {{post.link}}">
     </div>
@@ -33,11 +42,36 @@
                     <md-icon ng-show="!isSaved" ng-click="save()" md-svg-src="images/icons/ic_favorite_border_white_24px.svg"></md-icon>
                     <md-icon ng-show="isSaved" ng-click="unsave()" md-svg-src="images/icons/ic_favorite_white_24px.svg"></md-icon>
                 </md-button>
-                <md-button aria-label="Share">
+                <md-button ng-hide="true" aria-label="Share">
                     <md-icon md-svg-src="images/icons/ic_share_white_24px.svg"></md-icon>
                 </md-button>
+                <md-button ng-href="#/c/{{post.community}}/post/{{txHash}}" style="text-transform:lowercase" aria-label="Go to Comments"><md-icon md-svg-src="images/icons/ic_comment_white_24px.svg"></md-icon>&nbsp comments</md-button>
                 <span flex></span>
-                <md-button ng-href="#/c/{{post.community}}/post/{{txHash}}" aria-label="Go to Comments"><md-icon md-svg-src="images/icons/ic_comment_white_24px.svg"></md-icon>&nbsp Comments</md-button>
+                <md-menu>
+                    <md-button ng-click="openMenu($mdOpenMenu, $event)" style="text-transform:lowercase">
+                       more <md-icon md-svg-src="images/icons/ic_keyboard_arrow_down_white_24px.svg"></md-icon>
+                    </md-button>
+                    <md-menu-content style="background-color:rgba(50,50,50,1);" width="2">
+                        <md-menu-item>
+                            <md-button ng-click="hide()" style="text-transform: lowercase; color: rgba(255,255,255,0.87);">
+                                <md-icon md-svg-src="images/icons/ic_chrome_reader_mode_white_24px.svg"></md-icon>
+                                hide
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item ng-if="user.worstDownvoteStreak >= 3">
+                            <md-button style="text-transform: lowercase; color: rgba(255,255,255,0.87);">
+                                <md-icon md-svg-src="images/icons/ic_favorite_white_24px.svg"></md-icon>
+                                squelch
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item ng-if="user.squelched">
+                            <md-button style="text-transform: lowercase; color: rgba(255,255,255,0.87);">
+                                <md-icon md-svg-src="images/icons/ic_assessment_white_18px.svg"></md-icon>
+                                ban
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
             </md-card-icon-actions>
         </md-card-actions>
     </div>

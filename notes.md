@@ -7,7 +7,8 @@
 - blacklist button
 - auto hide post if score is low
     - auto reveal if high score user replies
-- auto reveal users with high score 
+- auto reveal users with high score
+- implement share button
 
 ## Critical ##
 

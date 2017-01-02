@@ -24,6 +24,10 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
             $scope.rootTxHash = $location.url().split('/')[4];
             $scope.hasPrivateVoted = false;
             $scope.isComment = false;
+            $scope.minimized = true;
+            
+            if($scope.commentDepth == 0)
+                Community.getPosts([$scope.activeView]);
             
             $scope.children = [];
             $scope.comments = Community.getChildren($scope.activeView, $scope.txHash);
@@ -54,7 +58,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
     
                 }, function(err){
                     console.error(err);
-                })
+                });
                 
                 VoteHub.getKeyVotes($scope.communityName,$scope.event.args.sender).then(
                 function(voteData){
@@ -62,13 +66,34 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                     var downvotes = web3.fromWei(voteData[1],'szabo').toString()/10;
                     //console.log(upvotes,downvotes);
                     if(upvotes+downvotes !== 0){
+                        console.log(upvotes,downvotes);
                         $scope.publicScore = Math.round(100*upvotes/(upvotes+downvotes));
                         //console.log($scope.publicScore,$scope.user.score);
                         $scope.commentData.combinedScore = ($scope.publicScore+$scope.user.score)/2;
                     } else {
+                        console.log($scope.privateScore);
                         $scope.publicScore = '*';
                         $scope.commentData.combinedScore = $scope.privateScore;
                     }
+                    
+                    console.log($scope.commentDepth, $scope.commentData.combinedScore, $scope.minimized);
+                    
+                    if($scope.commentData.combinedScore >= 25 && $scope.user.score >= 25 )
+                        $scope.minimized = false;
+
+                    if($scope.commentDepth == 0)
+                        $scope.minimized = false;
+                    
+                    if($scope.user.squelched || $scope.user.banned)
+                        $scope.hidden = true;
+                    
+                    
+                    console.log($scope.commentDepth, $scope.commentData.combinedScore, $scope.minimized);
+                    
+                    $scope.$watch('children',
+                    function(oldChildren,newChildren){
+                        //console.log(oldChildren,newChildren);
+                    });
                 }, function(err){
                     console.error(err);
                 });
@@ -83,6 +108,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                     //console.log($scope.post.poster);
                     if(Community.commentIsValid(ipfsData))
                         $scope.isComment = true;
+                    console.log($scope.isComment);
                 }, function(err){
                     console.error(err); 
                 });
@@ -139,7 +165,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                         var tokenAmount = Math.round(data[0]*1/10);
                         VoteHub.vote($scope.activeView,$scope.event.args.sender,tokenAmount,true).then(
                         function(receipt){
-                            $scope.hasPublicVoted = true;
+                            $scope.userDownvoted = false;
                         });
                     });
                 };
@@ -150,7 +176,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                         var tokenAmount = Math.round(data[0]/10);
                         VoteHub.vote($scope.activeView,$scope.event.args.sender,tokenAmount,false).then(
                         function(receipt){
-                            $scope.hasPublicVoted = true;
+                            $scope.userUpvoted = false;
                         });
                     });
                 };
@@ -169,9 +195,19 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                 };
                 
                 $scope.voteIsPrivate = false;
+                
+                $scope.hide = function(){
+                    $scope.hidden = true;
+                };
             }, function(err){
                 console.error(err);    
             });
+            
+            var originatorEv;
+            $scope.openMenu = function($mdOpenMenu, ev) {
+                originatorEv = ev;
+                $mdOpenMenu(ev);
+            };
         }
 	}
 }]);
