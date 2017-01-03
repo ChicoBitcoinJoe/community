@@ -58,7 +58,7 @@ function($mdSidenav, $location, ProfileDB) {
             };
             
             $scope.goTo = function(url){
-                console.log(url);
+                //console.log(url);
                 $location.url(url);
             };
 		},

@@ -37,7 +37,7 @@ function(IpfsService,$location,$window,ProfileDB,Community,VoteHub,Web3Service){
                     if (downvotes > 0)
                         $scope.userDownvoted = true;
 
-                    console.log(upvotes,downvotes);
+                    //console.log(upvotes,downvotes);
                 }, function(err){
                     console.error(err);
                 });

@@ -66,17 +66,17 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                     var downvotes = web3.fromWei(voteData[1],'szabo').toString()/10;
                     //console.log(upvotes,downvotes);
                     if(upvotes+downvotes !== 0){
-                        console.log(upvotes,downvotes);
+                        //console.log(upvotes,downvotes);
                         $scope.publicScore = Math.round(100*upvotes/(upvotes+downvotes));
                         //console.log($scope.publicScore,$scope.user.score);
                         $scope.commentData.combinedScore = ($scope.publicScore+$scope.user.score)/2;
                     } else {
-                        console.log($scope.privateScore);
+                        //console.log($scope.privateScore);
                         $scope.publicScore = '*';
                         $scope.commentData.combinedScore = $scope.privateScore;
                     }
                     
-                    console.log($scope.commentDepth, $scope.commentData.combinedScore, $scope.minimized);
+                    //console.log($scope.commentDepth, $scope.commentData.combinedScore, $scope.minimized);
                     
                     if($scope.commentData.combinedScore >= 25 && $scope.user.score >= 25 )
                         $scope.minimized = false;
@@ -87,8 +87,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                     if($scope.user.squelched || $scope.user.banned)
                         $scope.hidden = true;
                     
-                    
-                    console.log($scope.commentDepth, $scope.commentData.combinedScore, $scope.minimized);
+                    //console.log($scope.commentDepth, $scope.commentData.combinedScore, $scope.minimized);
                     
                     $scope.$watch('children',
                     function(oldChildren,newChildren){
@@ -108,7 +107,7 @@ function($location,RecursionHelper,Community,IpfsService,ProfileDB,VoteHub,Web3S
                     //console.log($scope.post.poster);
                     if(Community.commentIsValid(ipfsData))
                         $scope.isComment = true;
-                    console.log($scope.isComment);
+                    //console.log($scope.isComment);
                 }, function(err){
                     console.error(err); 
                 });
