@@ -6,7 +6,7 @@ Community.config(function ($routeProvider) {
         templateUrl: 'views/homepage/homepageView.html',
         controller: 'HomepageViewController'
     }).
-    when('/profile', {
+    when('/user/:account', {
         templateUrl: 'views/profile/profileView.html',
         controller: 'ProfileViewController'
     }).

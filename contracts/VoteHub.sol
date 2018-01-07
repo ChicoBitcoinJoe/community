@@ -9,6 +9,7 @@ contract VoteHub is Owned {
     struct Community {
         uint available_tokens;
         uint total_tokens;
+        
         mapping(string => Key) keys;
     }
     
@@ -77,17 +78,23 @@ contract VoteHub is Owned {
         var upvotes = Voters[msg.sender].Communities[community].keys[key].upvotes;
         var downvotes = Voters[msg.sender].Communities[community].keys[key].downvotes;
         
-        Communities[community].keys[key].upvotes -= upvotes;
-        Communities[community].keys[key].downvotes -= downvotes;
+        if(upvotes > 0){
+            Communities[community].keys[key].upvotes -= upvotes;
+            Voters[msg.sender].Communities[community].keys[key].upvotes = 0;
+            
+            Voters[msg.sender].Communities[community].available_tokens += upvotes;
+            Communities[community].available_tokens += upvotes;
+        }
         
-        Voters[msg.sender].Communities[community].keys[key].upvotes = 0;
-        Voters[msg.sender].Communities[community].keys[key].downvotes = 0;
+        if(downvotes > 0){
+            Communities[community].keys[key].downvotes -= downvotes;
+            Voters[msg.sender].Communities[community].keys[key].downvotes = 0;
+            
+            Voters[msg.sender].Communities[community].available_tokens += downvotes;
+            Communities[community].available_tokens += downvotes;
+        }
         
-        var refund = upvotes + downvotes;
-        Voters[msg.sender].Communities[community].available_tokens += refund;
-        Communities[community].available_tokens += refund;
-        
-        ReclaimTokens_event(msg.sender, community,key,upvotes,downvotes);
+        ReclaimTokens_event(msg.sender,community,key,upvotes,downvotes);
     }
     
     function getKeyVotes(string community, string key) constant returns(uint,uint){

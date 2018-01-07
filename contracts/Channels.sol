@@ -2,14 +2,13 @@ pragma solidity ^0.4.6;
 
 import "Channel.sol";
 
-contract SharePlatform {
-    
-    event NewChannel_event(string channelName);
+contract Channels {
     
     uint total_channels = 0;
     mapping (uint => string) channelIndex;
     mapping (string => address) channelList;
 
+    event NewChannel_event(string channelName);
     function createChannel(string channelName){
         if(channelList[channelName] == 0){
             total_channels++;

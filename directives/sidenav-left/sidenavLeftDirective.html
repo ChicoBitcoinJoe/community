@@ -2,7 +2,7 @@
     <md-toolbar class="md-tall sidenavGreen sidenav-toolbar" layout="column">
         <h3 class="sidenav-community-header" layout="row"><a href="#/">Community - Testnet</a><span flex></span><span ng-click="toggle('left')" class="sidenav-close-button" hide-gt-sm><md-icon md-svg-src="images/icons/ic_close_white_24px"></md-icon></span></h3>
         <span flex></span>
-        <div ng-click="goTo('/profile')" class="user-account-color pointer-enabled md-whiteframe-4dp" layout="row" layout-align="left center" style="padding:5px; margin-bottom:10px;">
+        <div ng-click="goTo('/user/'+account)" class="user-account-color pointer-enabled md-whiteframe-4dp" layout="row" layout-align="left center" style="padding:5px; margin-bottom:10px;">
             &nbsp<md-icon md-svg-src="images/icons/ic_face_white_24px.svg"></md-icon>
             <div layout="column" flex>
                 <h5 style="margin: 4px 0px 0px 10px; overflow:hidden; white-space:nowrap; text-overflow: ellipsis;"><username account="account" unique="false"></username></h5>
@@ -29,10 +29,6 @@
             </div>
             <div class="sidenav-list-item" ng-class="{selected: (multi==activeView && viewType=='m')}" ng-repeat="multi in multis" layout="row">
                 <a style="height:36;" ng-href="#/m/{{multi}}" layout layout-align="left center" flex>{{multi | capitalize}}</a>
-                <!--<div aria-label="Multi stats" style="color:rgba(255,255,255,0.5); margin:0px;" ng-hide="toggleSettings" style="margin:0px;">
-                    2500 <small>vt</small>
-                </div>-->
-                
                 <md-button ng-show="toggleSettings && multi !== 'all' && multi !== 'ungrouped'" style="margin:0px;" ng-click="deleteMulti(multi)" aria-label="remove multi">
                     <md-icon md-svg-src="images/icons/ic_indeterminate_check_box_white_24px.svg"></md-icon>
                 </md-button>
