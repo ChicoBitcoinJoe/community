@@ -1,0 +1,28 @@
+<div style="padding: 16px;" ng-show="app.view.ready" layout="column" layout-fill>
+    <h1>Angular 1 Web3 Boilerplate</h1>
+    
+    <h2>View Information</h2>
+    <div>Ready: {{app.view.ready}}</div>
+
+    <h2>Ethereum Network</h2>
+    <div>Web3 Connected: {{app.web3Connected}}</div>
+    <div ng-show="app.web3Connected">
+
+        <div>Network Id: {{web3.networks.current}}</div>
+        <div>Current Block: {{app.block.current.number}}</div>
+        <div>ETH per USD: &diams;{{app.price.eth.usd | fromWei:'ether' | decimals:7}}</div>
+        <div>USD per ETH: ${{app.price.usd.eth | fromWei:'ether' | decimals:2}}</div>
+
+        <h2>Account Information</h2>
+        <div ng-show="!app.user.isLoggedIn">
+            <div>Not logged in.</div>
+        </div>
+        <div ng-show="app.user.isLoggedIn">
+            <div>Address: {{app.user.address}}</div>
+            <div>Ether: &diams;{{app.user.balance | fromWei:'ether' | decimals:5}}</div>
+            <div>USD Value: ${{(app.user.balance | fromWei:'ether') * (app.price.usd.eth | fromWei:'ether') | decimals:2}}</div>
+        </div>
+
+    </div>
+    
+</div>

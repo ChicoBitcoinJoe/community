@@ -1,99 +1,90 @@
-var Community = angular.module('Community',['RecursionHelper','ngRoute','ngMaterial','ngMessages','material.svgAssetsCache','ngSanitize']);
+var app = angular.module('app',['ngRoute','ngMaterial','ngAria','ngAnimate']);
 
-Community.config(function ($routeProvider) {
-	$routeProvider.
-    when('/homepage', {
-        templateUrl: 'views/homepage/homepageView.html',
-        controller: 'HomepageViewController'
-    }).
-    when('/user/:account', {
-        templateUrl: 'views/profile/profileView.html',
-        controller: 'ProfileViewController'
-    }).
-    when('/m/:multi', {
-        templateUrl: 'views/post/postView.html',
-        controller: 'PostViewController'
-    }).
-    when('/c/:community', {
-        templateUrl: 'views/post/postView.html',
-        controller: 'PostViewController'
-    }).
-    when('/c/:community/fund', {
-        templateUrl: 'views/fund/fundView.html',
-        controller: 'FundViewController'
-    }).
-    when('/c/:community/favorites', {
-        templateUrl: 'views/favorite/favoriteView.html',
-        controller: 'FavoriteViewController'
-    }).
-    when('/c/:community/statistics', {
-        templateUrl: 'views/community-stats/communityStatsView.html',
-        controller: 'CommunityStatsViewController'
-    }).
-    when('/m/:multi/statistics', {
-        templateUrl: 'views/multi-stats/multiStatsView.html',
-        controller: 'MultiStatsViewController'
-    }).
-    when('/c/:community/post/:postTxHash', {
-        templateUrl: 'views/comment/commentView.html',
-        controller: 'CommentViewController'
-    }).
-	otherwise({
-      redirectTo: '/homepage'
-    });
-});
-
-Community.config(function($mdThemingProvider) {
-     $mdThemingProvider
-    .theme('dark-theme')
-    .primaryPalette('blue-grey')
-    .accentPalette('amber')
-    .warnPalette('deep-orange')
-    .backgroundPalette('grey')
-    .dark();
-});
-
-Community.run(['$rootScope','$location', function($rootScope,$location) {
-    console.log('Community booting up.');
-    
-    $rootScope.$on('$routeChangeSuccess', function() {
-        var locationUrlArray = $location.url().split('/');
-        $rootScope.viewType = locationUrlArray[1];
-        $rootScope.activeView = locationUrlArray[2];
-        $rootScope.$broadcast('headerChange',$rootScope.activeView);
-    });
+app.run(['$rootScope', function($rootScope) {
+    console.log('App is loading.');
 }]);
 
-Community.filter('capitalize', function() {
-    return function(input){
-        if(input){
-            if(input.indexOf(' ') !== -1){
-                var input = input.toLowerCase();
-                var inputPieces = input.split(' ');
-                for(i = 0; i < inputPieces.length; i++){
-                    inputPieces[i] = capitalizeString(inputPieces[i]);
-                }
-                return inputPieces.toString().replace(/,/g,' ');
-            } else {
-                input = input.toLowerCase();
-                return capitalizeString(input);
-            }
+app.controller('AppController', ['$scope','$q','$web3','$location','Profile','PriceFeed',
+function($scope, $q, $web3, $location, Profile, PriceFeed) {
+    console.log('Loading AppController');
 
-            function capitalizeString(inputString){
-                return inputString.substring(0,1).toUpperCase() + inputString.substring(1);
+    var ready = $q.defer();
+
+    $scope.web3 = $web3;
+
+    $scope.app = {
+        ready: ready.promise,
+        web3Connected: null,
+        path: parsePath(),
+        price: {
+            usd: {
+                eth: null
+            },
+            eth: {
+                usd: null
             }
-        };
+        },
+        user: {
+            isLoggedIn: null,
+            address: null,
+            balance: null
+        },
+        block: {
+            current: null
+        },
+        error: null
+    };
+
+    $web3.assertNetworkId($web3.networks.kovan)
+    .then(function(currentBlock){
+        $scope.app.web3Connected = true;
+        $scope.app.block.current = currentBlock;
+        return $q.all([
+            $web3.getCurrentAccount(),
+            PriceFeed.get('usd','eth'),
+            PriceFeed.get('eth','usd'),
+        ]);
+    }).then(function(promises){
+        var currentAddress = promises[0];
+        var usdPerEth = promises[1];
+        var ethPerUsd = promises[2];
+
+        $scope.app.price['usd']['eth'] = usdPerEth;
+        $scope.app.price['eth']['usd'] = ethPerUsd;
+
+        return Profile.get(currentAddress);
+    }).then(function(profile){
+        $scope.app.user = profile;
+        console.log($scope.app);
+        ready.resolve();
+    }).catch(function(err){
+        $scope.app.web3Connected = false;
+
+        console.error(err);
+        console.log($scope.app);
+        $scope.app.error = err;
+        ready.reject(err);
+    });
+
+    function getNow(){
+        return parseInt((Date.now() / 1000).toFixed(0));
     }
-});
+    
+    function parsePath(){
+        var path = $location.path();
+        return path.split('/').slice(1,path.length);
+    }
 
-Community.filter('round', [function() {
-    return function(val) {
-        return val.toFixed(0);
-    };
+    $scope.$on('$routeChangeStart', function($event, next, current) {
+        $scope.app.path = parsePath();
+    });
+
+    web3.eth.filter('latest', function(err, blockHash){
+        //console.log(err, blockHash);
+        console.log('New block found. Updating current block...');
+        $web3.getBlock(blockHash).then(function(currentBlock){
+            $scope.app.block.current = currentBlock;
+        });
+    });
+
 }]);
-
-Community.filter('reverse', function() {
-    return function(items) {
-        return items.slice().reverse();
-    };
-});
