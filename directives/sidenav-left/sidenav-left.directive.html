@@ -1,0 +1,33 @@
+<md-sidenav flex
+    class="md-sidenav-left"
+    style="max-width: 300px !important; min-width: 300px !important;"
+    layout="column"
+    md-component-id="left"
+    md-is-locked-open="$mdMedia('gt-xs')">
+    <div layout="column" layout-padding flex>
+        <h3>Community</h3>
+
+        <md-divider></md-divider>
+
+        <div ng-show="app.user.isLoggedIn" layout="row" layout-padding>
+            <div layout="column">
+                {{whois(app.user.address)}}
+                <div class="light-text">{{app.user.address.slice(0,6)}}...</div>
+            </div>
+            <span flex></span>
+            <div layout="column" layout-align="start end">
+                <div>&diams;{{app.user.balance | fromWei:'ether' | decimals:3}}</div>
+                <div>${{(app.user.balance | fromWei:'ether') * (app.price.usd.eth | fromWei:'ether') | decimals:2}}</div>
+            </div>
+        </div>
+
+        <md-divider></md-divider>
+        
+        <div style="overflow: auto" layout="column" layout-padding flex>
+            <div>All</div>
+            <div>Bitcoin</div>
+            <div>Ethereum</div>
+            <div>Monero</div>
+        </div>
+    </div>
+</md-sidenav>

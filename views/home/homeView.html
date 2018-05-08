@@ -1,28 +1,36 @@
-<div style="padding: 16px;" ng-show="app.view.ready" layout="column" layout-fill>
-    <h1>Angular 1 Web3 Boilerplate</h1>
-    
-    <h2>View Information</h2>
-    <div>Ready: {{app.view.ready}}</div>
-
-    <h2>Ethereum Network</h2>
-    <div>Web3 Connected: {{app.web3Connected}}</div>
-    <div ng-show="app.web3Connected">
-
-        <div>Network Id: {{web3.networks.current}}</div>
-        <div>Current Block: {{app.block.current.number}}</div>
-        <div>ETH per USD: &diams;{{app.price.eth.usd | fromWei:'ether' | decimals:7}}</div>
-        <div>USD per ETH: ${{app.price.usd.eth | fromWei:'ether' | decimals:2}}</div>
-
-        <h2>Account Information</h2>
-        <div ng-show="!app.user.isLoggedIn">
-            <div>Not logged in.</div>
+<div ng-show="app.view.ready" layout="row" layout-fill>
+    <sidenav-left data="app" layout="column"></sidenav-left>
+    <div layout="column" layout-padding flex>
+        <div layout="row">
+            <div>
+                <md-input-container class="option-picker">
+                    <md-select ng-model="app.view.selectedOption">
+                        <md-option ng-repeat="option in app.view.options" value="{{option}}">
+                            {{option}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+            <span flex></span>
+            <md-button hide-gt-xs class="fake-icon" ng-click="toggleSidenav('left')">| | |</md-button>
         </div>
-        <div ng-show="app.user.isLoggedIn">
-            <div>Address: {{app.user.address}}</div>
-            <div>Ether: &diams;{{app.user.balance | fromWei:'ether' | decimals:5}}</div>
-            <div>USD Value: ${{(app.user.balance | fromWei:'ether') * (app.price.usd.eth | fromWei:'ether') | decimals:2}}</div>
+        <div style="overflow: auto">
+            <div ng-repeat="post in posts" style="padding: 16px;" layout="row">
+                <div style="min-width: 30px; max-width: 30px;" layout="column" layout-align="center center">
+                    <div>&#9650;</div>
+                    <div>{{post.score}}</div>
+                    <div>&#9660;</div>
+                </div>
+                <div layout="column" layout-margin flex>
+                    <h4 class="nomargin">{{post.data.title}}</h4>
+                    <div class="nomargin subtitle subtext" style="display: inline-block;" layout="row">
+                        <span>By {{post.poster}} to </span>
+                        <span class="subtext" ng-repeat="community in post.to">
+                            {{community}}<span ng-if="!$last">,&nbsp</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
         </div>
-
     </div>
-    
 </div>

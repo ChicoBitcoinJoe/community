@@ -3,7 +3,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="A simple Angular 1 boilerplate with Web3 integration">
+    <meta name="description" content="Community: A simple free speech platform.">
     
     <!-- Angular Material style sheet -->
     <link rel="stylesheet" href="libs/angular-includes/angular-material-1.1.0.min.css">
@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="libs/googleapis/roboto.css">
     <link rel="stylesheet" href="styles.css">
     
-    <title>Angular 1 Web3 Boilerplate</title>
+    <title>Community</title>
     
 </head>
 <body ng-controller="AppController" ng-cloak>
@@ -35,13 +35,16 @@
     <!-- Services -->
     <script src="https://cdn.rawgit.com/ChicoBitcoinJoe/Angular-1-Web3-Service/master/Web3.js"></script>
     <script src="services/PriceFeed.js"></script>
+    <script src="services/NameService.js"></script>
     <script src="services/Profile.js"></script>
+    <script src="services/Community.js"></script>
     
     <!-- View Controllers -->
     <script src="views/app.routes.js"></script>
     <script src="views/home/homeViewController.js"></script>
     
     <!-- Directives -->
+    <script src="directives/sidenav-left/sidenav-left.directive.js"></script>
     
     <!-- Make sure web3 object is available before rendering -->
     <script>

@@ -4,13 +4,14 @@ app.run(['$rootScope', function($rootScope) {
     console.log('App is loading.');
 }]);
 
-app.controller('AppController', ['$scope','$q','$web3','$location','Profile','PriceFeed',
-function($scope, $q, $web3, $location, Profile, PriceFeed) {
+app.controller('AppController', ['$scope','$q','$web3','$location','Profile','PriceFeed','NameService','$mdSidenav',
+function($scope, $q, $web3, $location, Profile, PriceFeed, Names, $mdSidenav) {
     console.log('Loading AppController');
 
     var ready = $q.defer();
 
     $scope.web3 = $web3;
+    $scope.whois = Names.get;
 
     $scope.app = {
         ready: ready.promise,
@@ -49,6 +50,8 @@ function($scope, $q, $web3, $location, Profile, PriceFeed) {
         var usdPerEth = promises[1];
         var ethPerUsd = promises[2];
 
+        Names.register(currentAddress, 'Me');
+
         $scope.app.price['usd']['eth'] = usdPerEth;
         $scope.app.price['eth']['usd'] = ethPerUsd;
 
@@ -81,10 +84,16 @@ function($scope, $q, $web3, $location, Profile, PriceFeed) {
 
     web3.eth.filter('latest', function(err, blockHash){
         //console.log(err, blockHash);
-        console.log('New block found. Updating current block...');
+        console.log('New block found. Updating current block info...');
         $web3.getBlock(blockHash).then(function(currentBlock){
             $scope.app.block.current = currentBlock;
         });
     });
 
+    $scope.toggleSidenav = function(id){
+        $mdSidenav(id).toggle()
+        .then(function () {
+            console.log('Toggled: ' + id);
+        });
+    }
 }]);

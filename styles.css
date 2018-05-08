@@ -1,0 +1,45 @@
+h1, h2, h3, h4, h5 {
+    color: rgba(0,0,0,0.67);
+}
+
+p, div {
+    color: rgba(0,0,0,0.87);
+}
+
+.light-text {
+    color: rgba(0,0,0,0.5);
+}
+
+md-divider {
+    margin-top: 16px !important;
+}
+
+.fake-icon {
+    max-width: 48px !important;
+    min-width: 48px !important;
+}
+
+.option-picker {
+    margin: 16px;
+}
+
+.nomargin {
+    margin: 0px !important;
+}
+
+.subtitle {
+    padding-top: 4px;
+    white-space: line;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.subtext {
+    color: rgba(0,0,0,0.5);
+    font-size: 12px;
+}
+
+
+sidenav-left {
+    border-right: 1px solid rgba(0,0,0,0.33);
+}
