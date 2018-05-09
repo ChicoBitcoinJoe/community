@@ -1,0 +1,23 @@
+<div layout="row" layout-align="center center">
+    <h3 ng-show="app.path[2] == 'compose'" 
+        class="cursor"
+        style="text-transform: capitalize; margin-left: 24px;" 
+        ng-click="goto('c/'+app.path[1])">
+        {{app.path[1]}}
+    </h3>
+    <h3 ng-hide="app.path[2] == 'compose'" style="text-transform: capitalize; margin-left: 24px;">{{app.path[1]}}</h3>
+    <span flex></span>
+    <div ng-show="app.user.isLoggedIn">
+        <md-button ng-show="app.path[0] == 'c' && app.path[2] != 'compose' && $mdMedia('gt-sm')" 
+            style="text-transform: lowercase !important;" 
+            ng-click="goto('/c/'+app.path[1]+'/compose')">
+            create a discussion
+        </md-button>
+        <md-button ng-hide="$mdMedia('gt-sm') || app.path[2] == 'compose'"
+            class="fake-icon"
+            ng-click="goto('/c/'+app.path[1]+'/compose')">
+            +
+        </md-button>
+    </div>
+    <md-button hide-gt-xs class="fake-icon" ng-click="toggleSidenav('left')">| | |</md-button>
+</div>

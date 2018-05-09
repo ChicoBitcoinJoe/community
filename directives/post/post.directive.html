@@ -1,0 +1,19 @@
+<div style="padding: 16px;" layout="row">
+    <div style="min-width: 30px; max-width: 30px;" layout="column" layout-align="center center">
+        <div>&#9650;</div>
+        <div>{{post.score}}</div>
+        <div>&#9660;</div>
+    </div>
+    <div layout="column" layout-margin flex>
+        <h4 ng-if="!post.data.title" class="nomargin">No Title</h4>
+        <h4 ng-if="post.data.title" class="nomargin">
+            <a ng-href="{{post.data.link}}" target=_blank>{{post.data.title}}</a>
+        </h4>
+        <div class="nomargin subtitle subtext" style="display: inline-block;" layout="row">
+            <span>By {{whois(post.poster)}} to </span>
+            <span class="subtext" style="text-transform: capitalize;" ng-repeat="community in post.to">
+                {{community}}<span ng-if="!$last">,&nbsp</span>
+            </span>
+        </div>
+    </div>
+</div>

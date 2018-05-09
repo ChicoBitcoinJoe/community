@@ -15,7 +15,11 @@ function($scope, $q, $web3, $location, Profile, PriceFeed, Names, $mdSidenav) {
 
     $scope.app = {
         ready: ready.promise,
-        web3Connected: null,
+        web3: {
+            network: $web3.networks.kovan,
+            connected: null,
+            currentBlock: null,
+        },
         path: parsePath(),
         price: {
             usd: {
@@ -30,16 +34,15 @@ function($scope, $q, $web3, $location, Profile, PriceFeed, Names, $mdSidenav) {
             address: null,
             balance: null
         },
-        block: {
-            current: null
-        },
+        search: null,
         error: null
     };
 
-    $web3.assertNetworkId($web3.networks.kovan)
+    $web3.assertNetworkId($scope.app.web3.network)
     .then(function(currentBlock){
-        $scope.app.web3Connected = true;
-        $scope.app.block.current = currentBlock;
+        $scope.app.web3.connected = true;
+        $scope.app.web3.currentBlock = currentBlock;
+
         return $q.all([
             $web3.getCurrentAccount(),
             PriceFeed.get('usd','eth'),
@@ -58,6 +61,8 @@ function($scope, $q, $web3, $location, Profile, PriceFeed, Names, $mdSidenav) {
         return Profile.get(currentAddress);
     }).then(function(profile){
         $scope.app.user = profile;
+        $scope.app.user['communities'] = ['bitcoin','ethereum','monero'];
+
         console.log($scope.app);
         ready.resolve();
     }).catch(function(err){
@@ -82,18 +87,23 @@ function($scope, $q, $web3, $location, Profile, PriceFeed, Names, $mdSidenav) {
         $scope.app.path = parsePath();
     });
 
-    web3.eth.filter('latest', function(err, blockHash){
-        //console.log(err, blockHash);
-        console.log('New block found. Updating current block info...');
-        $web3.getBlock(blockHash).then(function(currentBlock){
-            $scope.app.block.current = currentBlock;
-        });
-    });
-
     $scope.toggleSidenav = function(id){
         $mdSidenav(id).toggle()
         .then(function () {
             console.log('Toggled: ' + id);
         });
     }
+
+    $scope.goto = function(path){
+        $location.path(path);
+        $scope.app.search = null;
+    }
+    
+    $scope.search = function(search){
+        if(search)
+            $scope.goto('c/'+search.toLowerCase());
+
+        $scope.app.search = null;
+    }
+
 }]);

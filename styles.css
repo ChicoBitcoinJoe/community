@@ -39,7 +39,57 @@ md-divider {
     font-size: 12px;
 }
 
-
 sidenav-left {
     border-right: 1px solid rgba(0,0,0,0.33);
+}
+
+.community-btn {
+    text-transform: capitalize;
+    padding: 8px;
+    border-left: 3px solid rgba(0,0,0,0.0);
+    cursor: hand;
+    cursor: pointer;
+    outline: none;
+}
+
+a {
+    color: rgba(0,0,0,0.87);
+    text-decoration: none;
+}
+
+.cursor {
+    outline: none;
+    cursor: hand;
+    cursor: pointer;
+}
+
+.community-btn:hover, .community-btn:focus {
+    border-left: 3px solid rgba(0,0,0,0.33);
+}
+
+.current-community {
+    border-left: 3px solid rgba(0,0,0,0.5) !important;
+}
+
+md-input-container {
+    margin: 0px;
+}
+
+.md-errors-spacer {
+    min-height: 0px !important;
+}
+
+.post-body {
+    border-left-width: 2px !important; 
+    border-bottom-width: 0px !important;
+    padding: 8px !important;
+    overflow: auto !important; 
+    min-height: 120px !important;
+    max-height: 75vh !important;
+}
+
+.md-char-counter {
+    position: absolute;
+    top: -16px;
+    right: 10px;
 }

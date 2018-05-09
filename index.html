@@ -14,7 +14,7 @@
     <title>Community</title>
     
 </head>
-<body ng-controller="AppController" ng-cloak>
+<body ng-app="app" ng-controller="AppController" ng-cloak>
     
     <div ng-view></div>
 
@@ -27,6 +27,12 @@
     
     <!-- Other Libraries -->
     <script src="libs/web3.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://unpkg.com/ipfs/dist/index.min.js"></script>
+    <!--
+        <script src="libs/marked.js"></script>
+        <script src="libs/ipfs.js"></script>
+    -->
     
     <!-- Application Files  -->
     <script src="app.js"></script>
@@ -38,18 +44,23 @@
     <script src="services/NameService.js"></script>
     <script src="services/Profile.js"></script>
     <script src="services/Community.js"></script>
+    <script src="services/IpfsService.js"></script>
     
     <!-- View Controllers -->
     <script src="views/app.routes.js"></script>
-    <script src="views/home/homeViewController.js"></script>
+    <script src="views/home/home.controller.js"></script>
+    <script src="views/community/community.controller.js"></script>
+    <script src="views/compose/compose.controller.js"></script>
     
     <!-- Directives -->
     <script src="directives/sidenav-left/sidenav-left.directive.js"></script>
+    <script src="directives/post/post.directive.js"></script>
+    <script src="directives/header/header.directive.js"></script>
     
     <!-- Make sure web3 object is available before rendering -->
     <script>
         window.addEventListener('load', function() {
-            angular.bootstrap(document, ['app'])
+            //angular.bootstrap(document, ['app'])
         })
     </script>
 

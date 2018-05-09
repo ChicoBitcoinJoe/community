@@ -5,7 +5,16 @@
     md-component-id="left"
     md-is-locked-open="$mdMedia('gt-xs')">
     <div layout="column" layout-padding flex>
-        <h3>Community</h3>
+
+        <h3 class="cursor" ng-click="goto('/')">Community</h3>
+
+        <div layout="row">
+            <md-input-container style="margin: 4px;" flex>
+                <label>Browse</label>
+                <input ng-model="app.search" type="text">
+            </md-input-container>
+            <md-button style="min-width: 60px; max-width: 60px;" ng-click="search(app.search)">go</md-button>
+        </div>
 
         <md-divider></md-divider>
 
@@ -21,13 +30,25 @@
             </div>
         </div>
 
+        <div ng-show="!app.user.isLoggedIn" layout="row" layout-padding>
+            Not logged in.
+        </div>
+
         <md-divider></md-divider>
         
-        <div style="overflow: auto" layout="column" layout-padding flex>
-            <div>All</div>
-            <div>Bitcoin</div>
-            <div>Ethereum</div>
-            <div>Monero</div>
+        
+        <div style="overflow: auto" layout="column" flex>
+            <div class="community-btn"
+                ng-class="{'current-community': app.path[1] == 'all'}" 
+                ng-click="goto('m/all')">
+                All
+            </div>
+            <div class="community-btn"
+                ng-repeat="community in app.user.communities"
+                ng-class="{'current-community': app.path[1] == community}" 
+                ng-click="goto('c/' + community)">
+                {{community}}
+            </div>
         </div>
     </div>
 </md-sidenav>
