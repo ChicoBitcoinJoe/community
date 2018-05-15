@@ -1,8 +1,12 @@
-var app = angular.module('app',['ngRoute','ngMaterial','ngAria','ngAnimate']);
+var app = angular.module('app',['ngRoute','ngMaterial','ngAria','ngAnimate','ngSanitize','RecursionHelper',]);
 
 app.run(['$rootScope', function($rootScope) {
     console.log('App is loading.');
 }]);
+
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
 
 app.controller('AppController', ['$scope','$q','$web3','$location','Profile','PriceFeed','NameService','$mdSidenav',
 function($scope, $q, $web3, $location, Profile, PriceFeed, Names, $mdSidenav) {
@@ -20,7 +24,9 @@ function($scope, $q, $web3, $location, Profile, PriceFeed, Names, $mdSidenav) {
             connected: null,
             currentBlock: null,
         },
-        path: parsePath(),
+        events: {
+
+        },
         price: {
             usd: {
                 eth: null
@@ -34,6 +40,8 @@ function($scope, $q, $web3, $location, Profile, PriceFeed, Names, $mdSidenav) {
             address: null,
             balance: null
         },
+        path: parsePath(),
+        now: now(),
         search: null,
         error: null
     };
@@ -53,7 +61,8 @@ function($scope, $q, $web3, $location, Profile, PriceFeed, Names, $mdSidenav) {
         var usdPerEth = promises[1];
         var ethPerUsd = promises[2];
 
-        Names.register(currentAddress, 'Me');
+        if(currentAddress)
+            Names.register(currentAddress, 'Me');
 
         $scope.app.price['usd']['eth'] = usdPerEth;
         $scope.app.price['eth']['usd'] = ethPerUsd;
@@ -61,9 +70,7 @@ function($scope, $q, $web3, $location, Profile, PriceFeed, Names, $mdSidenav) {
         return Profile.get(currentAddress);
     }).then(function(profile){
         $scope.app.user = profile;
-        $scope.app.user['communities'] = ['bitcoin','ethereum','monero'];
 
-        console.log($scope.app);
         ready.resolve();
     }).catch(function(err){
         $scope.app.web3Connected = false;
@@ -74,7 +81,7 @@ function($scope, $q, $web3, $location, Profile, PriceFeed, Names, $mdSidenav) {
         ready.reject(err);
     });
 
-    function getNow(){
+    function now(){
         return parseInt((Date.now() / 1000).toFixed(0));
     }
     
@@ -87,10 +94,16 @@ function($scope, $q, $web3, $location, Profile, PriceFeed, Names, $mdSidenav) {
         $scope.app.path = parsePath();
     });
 
+    web3.eth.filter('latest', function(blockHash){
+        $web3.getBlock('latest').then(function(currentBlock){
+            $scope.app.web3.currentBlock = currentBlock;
+        })
+    })
+
     $scope.toggleSidenav = function(id){
         $mdSidenav(id).toggle()
         .then(function () {
-            console.log('Toggled: ' + id);
+            //console.log('Toggled: ' + id);
         });
     }
 

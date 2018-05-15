@@ -1,4 +1,4 @@
-app.service( 'IpfsService',['$q', function ($q) {
+app.service( '$ipfs',['$q', '$http', function ($q, $http) {
     console.log('Loading Ipfs Service');
     
     var promise = $q.defer();
@@ -6,7 +6,7 @@ app.service( 'IpfsService',['$q', function ($q) {
 
     const node = new Ipfs({ repo: 'ipfs-' + Math.random() })
     node.once('ready', () => {
-        console.log('Node status: ' + (node.isOnline() ? 'online' : 'offline'));
+        //console.log('Node status: ' + (node.isOnline() ? 'online' : 'offline'));
         promise.resolve(node);
         // You can write more code here to use it. Use methods like 
         // node.files.add, node.files.get. See the API docs here:
@@ -14,24 +14,44 @@ app.service( 'IpfsService',['$q', function ($q) {
     });
     
     var service = {
-        get: function(hash){
+        get: function(hash, useFallBackGateway){
             var deferred = $q.defer();
-
+            
             ready.then(function(node){
-                node.files.cat(hash, function (err, data) {
-                    if(!err) {
-                        deferred.resolve(data.toString());
-                    } else {
-                        deferred.reject(err);
-                    }
-                });
+                if(hash){
+                    node.files.cat(hash, function (err, data) {
+                        //console.log(err, data.toString);
+                        if(!err) {
+                            deferred.resolve(data.toString());
+                        } else if(useFallBackGateway) {
+                            $http({
+                                method: 'GET',
+                                url: 'https://gateway.ipfs.io/ipfs/' + file.hash
+                            }).then(function successCallback(response) {
+                                // this callback will be called asynchronously
+                                // when the response is available
+                                //console.log(response);
+                                deferred.resolve(response.data);
+                            }, function errorCallback(response) {
+                                // called asynchronously if an error occurs
+                                // or server returns response with an error status.
+                                //console.log(response);
+                                deferred.reject(response);
+                            });
+                        } else {
+                            deferred.reject(err);
+                        }
+                    });
+                } else {
+                    deferred.reject('hash is undefined');
+                }
             }).catch(function(err){
-                conole.error(err);
+                deferred.reject(err);
             });
 
             return deferred.promise;
         },
-        put: function(data){
+        put: function(data, pushToGateway){
             var deferred = $q.defer();
 
             ready.then(function(node){
@@ -39,7 +59,23 @@ app.service( 'IpfsService',['$q', function ($q) {
                     if(!err) {
                         filesAdded.forEach((file) => {
                             //console.log(file);
-                            deferred.resolve(file)
+                            if(pushToGateway){
+                                console.log('Pushing to gateway: ' + file.hash);
+                                $http({
+                                    method: 'GET',
+                                    url: 'https://gateway.ipfs.io/ipfs/' + file.hash
+                                }).then(function successCallback(response) {
+                                    // this callback will be called asynchronously
+                                    // when the response is available
+                                    console.log(response);
+                                }, function errorCallback(response) {
+                                    // called asynchronously if an error occurs
+                                    // or server returns response with an error status.
+                                    console.log(response);
+                                });
+                            }
+
+                            deferred.resolve(file);
                         });
                     } else {
                         deferred.reject(err);

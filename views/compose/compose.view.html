@@ -1,63 +1,62 @@
-<div ng-show="app.view.ready" layout="row" layout-fill>
-    <sidenav-left layout="column"></sidenav-left>
-    <div layout="column" layout-padding flex>
-        <header></header>
-        <div style="overflow: auto" layout-gt-sm="row" flex>
-            <div layout="column" flex-gt-sm="50">
-                <h4 style="margin-left: 20px;">Create a Discussion</h4>
-                <div layout="column" layout-padding flex-gt-sm>
-                    <div>
-                        <md-input-container class="md-block">
-                            <label>Title</label>
-                            <input ng-model="app.view.post.data.title">
-                        </md-input-container>
-                    </div>
-                    <div>
-                        <md-input-container class="md-block">
-                            <label>Link</label>
-                            <input ng-model="app.view.post.data.link">
-                        </md-input-container>
-                    </div>
-                    <div layout="column" flex>
-                        <md-input-container md-no-float style="margin-top: 16px;" layout="column" flex-gt-sm>
-                            <textarea class="post-body"
-                                ng-model="app.view.post.data.body" 
-                                md-maxlength="30000" 
-                                placeholder="Check for spelling mistakes!"
-                                rows="5"
-                                flex-gt-sm>
-                            </textarea>
-                        </md-input-container>
-                    </div>
-                </div>
+<div style="overflow: auto" layout-gt-sm="row" flex>
+    <div layout="column" flex-gt-sm="50">
+        <h4 style="margin-left: 20px;">Create a Discussion</h4>
+        <div layout="column" layout-padding flex-gt-sm>
+            <div>
+                <md-input-container class="md-block">
+                    <label>Title</label>
+                    <input ng-model="app.view.post.data.title" ng-disabled="app.view.waiting">
+                </md-input-container>
             </div>
-            <md-divider hide-gt-sm style="border-top-width: 1px;"></md-divider>
-            <md-divider hide show-gt-sm></md-divider>
-            <div style="margin-left: 16px;" layout-gt-sm="column" flex-gt-sm="50">
-                <h4 layout="row" layout-align="center center">
-                    Discussion Preview
-                    <span flex></span>
-                    <md-button class="md-raised md-primary" 
-                        style="margin: 0px; padding: 0px;"
-                        ng-disabled="!app.view.post.data.title || !(app.view.post.data.link || app.view.post.data.body)"
-                        ng-click="post()">
-                        post
-                    </md-button>
-                </h4>
-                <div>
-                    <post post="app.view.post"></post>
-                </div>
-                <div ng-show="app.view.post.data.body" style="padding: 8px; border-left: 1px solid rgb(63,81,181); overflow: auto;">
-                    <div ng-bind-html="app.view.post.preview"></div>
-                </div>
-                <div ng-show="!app.view.post.data.body" style="padding: 8px; border-left: 1px solid rgb(63,81,181); overflow: auto;">
-                    <p>
-                        A post requires a title and a link or body of text or both.
+            <div>
+                <md-input-container class="md-block">
+                    <label>Link</label>
+                    <input ng-model="app.view.post.data.link" ng-disabled="app.view.waiting">
+                </md-input-container>
+            </div>
+            <div layout="column" flex>
+                <md-input-container md-no-float style="margin-top: 16px;" layout="column" flex-gt-sm>
+                    <textarea class="post-body"
+                        ng-model="app.view.post.data.body" 
+                        ng-disabled="app.view.waiting"
+                        md-maxlength="30000" 
+                        placeholder="Check for spelling mistakes!"
+                        rows="5"
+                        flex-gt-sm>
+                    </textarea>
+                </md-input-container>
+            </div>
+        </div>
+    </div>
+    <md-divider hide-gt-sm style="border-top-width: 1px;"></md-divider>
+    <md-divider hide show-gt-sm></md-divider>
+    <div style="margin-left: 16px;" layout-gt-sm="column" flex-gt-sm="50">
+        <h4 layout="row" layout-align="center center">
+            Discussion Preview
+            <span flex></span>
+            <md-button class="md-raised md-primary" 
+                style="margin: 0px; padding: 0px;"
+                ng-disabled="
+                    !app.view.post.data.title 
+                    || !(app.view.post.data.link 
+                    || app.view.post.data.body) 
+                    || app.view.waiting"
+                ng-click="post()">
+                {{app.view.postButtonText}}
+            </md-button>
+        </h4>
+        <div>
+            <post post="app.view.post"></post>
+        </div>
+        <div ng-show="app.view.post.data.body" style="padding: 8px; border-left: 1px solid rgb(63,81,181); overflow: auto;">
+            <div ng-bind-html="app.view.post.preview"></div>
+        </div>
+        <div ng-show="!app.view.post.data.body" style="padding: 8px; border-left: 1px solid rgb(63,81,181); overflow: auto;">
+            <p>
+                A post requires a title and a link or body of text or both.
 
-                        Github style markdown is supported!
-                    </p>
-                </div>
-            </div>
+                Github style markdown is supported!
+            </p>
         </div>
     </div>
 </div>

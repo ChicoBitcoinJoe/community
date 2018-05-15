@@ -11,7 +11,8 @@ p, div {
 }
 
 md-divider {
-    margin-top: 16px !important;
+    margin-top: 8px !important;
+    padding: 4px !important;
 }
 
 .fake-icon {
@@ -27,8 +28,11 @@ md-divider {
     margin: 0px !important;
 }
 
+.nopadding {
+    padding: 0px !important;
+}
+
 .subtitle {
-    padding-top: 4px;
     white-space: line;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -37,10 +41,6 @@ md-divider {
 .subtext {
     color: rgba(0,0,0,0.5);
     font-size: 12px;
-}
-
-sidenav-left {
-    border-right: 1px solid rgba(0,0,0,0.33);
 }
 
 .community-btn {
@@ -55,6 +55,12 @@ sidenav-left {
 a {
     color: rgba(0,0,0,0.87);
     text-decoration: none;
+    outline: rgba(0,0,0,0.0);
+}
+
+form {
+    padding: 0px;
+    margin: 0px;
 }
 
 .cursor {
@@ -85,11 +91,24 @@ md-input-container {
     padding: 8px !important;
     overflow: auto !important; 
     min-height: 120px !important;
-    max-height: 75vh !important;
+    max-height: 50vh !important;
 }
 
 .md-char-counter {
     position: absolute;
     top: -16px;
     right: 10px;
+}
+
+.icon-btn {
+    min-width: 40px; 
+    max-width: 40px; 
+}
+
+.md-resize-handle {
+    bottom: 0px !important;
+}
+
+.margin-bottom {
+    margin-bottom: 4px;
 }

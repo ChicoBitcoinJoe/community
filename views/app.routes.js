@@ -1,22 +1,22 @@
 app.config(function ($routeProvider) {
 	$routeProvider.
-    when('/', {
-        templateUrl: 'views/home/home.view.html',
-        controller: 'HomeController'
-    }).
     when('/c/:community', {
         templateUrl: 'views/community/community.view.html',
         controller: 'CommunityController'
     }).
     when('/m/:multi', {
-        templateUrl: 'views/community/community.view.html',
-        controller: 'CommunityController'
+        templateUrl: 'views/multi/multi.view.html',
+        controller: 'MultiController'
     }).
     when('/c/:community/compose', {
         templateUrl: 'views/compose/compose.view.html',
         controller: 'ComposeController'
     }).
+    when('/c/:community/:postHash', {
+        templateUrl: 'views/comments/comments.view.html',
+        controller: 'CommentsController'
+    }).
 	otherwise({
-      redirectTo: '/'
+      redirectTo: '/c/community'
     });
 });

@@ -1,19 +1,34 @@
-<div style="padding: 16px;" layout="row">
-    <div style="min-width: 30px; max-width: 30px;" layout="column" layout-align="center center">
-        <div>&#9650;</div>
-        <div>{{post.score}}</div>
-        <div>&#9660;</div>
-    </div>
-    <div layout="column" layout-margin flex>
-        <h4 ng-if="!post.data.title" class="nomargin">No Title</h4>
-        <h4 ng-if="post.data.title" class="nomargin">
-            <a ng-href="{{post.data.link}}" target=_blank>{{post.data.title}}</a>
-        </h4>
-        <div class="nomargin subtitle subtext" style="display: inline-block;" layout="row">
-            <span>By {{whois(post.poster)}} to </span>
-            <span class="subtext" style="text-transform: capitalize;" ng-repeat="community in post.to">
-                {{community}}<span ng-if="!$last">,&nbsp</span>
-            </span>
+<div id="post.hash" ng-hide="!post.data.title" style="padding: 8px 0px;" layout="row">
+    <md-button class="icon-btn nomargin" 
+        ng-click=""
+        aria-label="post score details">    
+        <b>100</b>
+    </md-button>
+    <div style="padding: 0px 8px 0px 8px;" layout="column" flex>
+        <div style="padding-top: 8px;">
+            <h4 ng-if="!post.data.title" class="nomargin">No Title</h4>
+            <h4 ng-if="post.data.title" class="nomargin">
+                <a ng-if="post.data.link" ng-href="{{post.data.link}}" target=_blank>{{post.data.title}}</a>
+                <a ng-if="!post.data.link" ng-href="#/c/{{post.to[0]}}/{{post.transactionHash}}">{{post.data.title}}</a>
+            </h4>
+        </div>
+        <a style="font-size: 12px; margin-top: 4px;"
+            ng-show="post.data.link" 
+            ng-href="post.data.link">
+            ({{post.data.link}})
+        </a>
+        <div class="subtitle subtext" style="margin-top: 4px;" layout="row" layout-align="start center">
+            <div style="display: inline-block;">
+                <span>submitted {{timeElapsed}} ago by {{whois(post.poster).toLowerCase()}} to </span>
+                <a class="subtext" ng-repeat="community in post.to" ng-href="#/c/{{community.toLowerCase()}}">
+                    {{community.toLowerCase()}}<span ng-if="!$last">,&nbsp</span>
+                </a>
+            </div>
         </div>
     </div>
+    <md-button class="icon-btn nomargin" 
+        ng-click="goto('/c/' + post.to[0] + '/' + post.transactionHash)"
+        aria-label="go to comments">    
+        <md-icon md-svg-src="icons/ic_comment.svg"></md-icon>
+    </md-button>
 </div>

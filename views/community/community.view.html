@@ -1,18 +1,19 @@
-<div ng-show="app.view.ready" layout="row" layout-fill>
-    <sidenav-left layout="column"></sidenav-left>
-    <div layout="column" layout-padding flex>
-        <header></header>
-        <layout="row">
-            <md-input-container class="option-picker" style="margin: 0px 0px 8px 32px;">
-                <md-select ng-model="app.view.selectedOption" aria-label="selected option">
-                    <md-option ng-repeat="option in app.view.options" value="{{option}}">
-                        {{option}}
-                    </md-option>
-                </md-select>
-            </md-input-container>
-        </layout>
-        <div style="overflow: auto">
-            <post ng-repeat="post in posts" post="post"></post>
+<div layout="row">
+    <md-input-container class="option-picker" style="margin: 0px 0px 16px 20px;">
+        <md-select ng-model="app.view.selectedOption" aria-label="selected option">
+            <md-option ng-repeat="option in app.view.options" value="{{option}}">
+                {{option}}
+            </md-option>
+        </md-select>
+    </md-input-container>
+</div>
+<div layout="column" flex>
+    <div ng-show="app.view.ready" style="overflow-y: auto; overflow-x: hidden;">
+        <div ng-repeat="
+            post in app.view.posts[community] | 
+            orderBy: '-timestamp'
+            track by post.transactionHash">
+            <post post="post" fallback-gateway="true"></post>
         </div>
     </div>
 </div>

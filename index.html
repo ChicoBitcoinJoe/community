@@ -16,7 +16,13 @@
 </head>
 <body ng-app="app" ng-controller="AppController" ng-cloak>
     
-    <div ng-view></div>
+    <div ng-show="app.web3.connected" layout="row" layout-fill>
+        <sidenav-left layout="column"></sidenav-left>
+        <div style="padding-bottom: 0px !important" layout="column" layout-padding flex>
+            <header class="nopadding"></header>
+            <div class="nopadding" layout="column" ng-view flex></div>
+        </div>
+    </div>
 
     <!-- Angular + Material Libraries -->
     <script src="libs/angular-includes/angular-1.5.5.min.js"></script>
@@ -24,15 +30,13 @@
     <script src="libs/angular-includes/angular-animate-1.5.5.min.js"></script>
     <script src="libs/angular-includes/angular-material-1.1.0.min.js"></script>
     <script src="libs/angular-includes/angular-route-1.5.5.min.js"></script>
+    <script src="libs/angular-includes/angular-sanitize-1.5.5.min.js"></script>
     
     <!-- Other Libraries -->
-    <script src="libs/web3.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://unpkg.com/ipfs/dist/index.min.js"></script>
-    <!--
-        <script src="libs/marked.js"></script>
-        <script src="libs/ipfs.js"></script>
-    -->
+    <script src="modules/RecursionHelper.js"></script>
     
     <!-- Application Files  -->
     <script src="app.js"></script>
@@ -48,20 +52,22 @@
     
     <!-- View Controllers -->
     <script src="views/app.routes.js"></script>
-    <script src="views/home/home.controller.js"></script>
+    <script src="views/multi/multi.controller.js"></script>
     <script src="views/community/community.controller.js"></script>
     <script src="views/compose/compose.controller.js"></script>
+    <script src="views/comments/comments.controller.js"></script>
     
     <!-- Directives -->
     <script src="directives/sidenav-left/sidenav-left.directive.js"></script>
-    <script src="directives/post/post.directive.js"></script>
     <script src="directives/header/header.directive.js"></script>
+    <script src="directives/post/post.directive.js"></script>
+    <script src="directives/comment/comment.directive.js"></script>
     
     <!-- Make sure web3 object is available before rendering -->
     <script>
         window.addEventListener('load', function() {
             //angular.bootstrap(document, ['app'])
-        })
+        });
     </script>
 
 </body>

@@ -1,0 +1,80 @@
+<div style="overflow: auto;">
+    <div layout="column" flex>
+        <h4 class="nomargin" ng-show="app.view.post.data.title">{{app.view.post.data.title}}</h4>
+        <a style="font-size: 12px; margin-top: 4px;"
+            ng-show="app.view.post.data.link" 
+            ng-href="app.view.post.data.link">
+            ({{app.view.post.data.link}})
+        </a>
+        <div ng-show="app.view.ready" style="font-size: 12px; margin-top: 4px; display: inline-block;">
+            <span>submitted {{app.view.timeElapsed}} ago by {{whois(app.view.post.poster).toLowerCase()}} to </span>
+            <a class="subtext" ng-href="#/c/{{app.path[1].toLowerCase()}}">
+                {{app.path[1].toLowerCase()}}
+            </a>
+        </div>
+
+        <md-divider></md-divider>
+
+        <div ng-if="app.view.post.data.body" ng-bind-html="marked(app.view.post.data.body)"></div>
+        
+        <md-divider></md-divider>
+
+        <div layout-gt-sm="row">
+            <div layout="column" flex-gt-sm="50">
+                <div>
+                    <md-input-container md-no-float class="md-block" style="margin-top: 16px;">
+                        <textarea ng-style="{'max-height': maxHeight };"
+                            style="min-height: 120px;
+                            border-left-width: 2px !important;
+                            border-bottom-width: 0px !important;
+                            padding: 8px !important;"
+                            ng-model="app.view.comment.data.body" 
+                            md-maxlength="30000" 
+                            placeholder="Check for spelling mistakes!"
+                            min-rows="5">
+                        </textarea>
+                    </md-input-container>
+                </div>
+                <md-button class="md-raised md-primary" 
+                    ng-disabled="!app.view.comment.data.body"
+                    ng-click="comment()">
+                    comment
+                </md-button>
+            </div>
+
+            <md-divider hide-gt-sm style="border-top-width: 2px;"></md-divider>
+            <md-divider hide show-gt-sm></md-divider>
+
+            <div style="margin: 8px 8px 8px 0px;" layout-gt-sm="column" flex-gt-sm="50">
+                <div ng-show="app.view.comment.data.body" 
+                    style="padding: 8px; border-left: 2px solid rgb(63,81,181); overflow: auto;" 
+                    flex-gt-sm>
+                    <div ng-bind-html="app.view.preview"></div>
+                </div>
+                <div ng-show="!app.view.comment.data.body" 
+                    style="
+                    padding: 8px; 
+                    border-left: 2px solid rgb(63,81,181); 
+                    overflow: auto;"
+                    flex-gt-sm>
+                    <p>Be kind to others!</p>
+                    <p>
+                        <a style="color: rgb(0, 101, 216)" 
+                            href="https://guides.github.com/features/mastering-markdown/" 
+                            target="_blank">
+                            Github style markdown
+                        </a> is supported!
+                    </p>
+                </div>
+            </div>
+
+        </div>
+            
+        <md-divider></md-divider>
+        
+        <div style="margin-bottom: 33vh;">
+            <comment ng-repeat="comment in app.view.comments" app="app" comment="comment" comment-depth="0"></comment>
+        </div>
+
+    </div>
+</div>

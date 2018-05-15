@@ -1,0 +1,38 @@
+<div class="comment" 
+    ng-style="{
+        'border-left': '3px solid rgba(0,0,0,0.' + ((commentDepth+1) * 10),
+    };"
+    ng-class="{'margin-bottom': commentDepth == 0}"
+    layout="column">
+    <div style="font-size: 12px; margin-top: 4px; display: inline-block; line-height: 20px; padding-left: 4px;">
+        submitted {{timeElapsed}} ago by {{whois(comment.poster).toLowerCase()}}
+        <span>&nbsp&nbsp&nbsp&nbsp<a>minimize</a></span>
+        <span>&nbsp&nbsp&nbsp&nbsp<a ng-click="showReply = !showReply">reply</a></span>
+    </div>
+    <div ng-show="comment.data.body" style="padding: 4px;">{{comment.data.body}}</div>
+    <div ng-show="!comment.data.body" style="padding: 4px;">{{comment.hash}}</div>
+    <div ng-show="showReply" layout="column" flex-gt-sm="50">
+        <div>
+            <md-input-container md-no-float class="md-block" style="margin-top: 16px;">
+                <textarea ng-style="{'max-height': input.maxHeight };"
+                    style="min-height: 120px;
+                    border-left-width: 2px !important;
+                    border-bottom-width: 0px !important;
+                    padding: 8px !important;"
+                    ng-model="input.reply.body" 
+                    md-maxlength="30000" 
+                    placeholder="Check for spelling mistakes!"
+                    min-rows="5">
+                </textarea>
+            </md-input-container>
+        </div>
+        <md-button class="md-raised md-primary" 
+            ng-disabled="!input.reply.body"
+            ng-click="reply()">
+            reply
+        </md-button>
+    </div>
+    <div>
+        <comment ng-repeat="comment in comment.comments" app="app" comment="comment" comment-depth="commentDepth+1"></comment>
+    </div>
+</div>
