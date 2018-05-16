@@ -1,4 +1,4 @@
-<div style="overflow: auto;">
+<div style="overflow-y: auto; overflow-x: hidden;">
     <div layout="column" flex>
         <h4 class="nomargin" ng-show="app.view.post.data.title">{{app.view.post.data.title}}</h4>
         <a style="font-size: 12px; margin-top: 4px;"
@@ -14,8 +14,8 @@
         </div>
 
         <md-divider></md-divider>
-
-        <div ng-if="app.view.post.data.body" ng-bind-html="marked(app.view.post.data.body)"></div>
+            
+        <div class="selectable" ng-show="app.view.post.preview" ng-bind-html="app.view.post.preview"></div>
         
         <md-divider></md-divider>
 

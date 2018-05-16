@@ -1,24 +1,48 @@
 <div layout-xs="column" layout-gt-xs="row" layout-align="center center">
     <div layout="row">
-        <h2 ng-show="app.path[2] == 'compose'" 
-            class="cursor"
-            style="text-transform: capitalize; margin-left: 24px;" 
-            ng-click="goto('c/'+app.path[1])">
-            {{app.path[1]}}
-        </h2>
-        <h2 ng-hide="app.path[2] == 'compose'" style="text-transform: capitalize; margin-left: 8px;">{{app.path[1]}}</h2>
+        <div style="margin: 0px 8px;">
+            <h2 ng-show="app.path[2] == 'compose'" 
+                class="cursor"
+                style="text-transform: capitalize; margin-left: 24px;" 
+                ng-click="goto('c/'+app.path[1])">
+                {{app.path[1]}}
+            </h2>
+            <h2 ng-hide="app.path[2] == 'compose'" style="text-transform: capitalize;">{{app.path[1]}}</h2>
+        </div>
         <div layout="row" layout-align="center center" hide-xs>
             <md-button class="icon-btn" 
-                ng-show="app.user.communities.indexOf(app.path[1]) == -1 && app.path[0] == 'c'" 
+                ng-show="
+                app.user.communities.indexOf(app.path[1]) == -1 
+                && app.path[0] == 'c'
+                && !app.path[2]" 
                 ng-click="app.user.favorite(app.path[1])"
                 aria-label="favorite this community">
                 <md-icon class="cursor" md-svg-icon="icons/ic_favorite_border.svg"></md-icon>
             </md-button>
             <md-button class="icon-btn" 
-                ng-show="app.user.communities.indexOf(app.path[1]) > -1 && app.path[0] == 'c'" 
+                ng-show="
+                app.user.communities.indexOf(app.path[1]) > -1 
+                && app.path[0] == 'c'
+                && !app.path[2]" 
                 ng-click="app.user.unfavorite(app.path[1])"
                 aria-label="unfavorite this community">
                 <md-icon class="cursor" md-svg-icon="icons/ic_favorite.svg"></md-icon>
+            </md-button>
+            <md-button class="icon-btn" 
+                ng-show="
+                !app.user.isSaved(app.path[2])
+                && app.path[2]"
+                ng-click="app.user.bookmark(app.path[2])"
+                aria-label="bookmark this post">
+                <md-icon class="cursor" md-svg-icon="icons/ic_bookmark_border.svg"></md-icon>
+            </md-button>
+            <md-button class="icon-btn" 
+                ng-show="
+                app.user.isSaved(app.path[2])
+                && app.path[2]" 
+                ng-click="app.user.unbookmark(app.path[2])"
+                aria-label="unbookmark this post">
+                <md-icon class="cursor" md-svg-icon="icons/ic_bookmark_border.svg"></md-icon>
             </md-button>
         </div>
     </div>
@@ -26,27 +50,53 @@
     <div layout="row">
         <div hide-gt-xs>
             <md-button class="icon-btn" 
-                ng-show="app.user.communities.indexOf(app.path[1]) == -1 && app.path[0] == 'c'" 
+                ng-show="
+                app.user.communities.indexOf(app.path[1]) == -1 
+                && app.path[0] == 'c'
+                && !app.path[2]" 
                 ng-click="app.user.favorite(app.path[1])"
                 aria-label="favorite this community">
                 <md-icon class="cursor" md-svg-icon="icons/ic_favorite_border.svg"></md-icon>
             </md-button>
             <md-button class="icon-btn" 
-                ng-show="app.user.communities.indexOf(app.path[1]) > -1 && app.path[0] == 'c'" 
+                ng-show="
+                app.user.communities.indexOf(app.path[1]) > -1 
+                && app.path[0] == 'c'
+                && !app.path[2]" 
                 ng-click="app.user.unfavorite(app.path[1])"
                 aria-label="unfavorite this community">
                 <md-icon class="cursor" md-svg-icon="icons/ic_favorite.svg"></md-icon>
             </md-button>
+            <md-button class="icon-btn" 
+                ng-show="
+                !app.user.isSaved(app.path[2])
+                && app.path[2]"
+                ng-click="app.user.bookmark(app.path[2])"
+                aria-label="bookmark this post">
+                <md-icon class="cursor" md-svg-icon="icons/ic_bookmark_border.svg"></md-icon>
+            </md-button>
+            <md-button class="icon-btn" 
+                ng-show="
+                app.user.isSaved(app.path[2])
+                && app.path[2]" 
+                ng-click="app.user.unbookmark(app.path[2])"
+                aria-label="unbookmark this post">
+                <md-icon class="cursor" md-svg-icon="icons/ic_bookmark_border.svg"></md-icon>
+            </md-button>
         </div>
-        <div layout="row" ng-show="app.user.isLoggedIn">
-            <md-button ng-show="app.path[0] == 'c' && app.path[2] != 'compose' && $mdMedia('gt-sm')" 
-                style="text-transform: lowercase !important;" 
+        <div layout="row" 
+            ng-hide="
+            !app.user.isLoggedIn 
+            || app.path[0] != 'c' 
+            || app.path[2]">
+            <md-button style="text-transform: lowercase !important;" 
+                ng-hide="!$mdMedia('gt-sm')" 
                 ng-click="goto('/c/'+app.path[1]+'/compose')">
                 create a discussion
             </md-button>
-            <md-button ng-hide="$mdMedia('gt-sm') || app.path[2] == 'compose'"
-                class="fake-icon"
-                ng-click="goto('/c/'+app.path[1]+'/compose')">
+            <md-button class="fake-icon"
+                ng-hide="$mdMedia('gt-sm')"
+                ng-click="goto('/c/' + app.path[1] + '/compose')">
                 +
             </md-button>
         </div>

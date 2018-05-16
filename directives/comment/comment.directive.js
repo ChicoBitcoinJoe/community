@@ -18,18 +18,19 @@ function(RecursionHelper, NameService, Community, $q, $ipfs, $web3, $route) {
             });
         },
 		controller: function($scope){
-            console.log($scope.comment, $scope.commentDepth);
+            //console.log($scope.comment, $scope.commentDepth);
 
             $scope.input = {
                 reply: {
                     body: null,
                 },
+                preview: null,
                 maxHeight: null
             };
 
             if($scope.commentDepth > 0){
                 Community.getComment($scope.comment.transactionHash).then(function(commentData){
-                    console.log(commentData);
+                    //console.log(commentData);
                     $scope.comment = commentData;
                 })
             }
@@ -47,7 +48,7 @@ function(RecursionHelper, NameService, Community, $q, $ipfs, $web3, $route) {
             var toBlock = $scope.app.web3.currentBlock.number;
             Community.getComments(fromBlock, toBlock, $scope.comment.transactionHash, null)
             .then(function(comments){
-                console.log(comments);
+                //console.log(comments);
                 $scope.comment.comments = comments;
             }).catch(function(){
                 console.error(err);
@@ -68,7 +69,25 @@ function(RecursionHelper, NameService, Community, $q, $ipfs, $web3, $route) {
                 return deferred.promise;
             }
 
+            $scope.$watch('comment.data.body', function(){
+                try {
+                    if($scope.comment.data.body)
+                        $scope.comment['preview'] = marked($scope.comment.data.body);
+                } catch(err){
+                    //console.error(err);
+                }
+
+                updateIpfsHash(JSON.stringify($scope.app.view.comment.data));
+            });
+
             $scope.$watch('input.reply.body', function(){
+                try {
+                    if($scope.input.reply.body)
+                        $scope.input.preview = marked($scope.input.reply.body);
+                } catch(err){
+                    //console.error(err);
+                }
+
                 updateIpfsHash(JSON.stringify($scope.app.view.comment.data));
             });
 
@@ -84,6 +103,11 @@ function(RecursionHelper, NameService, Community, $q, $ipfs, $web3, $route) {
                         return $web3.getTransactionReceipt(txHash);
                     }).then(function(receipt){
                         console.log(receipt);
+                        
+                        $scope.interval = setInterval(function(){
+                            $route.reload()
+                            clearInterval($scope.interval);
+                        }, 3000);
                     }).catch(function(err){
                         console.error(err);
                     });

@@ -2,8 +2,6 @@ app.controller('CommentsController', ['$scope','$ipfs','$web3','$q','$route','$m
 function($scope, $ipfs, $web3, $q, $route, $mdMedia, Community){
     console.log('Loading Comments View');
     
-    $scope.marked = marked;
-    
     if($mdMedia('xs'))
         $scope.maxHeight = '50%';
     else
@@ -65,13 +63,22 @@ function($scope, $ipfs, $web3, $q, $route, $mdMedia, Community){
 
         return deferred.promise;
     }
+    
+    $scope.$watch('app.view.post.data.body', function(){
+        try {
+            if($scope.app.view.post.data.body)
+                $scope.app.view.post.preview = marked($scope.app.view.post.data.body);
+        } catch(err){
+            //console.error(err);
+        }
+    });
 
     $scope.$watch('app.view.comment.data.body', function(){
         try {
             if($scope.app.view.comment.data.body)
                 $scope.app.view.preview = marked($scope.app.view.comment.data.body);
         } catch(err){
-            console.error(err);
+            //console.error(err);
         }
 
         updateIpfsHash(JSON.stringify($scope.app.view.comment.data));

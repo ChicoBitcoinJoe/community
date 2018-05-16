@@ -56,7 +56,7 @@ function($scope, $ipfs, $sce, $web3, $location, Community){
     $scope.$watch('app.view.post.data.body', function(){
         try {
             if($scope.app.view.post.data.body)
-                $scope.app.view.post.preview = $sce.trustAsHtml(marked($scope.app.view.post.data.body));
+                $scope.app.view.post.preview = marked($scope.app.view.post.data.body);
         } catch(err){
             console.error(err);
         }

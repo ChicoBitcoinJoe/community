@@ -79,6 +79,7 @@ form {
 
 md-input-container {
     margin: 0px;
+    padding: 0px;
 }
 
 .md-errors-spacer {
@@ -92,6 +93,16 @@ md-input-container {
     overflow: auto !important; 
     min-height: 120px !important;
     max-height: 50vh !important;
+}
+
+.selectable * {
+    -webkit-touch-callout: text !important;
+    -webkit-user-select: text !important;
+    -khtml-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+    user-select: text !important;
+    word-break: break-word;
 }
 
 .md-char-counter {
@@ -111,4 +122,12 @@ md-input-container {
 
 .margin-bottom {
     margin-bottom: 4px;
+}
+
+.small-margin, h1 {
+    margin: 8px 0px !important;
+}
+
+.small-margin, p {
+    margin: 8px 0px !important;
 }

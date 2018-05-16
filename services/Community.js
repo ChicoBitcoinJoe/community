@@ -20,8 +20,9 @@ app.service( 'Community',['$q','$web3','$ipfs', function ($q, $web3, $ipfs) {
     };
 
     var comments = {
-        /*comment: {
+        /*txHash: {
             promise: null,
+            data: null,
             comments: []
         }*/
     };
@@ -134,7 +135,7 @@ app.service( 'Community',['$q','$web3','$ipfs', function ($q, $web3, $ipfs) {
         getComments: function(fromBlock, toBlock, parentHash, commentHash){
             var deferred = $q.defer();
             
-            console.log(fromBlock, toBlock, parentHash, commentHash);
+            //console.log(fromBlock, toBlock, parentHash, commentHash);
             var parentHashHash = web3.sha3(parentHash);
             var commentHashHash = web3.sha3(commentHash);
 
@@ -151,11 +152,11 @@ app.service( 'Community',['$q','$web3','$ipfs', function ($q, $web3, $ipfs) {
                     commentHashHash,
                 ]
             }).get((error, events) => {
-                console.log(error, events);
+                //console.log(error, events);
 
                 var commentPromises = [];
                 events.forEach(log => {
-                    console.log(log);
+                    //console.log(log);
                     commentPromises.push(this.getComment(log.transactionHash));
                 });
 
@@ -171,14 +172,14 @@ app.service( 'Community',['$q','$web3','$ipfs', function ($q, $web3, $ipfs) {
         getComment: function(transactionHash){
             var deferred = $q.defer();
             
-            console.log(transactionHash);
+            //console.log(transactionHash);
             $web3.getTransaction(transactionHash)
             .then(function(transaction){
-                console.log(transaction);
+                //console.log(transaction);
                 $web3.getBlock(transaction.blockNumber).then(function(block){
                     Community.Comment_event(null, {fromBlock: block.number, toBlock: transaction.number})
                     .get(function(err, events){
-                        console.log(err,events);
+                        //console.log(err,events);
                         if(!err) {
                             events.forEach(event => {
                                 if(posts[event.args.parentHash] && posts[event.args.parentHash].comments)
@@ -194,9 +195,9 @@ app.service( 'Community',['$q','$web3','$ipfs', function ($q, $web3, $ipfs) {
                                         parentHash: event.args.parentHash,
                                         get: function(){
                                             var txHash = transactionHash;
-                                            console.log(transactionHash);
+                                            //console.log(transactionHash);
                                             $ipfs.get(this.hash).then(function(data){
-                                                console.log(data);
+                                                //console.log(data);
                                                 comments[transactionHash].data = JSON.parse(data);
                                             });
                                         },
