@@ -10,7 +10,7 @@ app.service( 'Profile',['$q','$web3', function ($q, $web3) {
                     address: publicAddress,
                     isLoggedIn: publicAddress == currentAddress && currentAddress != null,
                     balance: null,
-                    communities: ['community'],
+                    communities: ['community','bitcoin','ethereum','monero','funny'],
                     multis: [],
                     favorite: function(community){
                         //console.log(this);

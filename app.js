@@ -46,28 +46,36 @@ function($scope, $q, $web3, $location, Profile, PriceFeed, Names, $mdSidenav) {
         error: null
     };
 
-    $web3.assertNetworkId($scope.app.web3.network)
-    .then(function(currentBlock){
+    $web3.getNetworkId().then(function(currentNetworkId){
         $scope.app.web3.connected = true;
-        $scope.app.web3.currentBlock = currentBlock;
 
-        return $q.all([
-            $web3.getCurrentAccount(),
-            PriceFeed.get('usd','eth'),
-            PriceFeed.get('eth','usd'),
-        ]);
+        if($scope.app.web3.network != currentNetworkId){
+            var err = 'Connected to the wrong network!';
+            $scope.app.error = err;
+            ready.reject(err);
+            console.error(err);
+            console.log($scope.app);
+            return ready.promise;
+        } else {
+            return $q.all([
+                $web3.getBlock('latest'),
+                $web3.getCurrentAccount(),
+                PriceFeed.get('usd','eth'),
+                PriceFeed.get('eth','usd'),
+            ]);
+        }
     }).then(function(promises){
-        var currentAddress = promises[0];
-        var usdPerEth = promises[1];
-        var ethPerUsd = promises[2];
+        var currentBlock = promises[0];
+        var currentAccount = promises[1];
+        var usdPerEth = promises[2];
+        var ethPerUsd = promises[3];
 
-        if(currentAddress)
-            Names.register(currentAddress, 'Me');
-
+        $scope.app.web3.currentBlock = currentBlock;
+        Names.register(currentAccount, 'Me');
         $scope.app.price['usd']['eth'] = usdPerEth;
         $scope.app.price['eth']['usd'] = ethPerUsd;
 
-        return Profile.get(currentAddress);
+        return Profile.get(currentAccount);
     }).then(function(profile){
         $scope.app.user = profile;
 
