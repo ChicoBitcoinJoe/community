@@ -1,263 +1,252 @@
-Community.service('Community', ['$q','SharePlatform','IpfsService','Web3Service','ProfileDB',
-function ($q,SharePlatform,IpfsService,Web3Service,ProfileDB) {
-    console.log('Loading Community');
-    
-    var CommunityDB;
-    var localCommunityDB = localStorage.getItem('CommunityDB');
-    if(!localCommunityDB){
-        CommunityDB = {};
-        CommunityDB.communities = {};
-        
-        localStorage.setItem('CommunityDB',JSON.stringify(CommunityDB));
-    } else {
-        CommunityDB = JSON.parse(localCommunityDB);
-    }
-    
-    var active = {view:[]};
-    
-    var touchCommunity = function(community){
-        if(!CommunityDB.communities[community]){
-            CommunityDB.communities[community] = {};
-            CommunityDB.communities[community].posts = [];
-            CommunityDB.communities[community].comments = {};
-            CommunityDB.communities[community].posters = {};
-        }
-    };
-    
-    var touchCommentList = function(community,txHash){
-        if(Object.keys(CommunityDB.communities[community].comments).indexOf(txHash) == -1)
-            CommunityDB.communities[community].comments[txHash] = [];
-    };
-    
-    var touchPosterList = function(community,txHash){
-        touchCommunity(community);
-        
-        if(Object.keys(CommunityDB.communities[community].posters).indexOf(txHash) == -1)
-            CommunityDB.communities[community].posters[txHash] = [];
-    };
-    
-    var addCommentToParent = function(community,txHash,parent){
-        touchCommentList(community,parent);
+app.service( 'Community',['$q','$web3','$ipfs', function ($q, $web3, $ipfs) {
+    console.log('Loading Community Service');
 
-        var comments = CommunityDB.communities[community].comments[parent];
-        if(comments.indexOf(txHash) == -1)
-            comments.push(txHash);
-    };
+    var metadata = {"compiler":{"version":"0.4.23+commit.124ca40d"},"language":"Solidity","output":{"abi":[{"constant":false,"inputs":[{"name":"communityName","type":"string"},{"name":"postHash","type":"string"}],"name":"post","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"commentHash","type":"string"},{"name":"parentHash","type":"string"}],"name":"comment","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"communityName","type":"string"},{"indexed":false,"name":"postHash","type":"string"}],"name":"Post_event","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"communityName","type":"bytes32"},{"indexed":true,"name":"postHash","type":"string"}],"name":"Index_event","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"parentHash","type":"string"},{"indexed":false,"name":"commentHash","type":"string"}],"name":"Comment_event","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"parentHash","type":"string"},{"indexed":true,"name":"commentHash","type":"string"}],"name":"Index_event","type":"event"}],"devdoc":{"methods":{}},"userdoc":{"methods":{}}},"settings":{"compilationTarget":{"browser/Community.sol":"Community"},"evmVersion":"byzantium","libraries":{},"optimizer":{"enabled":true,"runs":200},"remappings":[]},"sources":{"browser/Community.sol":{"keccak256":"0x00557517a1494dfd1bec2ebd6ec866558b7d675944fcdf38f1b0f6849d0036a7","urls":["bzzr://65a728fc764c2693005290a7e31841268feb0bb89bbdb5f06da2b2031865180f"]}},"version":1};
     
-    var addTxHashToActiveView = function(txHash){
-        if(active.view.indexOf(txHash) == -1)
-            active.view.push({txHash:txHash,combinedScore:50});
+    var contractAddress = '0x96c2b9ea7028f93e44f1b31788021c12e4a8d0ec';
+
+    var Community = web3.eth.contract(metadata.output.abi).at(contractAddress);
+
+    var communities = {
+        // community: [posts]
     };
-    
-    var addPostToCommunityDB = function(community,txHash){
-        if(CommunityDB.communities[community].posts.indexOf(txHash) == -1)
-            CommunityDB.communities[community].posts.push(txHash);
+
+    var posts = {
+        /*txHash: {
+            promise: null,
+            data: null,
+            comments: []
+        }*/
     };
-    
-    var addTxToCommunityDB = function(community,event,ipfsHash){
-        //console.log(community,event,ipfsHash);
-        touchCommunity(community);
-        var txHash = event.transactionHash;
-        
-        
-        //Need to do some filtering here
-        //Banned/Squelched users need not apply
-        IpfsService.getIpfsData(ipfsHash).then(
-        function(ipfsData){
-            if(service.postIsValid(ipfsData)){
-                //console.log("post");
-                touchCommentList(community,txHash);
-                addTxHashToActiveView(txHash);
-                addPosterToRootParent(community,txHash,event.args.sender);
-            } else if(service.commentIsValid(ipfsData)){
-                //console.log("comment");
-                touchCommentList(community,ipfsData.parent);
-                touchCommentList(community,txHash);
-                addCommentToParent(community,txHash,ipfsData.parent);
-                
-                addPosterToRootParent(community,ipfsData.rootParent,event.args.sender);
-            } else {
-                console.log("Invalid event");
-            }
-            
-            //console.log(active.view);
-        }, function(err){
-            console.error(err);
-        });
+
+    var comments = {
+        /*txHash: {
+            promise: null,
+            data: null,
+            comments: []
+        }*/
     };
-    
-    var addPosterToRootParent = function(community, rootParentTxHash, poster){
-        touchCommunity(community);
-        touchPosterList(community,rootParentTxHash);
-        
-        if(CommunityDB.communities[community].posters[rootParentTxHash].indexOf(poster) == -1){
-            CommunityDB.communities[community].posters[rootParentTxHash].push(poster);
-        }
-    };
-    
+
     var service = {
-        postIsValid: function(post){
-            if(post.media && post.title && post.community && post.poster && (post.link || post.comment))
-                return true;
-            else 
-                return false;
-        },
-        commentIsValid: function(comment){
-            if(comment.community && comment.poster && comment.comment && comment.parent && comment.rootParent)
-                return true;
-            else
-                return false;
-        },
-        getPosts: function(communities){
-            active.view = [];
-            //console.log(communities);
-            for(var index in communities){
-                var community = communities[index];
-                touchCommunity(community);
-                
-                SharePlatform.getChannelEvents(community).then(
-                function(args){
-                    var community = args[0];
-                    var events = args[1];
-                    //console.log(community,events);
-                    for(var index in events){
-                        var txHash = events[index].transactionHash;
-                        var ipfsHash = events[index].args.hash;
-                        
-                        localStorage.setItem(txHash,JSON.stringify(events[index]));
-                        
-                        //console.log(community,events[index],ipfsHash);
-                        addTxToCommunityDB(community,events[index],ipfsHash);
-                    }
-                    
-                    localStorage.setItem('CommunityDB',JSON.stringify(CommunityDB));
-                }, function(err){
-                    //This community does not exist
-                    //console.log(err);
-                });
-            }
-            
-            return active.view;
-        },
-        getPostScore: function(community,txHash){
-            //console.log(community,txHash,posters);
-            touchPosterList(community,txHash);
-            
-            var posters = CommunityDB.communities[community].posters[txHash];
-            var score = 0;
-            var relaventPosters = [];
-            for(index in posters){
-                var poster = posters[index];
-                
-                var userScore = ProfileDB.getUser(poster).score;
-                var tolerance = 25; //Need to add to settings
-                if(userScore > tolerance){
-                    relaventPosters.push(poster);
-                    score += userScore;
-                }
-            }
-            
-            score = Math.round(score/relaventPosters.length);
-            
-            return score;
-        },
-        getChildren: function(community,txHash){
-            touchCommunity(community);
-            touchCommentList(community,txHash);
-            var children = CommunityDB.communities[community].comments[txHash];
-            return children;
-        },
-        submitPost: function(post){
+        getPosts: function(fromBlock, toBlock, communityName, postHash){
             var deferred = $q.defer();
             
-            if(service.postIsValid(post)){
-                var async_getIpfsHash = IpfsService.getIpfsHash(post).then(
-                function(ipfsHash){
-                    console.log(ipfsHash);
-                    var async_shardAddress = SharePlatform.getChannelAddress(post.community).then(
-                    function(shardAddress){
-                        web3.eth.gasPrice
-                        var estimatedGas = 4700000;
-                        SharePlatform.broadcast(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount()}).then(
-                        function(txHash){
-                            deferred.resolve(txHash);
-                        }, function(err) {
-                            deferred.reject(err);
-                        });
-                    }, function(err){
-                        deferred.reject(err);
-                    });
-                }, function(err){
+            //console.log(fromBlock, toBlock, communityName, postHash);
+            var communityNameHash = web3.sha3(communityName);
+            var postHashHash = web3.sha3(postHash);
+
+            if(!communityName) communityNameHash = null;
+            if(!postHash) postHashHash = null;
+
+            var filter = web3.eth.filter({
+                fromBlock: fromBlock,
+                toBlock: toBlock,
+                address: contractAddress,
+                topics: [
+                    web3.sha3('Index_event(bytes32,string)'), 
+                    communityNameHash,
+                    postHashHash,
+                ]
+            }).get((error, events) => {
+                //console.log(error, events);
+
+                var postPromises = [];
+                events.forEach(log => {
+                    //console.log(log);
+                    postPromises.push(this.getPost(log.transactionHash));
+                });
+
+                $q.all(postPromises).then(function(posts){
+                    deferred.resolve(posts);
+                }).catch(function(err){
                     deferred.reject(err);
                 });
-            } else {
-                deferred.resolve(false);
-            }
-            
+            });
+
             return deferred.promise;
         },
-        submitComment: function(comment){
+        getPost: function(transactionHash){
             var deferred = $q.defer();
-            if(service.commentIsValid(comment)){
-                var async_getIpfsHash = IpfsService.getIpfsHash(comment).then(
-                function(ipfsHash){
-                    console.log(ipfsHash);
-                    var async_shardAddress = SharePlatform.getChannelAddress(comment.community).then(
-                    function(shardAddress){
-                        var estimatedGas = 4700000;
-                        SharePlatform.broadcast(shardAddress,ipfsHash,{from:Web3Service.getCurrentAccount()}).then(
-                        function(receipt){
-                            console.log(receipt);
-                            deferred.resolve(receipt.transactionHash);
-                        }, function(err) {
+            
+            $web3.getTransaction(transactionHash)
+            .then(function(transaction){
+                //console.log(transaction);
+                $web3.getBlock(transaction.blockNumber).then(function(block){
+                    Community.Post_event(null, {fromBlock: block.number, toBlock: transaction.number})
+                    .get(function(err, events){
+                        //console.log(err,events);
+                        if(!err) {
+                            events.forEach(event => {
+                                if(event.transactionHash == transactionHash){
+                                    posts[transactionHash] = {
+                                        transactionHash: transactionHash,
+                                        timestamp: block.timestamp,
+                                        score: 100,
+                                        poster: transaction.from,
+                                        to: [event.args.communityName],
+                                        hash: event.args.postHash,
+                                        get: function(){
+                                            var txHash = transactionHash;
+                                            $ipfs.get(this.hash).then(function(data){
+                                                posts[transactionHash].data = JSON.parse(data);
+                                            });
+                                        },
+                                        data: {
+                                            title: null,
+                                            link: null,
+                                            body: null
+                                        },
+                                    };
+
+                                    posts[transactionHash].get();
+                                    //console.log(post);
+                                    deferred.resolve(posts[transactionHash]);
+                                    return;
+                                }
+                            });
+                        } else {
                             deferred.reject(err);
-                        });
-                    }, function(err){
-                        deferred.reject(err);
+                        }
                     });
-                }, function(err){
+                }).catch(function(err){
+                    console.error(err);
                     deferred.reject(err);
                 });
-            } else {
-                deferred.resolve(false);
-            }
-            
-            return deferred.promise;
-        },
-        createCommunity: function(shardName){
-            return SharePlatform.createChannel(shardName);
-        },
-        communityExists: function(community){
-            var deferred = $q.defer();
-            
-            var async = SharePlatform.getChannelAddress(community).then(
-            function(communityAddress){
-                if(communityAddress){
-                    deferred.resolve(true)
-                } else {
-                    deferred.resolve(false);
-                }
-            }, function(err){
+            }).catch(function(err){
+                console.error(err);
                 deferred.reject(err);
-            })
+            });
+
+            return deferred.promise;
+        },
+        post: function(from, communityName, postHash) {
+            var deferred = $q.defer();
+            console.log(from, communityName, postHash);
+            Community.post(communityName, postHash, {from: from}, 
+            function(err, txHash){
+                if(!err)
+                    deferred.resolve(txHash);
+                else
+                    deferred.reject(err);
+            });
             
             return deferred.promise;
         },
-        getEventData(txHash){
+        getComments: function(fromBlock, toBlock, parentHash, commentHash){
             var deferred = $q.defer();
             
-            var local = localStorage.getItem(txHash);
-            if(local){
-                var event = JSON.parse(local);
-                deferred.resolve(event);
-            } else {
-                deferred.reject("Haven't seen this tx event");
-                //Todo: fetch from blockchain
-            }
+            //console.log(fromBlock, toBlock, parentHash, commentHash);
+            var parentHashHash = web3.sha3(parentHash);
+            var commentHashHash = web3.sha3(commentHash);
+
+            if(!parentHash) parentHashHash = null;
+            if(!commentHash) commentHashHash = null;
+            
+            var filter = web3.eth.filter({
+                fromBlock: fromBlock,
+                toBlock: toBlock,
+                address: contractAddress,
+                topics: [
+                    web3.sha3('Index_event(string,string)'), 
+                    parentHashHash,
+                    commentHashHash,
+                ]
+            }).get((error, events) => {
+                //console.log(error, events);
+
+                var commentPromises = [];
+                events.forEach(log => {
+                    //console.log(log);
+                    commentPromises.push(this.getComment(log.transactionHash));
+                });
+
+                $q.all(commentPromises).then(function(comments){
+                    deferred.resolve(comments);
+                }).catch(function(err){
+                    deferred.reject(err);
+                });
+            });
+
+            return deferred.promise;
+        },
+        getComment: function(transactionHash){
+            var deferred = $q.defer();
+            
+            //console.log(transactionHash);
+            $web3.getTransaction(transactionHash)
+            .then(function(transaction){
+                //console.log(transaction);
+                $web3.getBlock(transaction.blockNumber).then(function(block){
+                    Community.Comment_event(null, {fromBlock: block.number, toBlock: transaction.number})
+                    .get(function(err, events){
+                        //console.log(err,events);
+                        if(!err) {
+                            events.forEach(event => {
+                                if(posts[event.args.parentHash] && posts[event.args.parentHash].comments)
+                                    posts[event.args.parentHash].comments.push(transactionHash);
+                                    
+                                if(event.transactionHash == transactionHash){
+                                    comments[transactionHash] = {
+                                        transactionHash: transactionHash,
+                                        timestamp: block.timestamp,
+                                        score: 100,
+                                        poster: transaction.from,
+                                        hash: event.args.commentHash,
+                                        parentHash: event.args.parentHash,
+                                        get: function(){
+                                            var txHash = transactionHash;
+                                            //console.log(transactionHash);
+                                            $ipfs.get(this.hash).then(function(data){
+                                                //console.log(data);
+                                                comments[transactionHash].data = JSON.parse(data);
+                                            });
+                                        },
+                                        data: {
+                                            title: null,
+                                            link: null,
+                                            body: null
+                                        },
+                                    };
+
+                                    comments[transactionHash].get();
+                                    if(posts[event.args.parentHash] && posts[event.args.parentHash].comments)
+                                        posts[event.args.parentHash].comments.push[comments[transactionHash]];
+                                        
+                                    //console.log(post);
+                                    deferred.resolve(comments[transactionHash]);
+                                    return;
+                                }
+                            });
+                        } else {
+                            deferred.reject(err);
+                        }
+                    });
+                }).catch(function(err){
+                    console.error(err);
+                    deferred.reject(err);
+                });
+            }).catch(function(err){
+                console.error(err);
+                deferred.reject(err);
+            });
+
+            return deferred.promise;
+        },
+        comment: function(from, parentHash, postHash) {
+            var deferred = $q.defer();
+            console.log(from, parentHash, postHash);
+            Community.comment(parentHash, postHash, {from: from}, 
+            function(err, txHash){
+                if(!err)
+                    deferred.resolve(txHash);
+                else
+                    deferred.reject(err);
+            });
             
             return deferred.promise;
-        }
-    }
+        },
+
+    };
     
     return service;
 }]);

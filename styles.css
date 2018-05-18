@@ -1,18 +1,133 @@
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #212121 !important;
-    height: 100%;
+h1, h2, h3, h4, h5 {
+    color: rgba(0,0,0,0.67);
 }
 
-::-webkit-scrollbar {
-   display: none;
+p, div {
+    color: rgba(0,0,0,0.87);
 }
 
-.md-button {
-    min-width: 36px;
+.light-text {
+    color: rgba(0,0,0,0.5);
+}
+
+md-divider {
+    margin-top: 8px !important;
+    padding: 4px !important;
+}
+
+.fake-icon {
+    max-width: 48px !important;
+    min-width: 48px !important;
+}
+
+.option-picker {
+    margin: 16px;
+}
+
+.nomargin {
+    margin: 0px !important;
+}
+
+.nopadding {
+    padding: 0px !important;
+}
+
+.subtitle {
+    white-space: line;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.subtext {
+    color: rgba(0,0,0,0.5);
+    font-size: 12px;
+}
+
+.community-btn {
+    text-transform: capitalize;
+    padding: 8px;
+    border-left: 3px solid rgba(0,0,0,0.0);
+    cursor: hand;
+    cursor: pointer;
+    outline: none;
 }
 
 a {
+    color: rgba(0,0,0,0.87);
     text-decoration: none;
-    color: inherit;
+    outline: rgba(0,0,0,0.0);
+}
+
+form {
+    padding: 0px;
+    margin: 0px;
+}
+
+.cursor {
+    outline: none;
+    cursor: hand;
+    cursor: pointer;
+}
+
+.community-btn:hover, .community-btn:focus {
+    border-left: 3px solid rgba(0,0,0,0.33);
+}
+
+.current-community {
+    border-left: 3px solid rgba(0,0,0,0.5) !important;
+}
+
+md-input-container {
+    margin: 0px;
+    padding: 0px;
+}
+
+.md-errors-spacer {
+    min-height: 0px !important;
+}
+
+.post-body {
+    border-left-width: 2px !important; 
+    border-bottom-width: 0px !important;
+    padding: 8px !important;
+    overflow: auto !important; 
+    min-height: 120px !important;
+    max-height: 50vh !important;
+}
+
+.selectable * {
+    -webkit-touch-callout: text !important;
+    -webkit-user-select: text !important;
+    -khtml-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+    user-select: text !important;
+    word-break: break-word;
+}
+
+.md-char-counter {
+    position: absolute;
+    top: -16px;
+    right: 10px;
+}
+
+.icon-btn {
+    min-width: 40px; 
+    max-width: 40px; 
+}
+
+.md-resize-handle {
+    bottom: 0px !important;
+}
+
+.margin-bottom {
+    margin-bottom: 4px;
+}
+
+.small-margin, h1 {
+    margin: 8px 0px !important;
+}
+
+.small-margin, p {
+    margin: 8px 0px !important;
 }

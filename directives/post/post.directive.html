@@ -1,0 +1,55 @@
+<div id="post.hash" ng-hide="!post.data.title" style="padding: 8px 0px;" layout="row">
+    <md-button hide class="icon-btn nomargin" 
+        ng-click=""
+        aria-label="post score details">    
+        <b>100</b>
+    </md-button>
+    <div style="padding: 0px 8px 0px 8px;" layout="column" flex>
+        <div>
+            <h4 ng-if="!post.data.title" class="nomargin">{{post.score}} - No Title</h4>
+            <h4 ng-if="post.data.title" class="nomargin">
+                <a ng-if="post.data.link" ng-href="{{post.data.link}}" target=_blank>{{post.score}} - {{post.data.title}}</a>
+                <a ng-if="!post.data.link" ng-href="#/c/{{post.to[0]}}/{{post.transactionHash}}">{{post.score}} - {{post.data.title}}</a>
+            </h4>
+        </div>
+        <a style="font-size: 12px; margin-top: 4px; word-break: break-all;"
+            ng-show="post.data.link" 
+            ng-href="post.data.link">
+            ({{post.data.link}})
+        </a>
+        <div class="subtitle subtext" style="margin-top: 4px;" layout="row" layout-align="start center">
+            <div style="display: inline-block;">
+                <span>submitted {{timeElapsed}} ago by {{whois(post.poster).toLowerCase()}} to </span>
+                <a class="subtext" ng-repeat="community in post.to" ng-href="#/c/{{community.toLowerCase()}}">
+                    {{community.toLowerCase()}}<span ng-if="!$last">,&nbsp</span>
+                </a>
+            </div>
+        </div>
+        <div class="subtitle subtext" style="margin-top: 4px; display: inline-block;" layout="row">
+            <a class="subtext cursor" ng-click="goto('/c/' + post.to[0] + '/' + post.transactionHash)">
+                {{post.comments.length}} comments
+            </a>
+            &nbsp&nbsp
+            <a class="subtext" ng-click="">
+                save
+            </a>
+            &nbsp&nbsp
+            <a class="subtext" ng-click="">
+                share
+            </a>
+            &nbsp&nbsp
+            <a class="subtext" ng-click="">
+                hide
+            </a>
+            &nbsp&nbsp
+            <a class="subtext" ng-click="">
+                report
+            </a>
+        </div>
+    </div>
+    <md-button hide class="icon-btn nomargin" 
+        ng-click="goto('/c/' + post.to[0] + '/' + post.transactionHash)"
+        aria-label="go to comments">    
+        <md-icon md-svg-src="icons/ic_comment.svg"></md-icon>
+    </md-button>
+</div>

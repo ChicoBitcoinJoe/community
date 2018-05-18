@@ -3,99 +3,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="This is a description of something...">
+    <meta name="description" content="Community: A simple free speech platform.">
     
     <!-- Angular Material style sheet -->
-    <link rel="stylesheet" href="angular-includes/angular-material-1.1.0.min.css">
-    <link rel="stylesheet" href="libs/googleapis-fonts/material-icons.css">
-    <link rel="stylesheet" href="libs/googleapis-fonts/roboto.css">
+    <link rel="stylesheet" href="libs/angular-includes/angular-material-1.1.0.min.css">
+    <link rel="stylesheet" href="libs/googleapis/material-icons.css">
+    <link rel="stylesheet" href="libs/googleapis/roboto.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="views/post/postView.css">
-    <link rel="stylesheet" href="views/comment/commentView.css">
-    <link rel="stylesheet" href="views/homepage/homepageView.css">
-    <link rel="stylesheet" href="views/community-stats/communityStatsView.css">
-    <link rel="stylesheet" href="views/multi-stats/multiStatsView.css">
-    <link rel="stylesheet" href="directives/toolbar/toolbarDirective.css">
-    <link rel="stylesheet" href="directives/post/postDirective.css">
-    <link rel="stylesheet" href="directives/comment/commentDirective.css">
-    <link rel="stylesheet" href="directives/submit-comment/submitCommentDirective.css">
-    <link rel="stylesheet" href="directives/sidenav-left/sidenavLeftDirective.css">
-    <link rel="stylesheet" href="directives/username/usernameDirective.css">
     
-    <title>Community - Testnet</title>
+    <title>Community</title>
     
 </head>
-<body ng-app="Community" layout="row" ng-cloak>
+<body ng-app="app" ng-controller="AppController" ng-cloak>
     
-    <md-sidenav md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')" layout="column">
-        <sidenav-left></sidenav-left>
-    </md-sidenav>
-    
-    <div layout="column" flex>
-        <toolbar></toolbar>
-        <div ng-view layout="column" flex></div>
+    <div ng-show="app.web3.connected" layout="row" layout-fill>
+        <sidenav-left layout="column"></sidenav-left>
+        <div style="padding-bottom: 0px !important" layout="column" layout-padding flex>
+            <header class="nopadding"></header>
+            <div class="nopadding" layout="column" ng-view flex></div>
+        </div>
     </div>
-    
-    <md-sidenav md-component-id="right" class="md-sidenav-right" md-is-locked-open="$mdMedia('gt-md')" layout="column">
-        <sidenav-right></sidenav-right>
-    </md-sidenav>
 
     <!-- Angular + Material Libraries -->
-    <script src="angular-includes/angular-1.5.5.min.js"></script>
-    <script src="angular-includes/angular-animate-1.5.5.min.js"></script>
-    <script src="angular-includes/angular-aria-1.5.5.min.js"></script>
-    <script src="angular-includes/angular-material-1.1.0.min.js"></script>
-    <script src="angular-includes/angular-messages-1.5.5.min.js"></script>
-    <script src="angular-includes/angular-route-1.5.5.min.js"></script>
-    <script src="angular-includes/angular-svg-assets-cache.js"></script>
-    <script src="angular-includes/angular-sanitize-1.6.2.js"></script>
-    
-    <!-- Modules -->
-    <script src="modules/RecursionHelper.js"></script>
+    <script src="libs/angular-includes/angular-1.5.5.min.js"></script>
+    <script src="libs/angular-includes/angular-aria-1.5.5.min.js"></script>
+    <script src="libs/angular-includes/angular-animate-1.5.5.min.js"></script>
+    <script src="libs/angular-includes/angular-material-1.1.0.min.js"></script>
+    <script src="libs/angular-includes/angular-route-1.5.5.min.js"></script>
+    <script src="libs/angular-includes/angular-sanitize-1.5.5.min.js"></script>
     
     <!-- Other Libraries -->
-    <script src="libs/marked.js"></script>
-    <script src="libs/web3.js"></script>
-    <script src="libs/ipfs.js"></script>
-            
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://unpkg.com/ipfs/dist/index.min.js"></script>
+    <script src="modules/RecursionHelper.js"></script>
+    
     <!-- Application Files  -->
     <script src="app.js"></script>
+    <script src="app.filters.js"></script>
     
     <!-- Services -->
-    <script src="services/IpfsService.js"></script>
-    <script src="services/Web3Service.js"></script>
-    <script src="services/EventManager.js"></script>
-    <script src="services/SharePlatform.js"></script>
-    <script src="services/Community.js"></script>
-    <script src="services/ProfileDB.js"></script>
-    <script src="services/VoteHub.js"></script>
+    <script src="https://cdn.rawgit.com/ChicoBitcoinJoe/Angular-1-Web3-Service/master/Web3.js"></script>
+    <script src="services/PriceFeed.js"></script>
     <script src="services/NameService.js"></script>
-            
-    <!-- Controllers -->
-    <script src="controllers/TestController.js"></script>
-    <script src="views/post/postViewController.js"></script>
-    <script src="views/comment/commentViewController.js"></script>
-    <script src="views/fund/fundViewController.js"></script>
-    <script src="views/favorite/favoriteViewController.js"></script>
-    <script src="views/homepage/homepageViewController.js"></script>
-    <script src="views/profile/profileViewController.js"></script>
-    <script src="views/community-stats/communityStatsViewController.js"></script>
-    <script src="views/multi-stats/multiStatsViewController.js"></script>
+    <script src="services/Profile.js"></script>
+    <script src="services/Community.js"></script>
+    <script src="services/IpfsService.js"></script>
+    
+    <!-- View Controllers -->
+    <script src="views/app.routes.js"></script>
+    <script src="views/multi/multi.controller.js"></script>
+    <script src="views/community/community.controller.js"></script>
+    <script src="views/compose/compose.controller.js"></script>
+    <script src="views/comments/comments.controller.js"></script>
     
     <!-- Directives -->
-    <script src="directives/toolbar/toolbarDirective.js"></script>
-    <script src="directives/post/postDirective.js"></script>
-    <script src="directives/comment/commentDirective.js"></script>
-    <script src="directives/focus-on-show/focusOnShowDirective.js"></script>
-    <script src="directives/create-community/createCommunityDirective.js"></script>
-    <script src="directives/submit-post/submitPostDirective.js"></script>
-    <script src="directives/video-frame/videoFrameDirective.js"></script>
-    <script src="directives/submit-comment/submitCommentDirective.js"></script>
-    <script src="directives/sidenav-left/sidenavLeftDirective.js"></script>
-    <script src="directives/sidenav-right/sidenavRightDirective.js"></script>
-    <script src="directives/favorite-comment/favoriteCommentDirective.js"></script>
-    <script src="directives/username/usernameDirective.js"></script>
-    <script src="directives/vote-tokens/voteTokensDirective.js"></script>
-            
+    <script src="directives/sidenav-left/sidenav-left.directive.js"></script>
+    <script src="directives/header/header.directive.js"></script>
+    <script src="directives/post/post.directive.js"></script>
+    <script src="directives/comment/comment.directive.js"></script>
+    
+    <!-- Make sure web3 object is available before rendering -->
+    <script>
+        window.addEventListener('load', function() {
+            //angular.bootstrap(document, ['app'])
+        });
+    </script>
+
 </body>
 </html>

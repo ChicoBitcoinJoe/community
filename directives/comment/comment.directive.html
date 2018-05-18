@@ -1,0 +1,77 @@
+<div ng-style="{
+        'border-left': '3px solid rgba(0,0,0,0.' + ((commentDepth+1) * 10),
+    };"
+    ng-class="{'margin-bottom': commentDepth == 0}"
+    layout="column">
+
+    <div style="font-size: 12px; margin-top: 4px; display: inline-block; line-height: 20px; padding-left: 4px;">
+        <span ng-show="!minimized">&nbsp&nbsp&nbsp&nbsp<a class="cursor" ng-click="minimized = !minimized">[ <b>-</b> ]&nbsp</a></span>
+        <span ng-show="minimized">&nbsp&nbsp&nbsp&nbsp<a class="cursor" ng-click="minimized = !minimized">[ + ]&nbsp</a></span>
+        submitted {{timeElapsed}} ago by {{whois(comment.poster).toLowerCase()}}
+        <span ng-show="!showReply">&nbsp&nbsp&nbsp&nbsp<a class="cursor" ng-click="showReply = !showReply">reply</a></span>
+        <span ng-show="showReply">&nbsp&nbsp&nbsp&nbsp<a class="cursor" ng-click="showReply = !showReply">hide reply</a></span>
+    </div>
+
+    <div ng-show="comment.data.body && !minimized" style="padding: 0px 8px;"><div class="small-margins selectable" ng-bind-html="comment.preview"></div></div>
+    <div ng-show="!comment.data.body && !minimized" style="padding: 8px 8px;">{{comment.hash}}</div>
+
+    <div ng-show="showReply && !minimized" layout-gt-sm="row">
+        <div layout="column" flex-gt-sm="50">
+            <div>
+                <md-input-container md-no-float class="md-block" style="margin-top: 16px;">
+                    <textarea ng-style="{'max-height': input.maxHeight };"
+                        style="min-height: 120px;
+                        border-left-width: 2px !important;
+                        border-bottom-width: 0px !important;
+                        padding: 8px !important;"
+                        ng-model="input.reply.body" 
+                        md-maxlength="30000" 
+                        placeholder="Check for spelling mistakes!"
+                        min-rows="5">
+                    </textarea>
+                </md-input-container>
+            </div>
+            <md-button class="md-raised md-primary" 
+                ng-disabled="!input.reply.body"
+                ng-click="reply()">
+                reply
+            </md-button>
+        </div>
+
+        <md-divider hide-gt-sm style="border-top-width: 2px;"></md-divider>
+        <md-divider hide show-gt-sm></md-divider>
+
+        <div style="margin: 8px 8px 8px 0px;" layout-gt-sm="column" flex-gt-sm="50">
+            <div ng-show="input.reply.body" 
+                style="
+                padding: 8px; border-left: 2px solid rgb(63,81,181); 
+                overflow-y: auto;
+                overflow-x: none;
+                " 
+                flex-gt-sm>
+                <div class="small-margin" ng-bind-html="input.preview"></div>
+            </div>
+            <div ng-show="!input.reply.body" 
+                style="
+                padding: 8px; 
+                border-left: 2px solid rgb(63,81,181); 
+                overflow-y: auto;
+                overflow-x: none;
+                "
+                flex-gt-sm>
+                <p>Be kind to others!</p>
+                <p>
+                    <a style="color: rgb(0, 101, 216)" 
+                        href="https://guides.github.com/features/mastering-markdown/" 
+                        target="_blank">
+                        Github style markdown
+                    </a> is supported!
+                </p>
+            </div>
+        </div>
+
+    </div>
+    <div ng-show="!minimized">
+        <comment ng-repeat="comment in comment.comments" app="app" comment="comment" comment-depth="commentDepth+1"></comment>
+    </div>
+</div>

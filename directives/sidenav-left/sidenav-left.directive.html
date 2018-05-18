@@ -1,0 +1,71 @@
+<md-sidenav flex
+    class="md-sidenav-left"
+    style="max-width: 300px !important; min-width: 300px !important; "
+    layout="column"
+    md-component-id="left"
+    md-is-locked-open="$mdMedia('gt-sm')">
+    <div layout="column" style="border-right: 1px solid rgba(0,0,0,0.33)" layout-padding flex>
+        
+        <h2 class="cursor nopadding" style="margin-left: 8px;" ng-click="goto('/')">Community</h2>
+
+        <md-divider hide-xs></md-divider>
+
+        <md-button hide-gt-xs 
+            style="min-width: 40px; max-width: 40px; position:absolute; top: 0; right: 0px;" 
+            ng-click="toggleSidenav('left')" 
+            aria-label="close navigation menu">
+            <md-icon md-svg-icon="icons/ic_close.svg"></md-icon>
+        </md-button>
+
+        <div ng-show="app.user.isLoggedIn" layout="row">
+            <div layout="column">
+                {{whois(app.user.address)}}
+                <div class="light-text" style="font-size: 12px">{{app.user.address.slice(0,6)}}...</div>
+            </div>
+            <span flex></span>
+            <div layout="column" layout-align="start end">
+                <div>
+                    &diams;
+                    <span style="width: 3px;"></span>
+                    {{app.user.balance | fromWei:'ether' | decimals:3}}
+                </div>
+                <div class="light-text" style="font-size: 12px;">
+                    ($<span style="width: 3px;"></span>
+                    {{(app.user.balance | fromWei:'ether') * (app.price.usd.eth | fromWei:'ether') | decimals:2}})
+                </div>
+            </div>
+        </div>
+
+        <div ng-show="!app.user.isLoggedIn" layout="row" layout-padding>
+            Not logged in.
+        </div>
+
+        <md-divider></md-divider>
+
+        <form ng-submit="search(app.search)" layout="row">
+            <md-input-container md-no-float flex>
+                <input ng-model="app.search" type="text" placeholder="Browse">
+            </md-input-container>
+            <md-button class="icon-btn" style="margin: 0px 0px 0px 4px;" ng-click="search(app.search)" aria-label="browse community">
+                <md-icon md-svg-icon="icons/ic_search.svg"></md-icon>
+            </md-button>
+        </form>
+
+        <md-divider></md-divider>
+        
+        
+        <div style="overflow-y: auto" layout="column" flex>
+            <div class="community-btn"
+                ng-class="{'current-community': app.path[1] == 'all'}" 
+                ng-click="goto('m/all')">
+                All
+            </div>
+            <div class="community-btn"
+                ng-repeat="community in app.user.communities | orderBy:0"
+                ng-class="{'current-community': app.path[1] == community}" 
+                ng-click="goto('c/' + community)">
+                {{community}}
+            </div>
+        </div>
+    </div>
+</md-sidenav>
